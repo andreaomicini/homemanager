@@ -1,0 +1,1 @@
+Home Manager is an application for the control of an intelligent home designed through the SODA agent-oriented methodology. There, the house is seen as an intelligent environment made of independent, distributed devices, each equipped with an agent to support the user’s goals and tasks.
