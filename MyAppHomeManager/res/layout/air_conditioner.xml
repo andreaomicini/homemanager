@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/sfondo2" >
+
+    <TextView
+        android:id="@+id/aliasCondizionatore"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="20dp"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+    <ToggleButton
+        android:id="@+id/statoCondizionatore"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/aliasCondizionatore"
+        android:layout_below="@+id/aliasCondizionatore"
+        android:layout_marginTop="71dp"
+        android:text="ToggleButton" />
+
+    <TextView
+        android:id="@+id/textView1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/statoCondizionatore"
+        android:layout_below="@+id/aliasCondizionatore"
+        android:layout_marginTop="32dp"
+        android:text="Current status"
+        android:textAppearance="?android:attr/textAppearanceLarge" />
+
+    <TextView
+        android:id="@+id/TestoTemp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/statoCondizionatore"
+        android:layout_below="@+id/statoCondizionatore"
+        android:layout_marginTop="39dp"
+        android:text="Temperature"
+        android:textAppearance="?android:attr/textAppearanceLarge" />
+
+    <TextView
+        android:id="@+id/TemperaturaSelezionata"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/TestoTemp"
+        android:layout_marginRight="16dp"
+        android:textAppearance="?android:attr/textAppearanceLarge" />
+
+    <SeekBar
+        android:id="@+id/BarraTemperatura"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/TemperaturaSelezionata"
+        android:layout_marginTop="21dp"
+        android:max="@integer/Max_condizionatore" />
+
+    <Button
+        android:id="@+id/salvaCondizionatore"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/BarraTemperatura"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="39dp"
+        android:text="Save" />
+
+    <ImageView
+        android:id="@+id/imageView1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignRight="@+id/TemperaturaSelezionata"
+        android:layout_alignTop="@+id/aliasCondizionatore"
+        android:layout_marginTop="22dp"
+        android:src="@drawable/condizionatore2" />
+
+</RelativeLayout>
