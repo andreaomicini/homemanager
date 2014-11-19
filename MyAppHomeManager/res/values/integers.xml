@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <integer name="Max_condizionatore">30</integer>
-    <integer name="Max_Riscaldamento">35</integer>
-    <integer name="Max_Forno">250</integer>
-</resources>
