@@ -9,20 +9,23 @@ import alice.tucson.api.TucsonAgentId;
 import alice.tucson.api.TucsonMetaACC;
 import alice.tucson.api.TucsonTupleCentreId;
 import it.unibo.homemanager.dbmanagement.dbexceptions.NotFoundDbException;
+
 import java.util.ArrayList;
 import java.util.List;
 
 public class TucsonDatabase extends Database{
 	
     private TucsonTupleCentreId tc;
-    //private TucsonContext context;
+    //private TucsonContext context; db rbac_tc
     private TucsonAgentId agent;
     private EnhancedSynchACC acc;
 
     public TucsonDatabase() throws Exception {
     try {
 	System.err.println("TucsonDatabase constructor called..");
-	    this.tc = new TucsonTupleCentreId("database_tc", "localhost", "20504");
+		//RC: replaced database_tc with db
+		System.out.println("Creo db_tc");
+	    this.tc = new TucsonTupleCentreId("db", "localhost", "20504");
 	    //this.context=Tucson.enterDefaultContext();
 	    agent = new TucsonAgentId("tucsonDBAgent");
 	} catch (Exception e) {
@@ -94,11 +97,14 @@ public class TucsonDatabase extends Database{
 	    this.acc = TucsonMetaACC.getContext(agent);
 	    LogicTuple ltTemplate = LogicTuple.parse(template.toString());
 	    System.err.println("[readCentre@TucsonDatabase] ltTemplate: " + ltTemplate);
+	    System.out.println("faccio una read all");
 	    ITucsonOperation op_rdAll = this.acc.rdAll(tc, ltTemplate, Long.MAX_VALUE);
+	    System.out.println("fatta read all");
 	    if(op_rdAll.isResultSuccess()) {
-		//l = op_rdAll.getLogicTupleListResult();
-		l.addAll(op_rdAll.getLogicTupleListResult());
-		System.err.println("[readCentre@TucsonDatabase] Successfully read " + l);
+	    	//l = op_rdAll.getLogicTupleListResult();
+	    	System.out.println("read all SUCCESS");
+	    	l.addAll(op_rdAll.getLogicTupleListResult());
+	    	System.err.println("[readCentre@TucsonDatabase] Successfully read " + l);
 	    } else
 		System.err.println("[readCentre@TucsonDatabase] rdAll(" + ltTemplate + ") failed!");
 	    this.acc.exit();

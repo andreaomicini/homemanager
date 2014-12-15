@@ -12,9 +12,6 @@
 package it.unibo.homemanager.userinterfaces;
 
 import it.unibo.homemanager.tablemap.Device;
-import alice.tucson.api.*;
-import alice.logictuple.*;
-import alice.tuplecentre.api.exceptions.InvalidTupleException;
 import it.unibo.homemanager.tablemap.User;
 import it.unibo.homemanager.util.Utilities;
 import java.util.List;
@@ -22,6 +19,15 @@ import java.util.StringTokenizer;
 import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import alice.logictuple.LogicTuple;
+import alice.logictuple.Value;
+import alice.logictuple.Var;
+import alice.logictuple.exceptions.InvalidLogicTupleException;
+import alice.tucson.api.EnhancedSynchACC;
+import alice.tucson.api.ITucsonOperation;
+import alice.tucson.api.TucsonAgentId;
+import alice.tucson.api.TucsonMetaACC;
+import alice.tucson.api.TucsonTupleCentreId;
 /**
  *
  * @author Administrator
@@ -221,7 +227,7 @@ public class ManDevicesConstr extends javax.swing.JPanel {
             lt = LogicTuple.parse("dev_rule('"+clas+"','"+role+"',"+rp+","+hour+","+date+","+days+")");
             Utilities.insertTupleInto(rbac, lt);
             fillDevConstr();
-        } catch (InvalidTupleException ex) {
+        } catch (InvalidLogicTupleException ex) {
             Logger.getLogger(ManDevicesConstr.class.getName()).log(Level.SEVERE, null, ex);
         }
     }

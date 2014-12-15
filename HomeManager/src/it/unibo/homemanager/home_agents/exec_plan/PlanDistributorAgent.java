@@ -11,13 +11,12 @@ package it.unibo.homemanager.home_agents.exec_plan;
 
 import alice.tucson.api.*;
 import alice.logictuple.*;
+import alice.logictuple.exceptions.InvalidVarNameException;
 import alice.tucson.api.exceptions.TucsonInvalidAgentIdException;
 import alice.tuplecentre.core.AbstractTupleCentreOperation;
-
 import it.unibo.homemanager.userinterfaces.TracePanel;
 import it.unibo.homemanager.util.Command;
 import it.unibo.homemanager.home_agents.PlanTupleBuilder;
-
 import java.util.List;
 
 /**
@@ -80,7 +79,12 @@ public class PlanDistributorAgent extends AbstractTucsonAgent {
     private List getCmds(EnhancedSynchACC acc) {
         LogicTuple cmd = null;
         List l = null;
-        LogicTuple planCmdsTemplate = new LogicTuple("plan_cmds", new Var("X"),new Var("Y"));
+        LogicTuple planCmdsTemplate = null;
+        try {
+            planCmdsTemplate = new LogicTuple("plan_cmds", new Var("X"),new Var("Y"));
+        } catch (InvalidVarNameException e) {
+            // cannot happen
+        }
         try {
            ITucsonOperation op_inAll = acc.inAll(myTid, planCmdsTemplate, null);
                    //new LogicTuple("in_all",new Value("plan_cmds",

@@ -9,6 +9,7 @@ package it.unibo.homemanager.home_agents.exec_plan;
 import alice.logictuple.LogicTuple;
 import alice.logictuple.Value;
 import alice.logictuple.Var;
+import alice.logictuple.exceptions.InvalidVarNameException;
 import alice.tucson.api.AbstractTucsonAgent;
 import alice.tucson.api.EnhancedSynchACC;
 import alice.tucson.api.ITucsonOperation;
@@ -57,7 +58,12 @@ public class LampAgent extends AbstractTucsonAgent {
     
     @Override
     protected void main() {
-        LogicTuple template_in  = new LogicTuple("light_mode",new Value(l.sensId),new Var("X"));
+        LogicTuple template_in = null;
+        try {
+            template_in = new LogicTuple("light_mode",new Value(l.sensId),new Var("X"));
+        } catch (InvalidVarNameException e) {
+            // cannot happen
+        }
         tp.appendText("-- LAMP AGENT FOR "+l.name+" STARTED.");
 
         try {

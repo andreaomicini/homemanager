@@ -6,26 +6,31 @@
 
 package it.unibo.homemanager.util;
 
-import alice.logictuple.LogicTuple;
-import alice.logictuple.Value;
-import alice.logictuple.Var;
-import alice.tucson.api.EnhancedSynchACC;
-import alice.tucson.api.ITucsonOperation;
-import alice.tucson.api.TucsonAgentId;
-import alice.tucson.api.TucsonMetaACC;
-import alice.tucson.api.TucsonTupleCentreId;
-import alice.tucson.api.exceptions.TucsonInvalidAgentIdException;
-import alice.tucson.api.exceptions.TucsonInvalidTupleCentreIdException;
-import alice.tucson.examples.utilities.Utils;
-import alice.tuplecentre.api.exceptions.InvalidTupleException;
-import it.unibo.homemanager.RBAC.*;
 import it.unibo.homemanager.ServiceFactory;
+import it.unibo.homemanager.RBAC.DevsAccessManAgent;
+import it.unibo.homemanager.RBAC.GestoreAttivazioneRuolo;
+import it.unibo.homemanager.RBAC.GestoreDisattivazioneRuolo;
+import it.unibo.homemanager.RBAC.RoomAccessManAgent;
 import it.unibo.homemanager.dbmanagement.Database;
 import it.unibo.homemanager.home_agents.PlanEntitiesAgent;
-import it.unibo.homemanager.home_agents.check_people.*;
-import it.unibo.homemanager.home_agents.exec_plan.*;
-import it.unibo.homemanager.tablemap.*;
-import it.unibo.homemanager.tablemap.ServicesInterfaces.*;
+import it.unibo.homemanager.home_agents.check_people.DetectorAgent;
+import it.unibo.homemanager.home_agents.check_people.ListManager;
+import it.unibo.homemanager.home_agents.exec_plan.BlindAgent;
+import it.unibo.homemanager.home_agents.exec_plan.BrightnessAgent;
+import it.unibo.homemanager.home_agents.exec_plan.DeviceAgent;
+import it.unibo.homemanager.home_agents.exec_plan.LampAgent;
+import it.unibo.homemanager.home_agents.exec_plan.WindowAgent;
+import it.unibo.homemanager.tablemap.Blind;
+import it.unibo.homemanager.tablemap.Device;
+import it.unibo.homemanager.tablemap.Lamp;
+import it.unibo.homemanager.tablemap.Room;
+import it.unibo.homemanager.tablemap.Sensor;
+import it.unibo.homemanager.tablemap.Window;
+import it.unibo.homemanager.tablemap.ServicesInterfaces.BlindServiceInterface;
+import it.unibo.homemanager.tablemap.ServicesInterfaces.DeviceServiceInterface;
+import it.unibo.homemanager.tablemap.ServicesInterfaces.LampServiceInterface;
+import it.unibo.homemanager.tablemap.ServicesInterfaces.SensorServiceInterface;
+import it.unibo.homemanager.tablemap.ServicesInterfaces.WindowServiceInterface;
 import it.unibo.homemanager.userinterfaces.ApartmentPanel;
 import it.unibo.homemanager.userinterfaces.TracePanel;
 import java.io.BufferedReader;
@@ -38,6 +43,18 @@ import java.util.List;
 import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import alice.logictuple.LogicTuple;
+import alice.logictuple.Value;
+import alice.logictuple.Var;
+import alice.logictuple.exceptions.InvalidLogicTupleException;
+import alice.tucson.api.EnhancedSynchACC;
+import alice.tucson.api.ITucsonOperation;
+import alice.tucson.api.TucsonAgentId;
+import alice.tucson.api.TucsonMetaACC;
+import alice.tucson.api.TucsonTupleCentreId;
+import alice.tucson.api.exceptions.TucsonInvalidAgentIdException;
+import alice.tucson.api.exceptions.TucsonInvalidTupleCentreIdException;
+import alice.tucson.utilities.Utils;
 
 /**
  *
@@ -85,7 +102,7 @@ public class Initializer {
             while ((line = br.readLine()) != null) {
                 try {
                     list.add(LogicTuple.parse(line));
-                } catch (InvalidTupleException ex) {
+                } catch (InvalidLogicTupleException ex) {
                     ex.printStackTrace();
                 }
             }
@@ -101,9 +118,9 @@ public class Initializer {
     public void initializeDatabaseTc() {
 	System.out.println("Reading the content from file..");
         List<LogicTuple> tuples = readTuplesFromFile("snapshot_database_tc.dat");
-        System.out.println("Loading tuples into database_tc..");
+        System.out.println("Loading tuples into tuple center db..");
 	try {
-	    insertTupleListInto(new TucsonTupleCentreId("database_tc", "localhost", "20504"), tuples);
+	    insertTupleListInto(new TucsonTupleCentreId("db", "localhost", "20504"), tuples);
 	} catch (TucsonInvalidTupleCentreIdException ex) {
 	    Logger.getLogger(Initializer.class.getName()).log(Level.SEVERE, null, ex);
 	}

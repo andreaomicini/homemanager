@@ -27,7 +27,7 @@ public class Main {
     public static void main(String[] args) {
         try {
             int NUM = ServiceFactory.TUCSON;
-	    ServiceFactory sf = ServiceFactory.getServiceFactory(NUM);
+            ServiceFactory sf = ServiceFactory.getServiceFactory(NUM);
 	    
             //TucsonNodeService tns = null;
             
@@ -36,7 +36,7 @@ public class Main {
             else {
                 System.out.println("Service not running! :(");
                 System.exit(-1);
-                //tns = new TucsonNodeService();
+                //tns = new TucsonNodeService(); 
                 //tns.install();
                 //Thread.sleep(30000);
             }
@@ -54,7 +54,9 @@ public class Main {
             TucsonTupleCentreId camera_doppia_tc = new TucsonTupleCentreId("camera_doppia_tc", "localhost", "20504");
             TucsonTupleCentreId bagno_priv_tc = new TucsonTupleCentreId("bagno_privato_tc", "localhost", "20504");
             TucsonTupleCentreId garage_tc = new TucsonTupleCentreId("garage_tc", "localhost", "20504");
-            TucsonTupleCentreId rbac_tc = new TucsonTupleCentreId("rbac_tc", "localhost", "20504");
+            //RC replaced rbac_tc with rbac
+            System.out.println("Creo rbac_tc");
+            TucsonTupleCentreId rbac_tc = new TucsonTupleCentreId("rbac", "localhost", "20504");
             TucsonTupleCentreId casa_tc = new TucsonTupleCentreId("casa_tc", "localhost", "20504");
             
             System.out.println("TCenters created.. 5 sec to connect the Inspector..");
@@ -93,8 +95,8 @@ public class Main {
             //Thread.sleep(12500);
             //Utilities.insertTupleInto(rbac_tc, new LogicTuple("active_role", new Value(3), new Value("Bambino")));
             init.setReSpecT(tupleCenters, casa_tc, rbac_tc);  
-            init.initializeRBAC(rbac_tc);
-	    init.initializeDatabaseTc();
+            //init.initializeRBAC(rbac_tc);
+            //init.initializeDatabaseTc();
             init.initializeCasaTc(casa_tc);
             
             boolean init_result = init.initializeData(tupleCenters, casa_tc, rbac_tc, gf.getTracePanel(), gf.getApPanel());
