@@ -82,7 +82,7 @@ public class Main {
             gf.getTracePanel().appendText("Initializing agents and data...");
             
             //Initializer init = new Initializer();
-	    Initializer init = new Initializer(sf);
+            Initializer init = new Initializer(sf);
             //Utilities.insertTupleInto(casa_tc, new LogicTuple("external_brightness", new Value(80)));
             //tns.enablePersistence(rbac_tc);
             //Thread.sleep(5000);
