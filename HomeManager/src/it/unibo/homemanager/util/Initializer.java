@@ -20,6 +20,7 @@ import it.unibo.homemanager.home_agents.exec_plan.BrightnessAgent;
 import it.unibo.homemanager.home_agents.exec_plan.DeviceAgent;
 import it.unibo.homemanager.home_agents.exec_plan.LampAgent;
 import it.unibo.homemanager.home_agents.exec_plan.WindowAgent;
+import it.unibo.homemanager.meteo.MeteoAgent;
 import it.unibo.homemanager.tablemap.Blind;
 import it.unibo.homemanager.tablemap.Device;
 import it.unibo.homemanager.tablemap.Lamp;
@@ -33,6 +34,7 @@ import it.unibo.homemanager.tablemap.ServicesInterfaces.SensorServiceInterface;
 import it.unibo.homemanager.tablemap.ServicesInterfaces.WindowServiceInterface;
 import it.unibo.homemanager.userinterfaces.ApartmentPanel;
 import it.unibo.homemanager.userinterfaces.TracePanel;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
@@ -43,6 +45,7 @@ import java.util.List;
 import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import alice.logictuple.LogicTuple;
 import alice.logictuple.Value;
 import alice.logictuple.Var;
@@ -327,6 +330,10 @@ public class Initializer {
             initListManagerAgents(tupleCenters, tracePanel, apPanel);
             System.out.println("Initializing BrightnessAgents..");
             initBrightnessAgents(tupleCenters, tracePanel, casa_tc);
+            //submitted by Alessandro Celi
+            System.out.println("Initializing MeteoAgents..");
+            initMeteoAgents(tupleCenters, tracePanel, casa_tc);
+            //
             System.out.println("Initializing Blinds..");
             initBlinds(tupleCenters, tracePanel);
             System.out.println("Initializing Lamps..");
@@ -348,7 +355,8 @@ public class Initializer {
         return res;
     }
     
-    public void setReSpecT(Vector tuplecenters, TucsonTupleCentreId casa_tc, TucsonTupleCentreId rbac_tc) {
+
+	public void setReSpecT(Vector tuplecenters, TucsonTupleCentreId casa_tc, TucsonTupleCentreId rbac_tc) {
         try {
             TucsonAgentId agent = new TucsonAgentId("setReSpecTAgent");
             EnhancedSynchACC acc = TucsonMetaACC.getContext(agent);
@@ -459,6 +467,26 @@ public class Initializer {
         }
     }
     
+    //submitted by Alessandro Celi 
+    private void initMeteoAgents(Vector tupleCenters, TracePanel tracePanel,
+			TucsonTupleCentreId casa_tc) {
+    	try {
+    		for(int i=0;i<tupleCenters.size();i++)
+    		{
+    			if(((TucsonTupleCentreId)tupleCenters.elementAt(i)).getName().equals("meteo_tc"))
+    			{
+    				MeteoAgent m=new MeteoAgent("meteoAgent_1",tracePanel,(TucsonTupleCentreId)tupleCenters.elementAt(i),casa_tc);  //+((TucsonTupleCentreId)tupleCenters.elementAt(i)).getName()
+    				m.go();
+    				Thread.sleep(250);
+    			}
+    		}
+    	 }
+        catch(Exception ex) {
+            ex.printStackTrace();
+        }
+	}
+    //
+    
     public void initLamps(Vector tc, TracePanel tp) {
         LampServiceInterface ls = sf.getLampServiceInterface();
         try {
@@ -550,6 +578,7 @@ public class Initializer {
         }
     }
 
+    
     private void initDevsAccessManAgents(Vector tc, TracePanel tp, TucsonTupleCentreId rbac) {
         SensorServiceInterface ss = sf.getSensorServiceInterface();
         try {
