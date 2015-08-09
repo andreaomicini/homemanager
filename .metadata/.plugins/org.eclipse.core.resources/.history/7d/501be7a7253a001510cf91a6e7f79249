@@ -1,0 +1,789 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+
+package it.unibo.homemanager.userinterfaces;
+
+import alice.tucson.api.TucsonTupleCentreId;
+import it.unibo.homemanager.ServiceFactory;
+import it.unibo.homemanager.meteo.ManageAgent;
+import it.unibo.homemanager.meteo.MeteoAgent;
+import it.unibo.homemanager.meteo.TucsonAgentInterface;
+import it.unibo.homemanager.tablemap.User;
+
+import java.awt.CardLayout;
+import java.awt.event.ActionEvent;
+import java.util.Vector;
+
+import javax.swing.BorderFactory;
+import javax.swing.JPanel;
+import javax.swing.border.TitledBorder;
+
+/**
+ *
+ * @author sik
+ */
+public class MainPanel extends JPanel {
+
+    private JPanel cards; //a panel that uses CardLayout
+    private CardLayout cl;
+    private User user = null;
+    
+    private AccessPanel aPanel;
+    private IssueCmdPanel icPanel;
+    private InitAdminPanel iaPanel;
+    private InitOrdinaryPanel ioPanel;
+    private InfoPanel iPanel;
+    private PolicyPanel pPanel;
+    private VisitorsPanel vPanel;
+    private ViewPlanPanel vpPanel;
+    private ViewPolicyPanel vpoPanel;
+    private ManageProfilePanel mpPanel;
+    private ManageUsersPanel muPanel;
+    
+    private ViewManageAgentPanel butlerPanel;
+    
+    
+    //RBAC
+    private RBACManager rbacPanel;
+    private ManRoles manRolePanel;
+    private ManRolesPerm manRolPermPanel;
+    private ManUsersRoles manUsRoPanel;
+    private ManPerm manPermPanel;
+    private ManRBACConstr manRBACConstrPanel;
+    private ManDevicesConstr manDevConstrPanel;
+    private ManRoomsConstr manRoomConstrPanel;
+    private ViewRBACPolicy viewRBACPanel;
+    private ViewUserRBAC viewuserRBAC;
+    private RBACStatistics rbacStatistics;
+    
+    private final static String ACCESS_PANEL = "Log In";
+    private final static String INIT_ADMIN_PANEL = "Welcome Administrator";
+    private final static String INIT_ORDINARY_PANEL = "Welcome User";
+    private final static String ISSUE_CMD_PANEL = "Issue Command";
+    private final static String INFO_PANEL = "View Info";
+    private final static String POLICY_PANEL = "Decide policy";
+    private final static String VISITORS_PANEL = "Manage Visitors";
+    private final static String VIEW_PLAN_PANEL = "View Plan";
+    private final static String VIEW_POLICY_PANEL = "View Policy";
+    private final static String MANAGE_PROFILE_PANEL = "Manage Profile";
+    private final static String MANAGE_USERS_PANEL = "Manage Users";
+    
+    private final static String BUTLER="BUTLER";
+    // RBAC
+    private final static String MANAGE_RBAC_PANEL = "Manage RBAC";
+    private final static String ROLES_PANEL = "Manage ROLES";
+    private final static String ROLES_PERMS_PANEL = "Manage Ass. ROLES-PERM.";
+    private final static String USER_ROLES_PANEL = "Manage Ass. USER-ROLES";
+    private final static String PERMS_PANEL = "Manage PERMISSIONS";
+    private final static String RBAC_CONSTR_PANEL = "Manage RBAC CONSTRAINTS";
+    private final static String DEV_CONSTR_PANEL = "Manage DEVICE CONSTRAINTS";
+    private final static String ROOMS_CONSTR_PANEL = "Manage ROOMS CONSTRAINTS";
+    private final static String VIEW_RBAC_PANEL = "Manage RBAC POLICY";
+    private final static String VIEW_RBAC_USR_PANEL = "Manage RBAC USER POLICY";
+    private final static String RBAC_STATISTICS = "Manage RBAC STATISTICS";
+ 
+    
+    public MainPanel() {
+        lookAndFeel();
+    }
+    
+    public MainPanel(TracePanel tp, Vector tCenters, int roomId, int sensId, TucsonTupleCentreId casa_tc, TucsonTupleCentreId rbac_tc, ServiceFactory sf) {
+        lookAndFeel();
+        
+        aPanel = new AccessPanel(this, tp,roomId,sensId,(TucsonTupleCentreId)tCenters.elementAt(2), rbac_tc, casa_tc, sf);
+        icPanel = new IssueCmdPanel(this,tCenters, sf);
+        iaPanel = new InitAdminPanel(this,tCenters, casa_tc, rbac_tc);
+        ioPanel = new InitOrdinaryPanel(this, casa_tc, rbac_tc);
+        iPanel = new InfoPanel(this, sf);
+        pPanel = new PolicyPanel(this,casa_tc, sf);
+        vPanel = new VisitorsPanel(this, sf);
+        vpPanel = new ViewPlanPanel(this,tCenters, sf);
+        vpoPanel = new ViewPolicyPanel(this,casa_tc, sf);
+        mpPanel = new ManageProfilePanel(this, rbac_tc, sf);
+        muPanel = new ManageUsersPanel(this, tCenters, sf);
+        
+        for(int i=0;i<tCenters.size();i++)
+		{
+			if(((TucsonTupleCentreId)tCenters.elementAt(i)).getName().equals("meteo_tc"))
+			{
+				butlerPanel=new ViewManageAgentPanel(this, ((TucsonTupleCentreId)tCenters.elementAt(i)), tp,sf);
+				ManageAgent.getInstance().inizializeComponet(butlerPanel, sf, tp,((TucsonTupleCentreId)tCenters.elementAt(i)) );
+				break;
+			}
+		}
+       
+        /*MeteoAgent finded=(MeteoAgent)ManageAgent.getInstance().getAgentbyName("Agente Meteo 1");
+        finded.setPanel(butlerPanel);*/
+        
+        //create RBAC panels
+        rbacPanel = new RBACManager(this);
+        manRolePanel = new ManRoles(this, rbac_tc, this.rbacPanel);
+        manRolPermPanel = new ManRolesPerm(this, rbac_tc, this.rbacPanel);
+        manUsRoPanel = new ManUsersRoles(this, rbac_tc, this.rbacPanel, sf);
+        manPermPanel = new ManPerm(this, rbac_tc, this.rbacPanel, sf);
+        manRBACConstrPanel = new ManRBACConstr(this, rbac_tc, this.rbacPanel);
+        manDevConstrPanel = new ManDevicesConstr(this, rbac_tc, this.rbacPanel);
+        manRoomConstrPanel = new ManRoomsConstr(this, rbac_tc, this.rbacPanel, sf);
+        viewRBACPanel = new ViewRBACPolicy(this, rbac_tc, this.rbacPanel, sf);
+        viewuserRBAC = new ViewUserRBAC(this, rbac_tc, casa_tc);
+        rbacStatistics = new RBACStatistics(this, rbac_tc, rbacPanel, sf);
+        
+        
+        cards = new JPanel(new CardLayout());
+        
+        cards.add(butlerPanel,BUTLER);
+        addListAgenttoCards(cards);
+        
+        cards.add(icPanel,ISSUE_CMD_PANEL);
+        cards.add(iaPanel,INIT_ADMIN_PANEL);
+        cards.add(ioPanel,INIT_ORDINARY_PANEL);
+        cards.add(aPanel,ACCESS_PANEL);
+        cards.add(iPanel,INFO_PANEL);
+        cards.add(pPanel,POLICY_PANEL);
+        cards.add(vPanel,VISITORS_PANEL);
+        cards.add(vpPanel,VIEW_PLAN_PANEL);
+        cards.add(vpoPanel,VIEW_POLICY_PANEL);
+        cards.add(mpPanel,MANAGE_PROFILE_PANEL);
+        cards.add(muPanel,MANAGE_USERS_PANEL);
+        //RBAC
+        cards.add(rbacPanel,MANAGE_RBAC_PANEL);
+        cards.add(manRolePanel, ROLES_PANEL);
+        cards.add(manRolPermPanel, ROLES_PERMS_PANEL);
+        cards.add(manUsRoPanel, USER_ROLES_PANEL);
+        cards.add(manPermPanel, PERMS_PANEL);
+        cards.add(manRBACConstrPanel,RBAC_CONSTR_PANEL);
+        cards.add(manDevConstrPanel,DEV_CONSTR_PANEL);
+        cards.add(manRoomConstrPanel, ROOMS_CONSTR_PANEL);
+        cards.add(viewRBACPanel, VIEW_RBAC_PANEL);
+        cards.add(viewuserRBAC, VIEW_RBAC_USR_PANEL);
+        cards.add(rbacStatistics, RBAC_STATISTICS);
+
+        cards.setLocation(0,0);
+        this.add(cards);
+        // manage visibility
+        cl = (CardLayout)(cards.getLayout());
+        loadAccessPanel();
+    }
+
+    private void lookAndFeel() {
+        setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(
+                null, new java.awt.Color(0, 0, 102)), "Home Manager",
+                TitledBorder.DEFAULT_JUSTIFICATION,TitledBorder.DEFAULT_POSITION,
+                new java.awt.Font("Courier New", 1, 12), new java.awt.Color(0, 0, 51)));
+        this.setBounds(0,0,538,343);
+        setBackground(new java.awt.Color(204,204,255));
+    }
+
+    private void loadAccessPanel() {
+        aPanel.init();
+        icPanel.hidePanel();
+        iaPanel.hidePanel();
+        cl.show(cards,ACCESS_PANEL);
+    }
+
+    void loadInitRolePanel(User usr) {
+        user = usr;
+        //System.err.println("user: " + user.toString());
+	System.err.println("[loadInitRolePanel@MainPanel] user: " + user.toString());
+        if(user.getRoleChar() == 'A')
+            loadInitAdminPanel();
+        else 
+            if(user.getRoleChar() == 'O')
+                loadInitOrdinaryPanel();
+    }
+
+    private void loadInitAdminPanel() {
+        iaPanel.init(user);
+        icPanel.hidePanel();
+        aPanel.hidePanel();
+        iPanel.hidePanel();
+        pPanel.hidePanel();
+        vPanel.hidePanel();
+        vpPanel.hidePanel();
+        vpoPanel.hidePanel();
+        ioPanel.hidePanel();
+        mpPanel.hidePanel();
+        muPanel.hidePanel();
+        rbacPanel.hidePanel();
+        manRolePanel.hidePanel();
+        manRolPermPanel.hidePanel();
+        manUsRoPanel.hidePanel();
+        manPermPanel.hidePanel();
+        manRBACConstrPanel.hidePanel();
+        manDevConstrPanel.hidePanel();
+        manRoomConstrPanel.hidePanel();
+        viewRBACPanel.hidePanel();
+        viewuserRBAC.hidePanel();
+        rbacStatistics.hidePanel();
+        cl.show(cards,INIT_ADMIN_PANEL);
+    }
+
+    private void loadInitOrdinaryPanel() {
+        ioPanel.init(user);
+        icPanel.hidePanel();
+        aPanel.hidePanel();
+        iPanel.hidePanel();
+        pPanel.hidePanel();
+        vPanel.hidePanel();
+        vpPanel.hidePanel();
+        vpoPanel.hidePanel();
+        iaPanel.hidePanel();
+        mpPanel.hidePanel();
+        muPanel.hidePanel();
+        rbacPanel.hidePanel();
+        manRolePanel.hidePanel();
+        manRolPermPanel.hidePanel();
+        manUsRoPanel.hidePanel();
+        manPermPanel.hidePanel();
+        manRBACConstrPanel.hidePanel();
+        manDevConstrPanel.hidePanel();
+        manRoomConstrPanel.hidePanel();
+        viewRBACPanel.hidePanel();
+        viewuserRBAC.hidePanel();
+        rbacStatistics.hidePanel();
+        cl.show(cards,INIT_ORDINARY_PANEL);
+    }
+
+    void loadIssueCmdPanel() {
+        icPanel.init(user);
+        iaPanel.hidePanel();
+        ioPanel.hidePanel();
+        aPanel.hidePanel();
+        iPanel.hidePanel();
+        pPanel.hidePanel();
+        vPanel.hidePanel();
+        vpPanel.hidePanel();
+        vpoPanel.hidePanel();
+        mpPanel.hidePanel();
+        muPanel.hidePanel();
+        rbacPanel.hidePanel();
+        manRolePanel.hidePanel();
+        manRolPermPanel.hidePanel();
+        manUsRoPanel.hidePanel();
+        manPermPanel.hidePanel();
+        manRBACConstrPanel.hidePanel();
+        manDevConstrPanel.hidePanel();
+        manRoomConstrPanel.hidePanel();
+        viewRBACPanel.hidePanel();
+        viewuserRBAC.hidePanel();
+        rbacStatistics.hidePanel();
+        cl.show(cards,ISSUE_CMD_PANEL);
+    }
+
+    void logOut(ActionEvent evt) {
+        loadAccessPanel();
+    }
+    //RBAC
+    void loadManRBACPanel() {
+        rbacPanel.init(user);
+        icPanel.hidePanel();
+        iaPanel.hidePanel();
+        ioPanel.hidePanel();
+        aPanel.hidePanel();
+        iPanel.hidePanel();
+        pPanel.hidePanel();
+        vPanel.hidePanel();
+        vpPanel.hidePanel();
+        vpoPanel.hidePanel();
+        mpPanel.hidePanel();
+        muPanel.hidePanel();
+        manRolePanel.hidePanel();
+        manRolPermPanel.hidePanel();
+        manUsRoPanel.hidePanel();
+        manPermPanel.hidePanel();
+        manRBACConstrPanel.hidePanel();
+        manDevConstrPanel.hidePanel();
+        manRoomConstrPanel.hidePanel();
+        viewRBACPanel.hidePanel();
+        viewuserRBAC.hidePanel();
+        rbacStatistics.hidePanel();
+        cl.show(cards,MANAGE_RBAC_PANEL);
+    }
+
+    void loadManRolePanel() {
+        manRolePanel.init(user);
+        rbacPanel.hidePanel();
+        icPanel.hidePanel();
+        iaPanel.hidePanel();
+        ioPanel.hidePanel();
+        aPanel.hidePanel();
+        iPanel.hidePanel();
+        pPanel.hidePanel();
+        vPanel.hidePanel();
+        vpPanel.hidePanel();
+        vpoPanel.hidePanel();
+        mpPanel.hidePanel();
+        muPanel.hidePanel();
+        manRolPermPanel.hidePanel();
+        manUsRoPanel.hidePanel();
+        manPermPanel.hidePanel();
+        manRBACConstrPanel.hidePanel();
+        manDevConstrPanel.hidePanel();
+        manRoomConstrPanel.hidePanel();
+        viewRBACPanel.hidePanel();
+        viewuserRBAC.hidePanel();
+        rbacStatistics.hidePanel();
+        cl.show(cards,ROLES_PANEL);
+    }
+
+    void loadManUsRolPanel() {
+        manRolePanel.hidePanel();
+        rbacPanel.hidePanel();
+        icPanel.hidePanel();
+        iaPanel.hidePanel();
+        ioPanel.hidePanel();
+        aPanel.hidePanel();
+        iPanel.hidePanel();
+        pPanel.hidePanel();
+        vPanel.hidePanel();
+        vpPanel.hidePanel();
+        vpoPanel.hidePanel();
+        mpPanel.hidePanel();
+        muPanel.hidePanel();
+        manRolPermPanel.hidePanel();
+        manUsRoPanel.init(user);
+        manPermPanel.hidePanel();
+        manRBACConstrPanel.hidePanel();
+        manDevConstrPanel.hidePanel();
+        manRoomConstrPanel.hidePanel();
+        viewRBACPanel.hidePanel();
+        viewuserRBAC.hidePanel();
+        rbacStatistics.hidePanel();
+        cl.show(cards,USER_ROLES_PANEL);
+    }
+
+    void loadManRolPermPanel() {
+        manRolePanel.hidePanel();
+        rbacPanel.hidePanel();
+        icPanel.hidePanel();
+        iaPanel.hidePanel();
+        ioPanel.hidePanel();
+        aPanel.hidePanel();
+        iPanel.hidePanel();
+        pPanel.hidePanel();
+        vPanel.hidePanel();
+        vpPanel.hidePanel();
+        vpoPanel.hidePanel();
+        mpPanel.hidePanel();
+        muPanel.hidePanel();
+        manRolPermPanel.init(user);
+        manUsRoPanel.hidePanel();
+        manPermPanel.hidePanel();
+        manRBACConstrPanel.hidePanel();
+        manDevConstrPanel.hidePanel();
+        manRoomConstrPanel.hidePanel();
+        viewRBACPanel.hidePanel();
+        viewuserRBAC.hidePanel();
+        rbacStatistics.hidePanel();
+        cl.show(cards,ROLES_PERMS_PANEL);
+    }
+
+    void loadManPermPanel() {
+        manRolePanel.hidePanel();
+        rbacPanel.hidePanel();
+        icPanel.hidePanel();
+        iaPanel.hidePanel();
+        ioPanel.hidePanel();
+        aPanel.hidePanel();
+        iPanel.hidePanel();
+        pPanel.hidePanel();
+        vPanel.hidePanel();
+        vpPanel.hidePanel();
+        vpoPanel.hidePanel();
+        mpPanel.hidePanel();
+        muPanel.hidePanel();
+        manRolPermPanel.hidePanel();
+        manUsRoPanel.hidePanel();
+        manPermPanel.init(user);
+        manRBACConstrPanel.hidePanel();
+        manDevConstrPanel.hidePanel();
+        manRoomConstrPanel.hidePanel();
+        viewRBACPanel.hidePanel();
+        viewuserRBAC.hidePanel();
+        rbacStatistics.hidePanel();
+        cl.show(cards,PERMS_PANEL);
+    }
+
+    void loadManRBACContrPanel() {
+        manRolePanel.hidePanel();
+        rbacPanel.hidePanel();
+        icPanel.hidePanel();
+        iaPanel.hidePanel();
+        ioPanel.hidePanel();
+        aPanel.hidePanel();
+        iPanel.hidePanel();
+        pPanel.hidePanel();
+        vPanel.hidePanel();
+        vpPanel.hidePanel();
+        vpoPanel.hidePanel();
+        mpPanel.hidePanel();
+        muPanel.hidePanel();
+        manRolPermPanel.hidePanel();
+        manUsRoPanel.hidePanel();
+        manPermPanel.hidePanel();
+        manRBACConstrPanel.init(user);
+        manDevConstrPanel.hidePanel();
+        manRoomConstrPanel.hidePanel();
+        viewRBACPanel.hidePanel();
+        viewuserRBAC.hidePanel();
+        rbacStatistics.hidePanel();
+        cl.show(cards,RBAC_CONSTR_PANEL);
+    }
+
+    void loadManDevContrPanel() {
+        manRolePanel.hidePanel();
+        rbacPanel.hidePanel();
+        icPanel.hidePanel();
+        iaPanel.hidePanel();
+        ioPanel.hidePanel();
+        aPanel.hidePanel();
+        iPanel.hidePanel();
+        pPanel.hidePanel();
+        vPanel.hidePanel();
+        vpPanel.hidePanel();
+        vpoPanel.hidePanel();
+        mpPanel.hidePanel();
+        muPanel.hidePanel();
+        manRolPermPanel.hidePanel();
+        manUsRoPanel.hidePanel();
+        manPermPanel.hidePanel();
+        manRBACConstrPanel.hidePanel();
+        manDevConstrPanel.init(user);
+        manRoomConstrPanel.hidePanel();
+        viewRBACPanel.hidePanel();
+        viewuserRBAC.hidePanel();
+        rbacStatistics.hidePanel();
+        cl.show(cards,DEV_CONSTR_PANEL);
+    }
+
+    void loadManRoomContrPanel() {
+        manRolePanel.hidePanel();
+        rbacPanel.hidePanel();
+        icPanel.hidePanel();
+        iaPanel.hidePanel();
+        ioPanel.hidePanel();
+        aPanel.hidePanel();
+        iPanel.hidePanel();
+        pPanel.hidePanel();
+        vPanel.hidePanel();
+        vpPanel.hidePanel();
+        vpoPanel.hidePanel();
+        mpPanel.hidePanel();
+        muPanel.hidePanel();
+        manRolPermPanel.hidePanel();
+        manUsRoPanel.hidePanel();
+        manPermPanel.hidePanel();
+        manRBACConstrPanel.hidePanel();
+        manDevConstrPanel.hidePanel();
+        manRoomConstrPanel.init(user);
+        viewRBACPanel.hidePanel();
+        viewuserRBAC.hidePanel();
+        rbacStatistics.hidePanel();
+        cl.show(cards,ROOMS_CONSTR_PANEL);
+    }
+
+    void loadViewRBACPanel() {
+        manRolePanel.hidePanel();
+        rbacPanel.hidePanel();
+        icPanel.hidePanel();
+        iaPanel.hidePanel();
+        ioPanel.hidePanel();
+        aPanel.hidePanel();
+        iPanel.hidePanel();
+        pPanel.hidePanel();
+        vPanel.hidePanel();
+        vpPanel.hidePanel();
+        vpoPanel.hidePanel();
+        mpPanel.hidePanel();
+        muPanel.hidePanel();
+        manRolPermPanel.hidePanel();
+        manUsRoPanel.hidePanel();
+        manPermPanel.hidePanel();
+        manRBACConstrPanel.hidePanel();
+        manDevConstrPanel.hidePanel();
+        manRoomConstrPanel.hidePanel();
+        viewRBACPanel.init(user);
+        viewuserRBAC.hidePanel();
+        rbacStatistics.hidePanel();
+        cl.show(cards,VIEW_RBAC_PANEL);
+    }
+
+    void loadRBACStatisticsPanel() {
+        manRolePanel.hidePanel();
+        rbacPanel.hidePanel();
+        icPanel.hidePanel();
+        iaPanel.hidePanel();
+        ioPanel.hidePanel();
+        aPanel.hidePanel();
+        iPanel.hidePanel();
+        pPanel.hidePanel();
+        vPanel.hidePanel();
+        vpPanel.hidePanel();
+        vpoPanel.hidePanel();
+        mpPanel.hidePanel();
+        muPanel.hidePanel();
+        manRolPermPanel.hidePanel();
+        manUsRoPanel.hidePanel();
+        manPermPanel.hidePanel();
+        manRBACConstrPanel.hidePanel();
+        manDevConstrPanel.hidePanel();
+        manRoomConstrPanel.hidePanel();
+        viewRBACPanel.hidePanel();
+        viewuserRBAC.hidePanel();
+        rbacStatistics.init(user);
+        cl.show(cards,RBAC_STATISTICS);
+    }
+
+    //Misc
+    void loadInfoPanel() {
+        iPanel.init(user);
+        iaPanel.hidePanel();
+        ioPanel.hidePanel();
+        aPanel.hidePanel();
+        icPanel.hidePanel();
+        pPanel.hidePanel();
+        vPanel.hidePanel();
+        vpPanel.hidePanel();
+        vpoPanel.hidePanel();
+        mpPanel.hidePanel();
+        muPanel.hidePanel();
+        rbacPanel.hidePanel();
+        manRolePanel.hidePanel();
+        manRolPermPanel.hidePanel();
+        manUsRoPanel.hidePanel();
+        manPermPanel.hidePanel();
+        manRBACConstrPanel.hidePanel();
+        manDevConstrPanel.hidePanel();
+        manRoomConstrPanel.hidePanel();
+        viewRBACPanel.hidePanel();
+        viewuserRBAC.hidePanel();
+        rbacStatistics.hidePanel();
+        cl.show(cards,INFO_PANEL);
+    }
+
+    void loadVisitorsPanel() {
+        vPanel.init(user);
+        iaPanel.hidePanel();
+        ioPanel.hidePanel();
+        aPanel.hidePanel();
+        icPanel.hidePanel();
+        pPanel.hidePanel();
+        iPanel.hidePanel();
+        vpPanel.hidePanel();
+        vpoPanel.hidePanel();
+        mpPanel.hidePanel();
+        muPanel.hidePanel();
+        rbacPanel.hidePanel();
+        manRolePanel.hidePanel();
+        manRolPermPanel.hidePanel();
+        manUsRoPanel.hidePanel();
+        manPermPanel.hidePanel();
+        manRBACConstrPanel.hidePanel();
+        manDevConstrPanel.hidePanel();
+        manRoomConstrPanel.hidePanel();
+        viewRBACPanel.hidePanel();
+        viewuserRBAC.hidePanel();
+        rbacStatistics.hidePanel();
+        cl.show(cards,VISITORS_PANEL);
+    }
+
+    void loadPolicyPanel() {
+        pPanel.init(user);
+        iaPanel.hidePanel();
+        ioPanel.hidePanel();
+        aPanel.hidePanel();
+        iPanel.hidePanel();
+        icPanel.hidePanel();
+        vPanel.hidePanel();
+        vpPanel.hidePanel();
+        vpoPanel.hidePanel();
+        mpPanel.hidePanel();
+        muPanel.hidePanel();
+        rbacPanel.hidePanel();
+        manRolePanel.hidePanel();
+        manRolPermPanel.hidePanel();
+        manUsRoPanel.hidePanel();
+        manPermPanel.hidePanel();
+        manRBACConstrPanel.hidePanel();
+        manDevConstrPanel.hidePanel();
+        manRoomConstrPanel.hidePanel();
+        viewRBACPanel.hidePanel();
+        viewuserRBAC.hidePanel();
+        rbacStatistics.hidePanel();
+        cl.show(cards,POLICY_PANEL);
+    }
+
+    void loadViewPlanPanel() {
+        vpPanel.init(user);
+        iaPanel.hidePanel();
+        ioPanel.hidePanel();
+        aPanel.hidePanel();
+        iPanel.hidePanel();
+        pPanel.hidePanel();
+        icPanel.hidePanel();
+        vPanel.hidePanel();
+        vpoPanel.hidePanel();
+        mpPanel.hidePanel();
+        muPanel.hidePanel();
+        rbacPanel.hidePanel();
+        manRolePanel.hidePanel();
+        manRolPermPanel.hidePanel();
+        manUsRoPanel.hidePanel();
+        manPermPanel.hidePanel();
+        manRBACConstrPanel.hidePanel();
+        manDevConstrPanel.hidePanel();
+        manRoomConstrPanel.hidePanel();
+        viewRBACPanel.hidePanel();
+        viewuserRBAC.hidePanel();
+        rbacStatistics.hidePanel();
+        cl.show(cards,VIEW_PLAN_PANEL);
+    }
+
+    void loadViewPolicyPanel() {
+        vpoPanel.init(user);
+        iaPanel.hidePanel();
+        ioPanel.hidePanel();
+        aPanel.hidePanel();
+        iPanel.hidePanel();
+        pPanel.hidePanel();
+        icPanel.hidePanel();
+        vPanel.hidePanel();
+        vpPanel.hidePanel();
+        mpPanel.hidePanel();
+        muPanel.hidePanel();
+        rbacPanel.hidePanel();
+        manRolePanel.hidePanel();
+        manRolPermPanel.hidePanel();
+        manUsRoPanel.hidePanel();
+        manPermPanel.hidePanel();
+        manRBACConstrPanel.hidePanel();
+        manDevConstrPanel.hidePanel();
+        manRoomConstrPanel.hidePanel();
+        viewRBACPanel.hidePanel();
+        viewuserRBAC.hidePanel();
+        rbacStatistics.hidePanel();
+        cl.show(cards,VIEW_POLICY_PANEL);
+    }
+
+    void loadManageProfilePanel() {
+        mpPanel.init(user);
+        iaPanel.hidePanel();
+        ioPanel.hidePanel();
+        aPanel.hidePanel();
+        iPanel.hidePanel();
+        pPanel.hidePanel();
+        icPanel.hidePanel();
+        vPanel.hidePanel();
+        vpPanel.hidePanel();
+        vpoPanel.hidePanel();
+        muPanel.hidePanel();
+        rbacPanel.hidePanel();
+        manRolePanel.hidePanel();
+        manRolPermPanel.hidePanel();
+        manUsRoPanel.hidePanel();
+        manPermPanel.hidePanel();
+        manRBACConstrPanel.hidePanel();
+        manDevConstrPanel.hidePanel();
+        manRoomConstrPanel.hidePanel();
+        viewRBACPanel.hidePanel();
+        viewuserRBAC.hidePanel();
+        rbacStatistics.hidePanel();
+        cl.show(cards,MANAGE_PROFILE_PANEL);
+    }
+
+    void loadManageUsersPanel() {
+        iaPanel.hidePanel();
+        ioPanel.hidePanel();
+        aPanel.hidePanel();
+        iPanel.hidePanel();
+        pPanel.hidePanel();
+        icPanel.hidePanel();
+        vPanel.hidePanel();
+        vpPanel.hidePanel();
+        vpoPanel.hidePanel();
+        mpPanel.hidePanel();
+        muPanel.init(user);
+        rbacPanel.hidePanel();
+        manRolePanel.hidePanel();
+        manRolPermPanel.hidePanel();
+        manUsRoPanel.hidePanel();
+        manPermPanel.hidePanel();
+        manRBACConstrPanel.hidePanel();
+        manDevConstrPanel.hidePanel();
+        manRoomConstrPanel.hidePanel();
+        viewRBACPanel.hidePanel();
+        viewuserRBAC.hidePanel();
+        rbacStatistics.hidePanel();
+        cl.show(cards,MANAGE_USERS_PANEL);
+    }
+    
+    void loadViewUsersRBACPanel() {
+        iaPanel.hidePanel();
+        ioPanel.hidePanel();
+        aPanel.hidePanel();
+        iPanel.hidePanel();
+        pPanel.hidePanel();
+        icPanel.hidePanel();
+        vPanel.hidePanel();
+        vpPanel.hidePanel();
+        vpoPanel.hidePanel();
+        mpPanel.hidePanel();
+        muPanel.hidePanel();
+        rbacPanel.hidePanel();
+        manRolePanel.hidePanel();
+        manRolPermPanel.hidePanel();
+        manUsRoPanel.hidePanel();
+        manPermPanel.hidePanel();
+        manRBACConstrPanel.hidePanel();
+        manDevConstrPanel.hidePanel();
+        manRoomConstrPanel.hidePanel();
+        viewRBACPanel.hidePanel();
+        viewuserRBAC.init(user);
+        rbacStatistics.hidePanel();
+        cl.show(cards,VIEW_RBAC_USR_PANEL);
+    }
+
+	public void loadAgentPanel(TucsonAgentInterface t) {
+        butlerPanel.hidePanel();
+        t.show();
+	}
+
+	public void loadButlerPanel() {
+		iaPanel.hidePanel();
+        ioPanel.hidePanel();
+        aPanel.hidePanel();
+        iPanel.hidePanel();
+        pPanel.hidePanel();
+        icPanel.hidePanel();
+        vPanel.hidePanel();
+        vpPanel.hidePanel();
+        vpoPanel.hidePanel();
+        mpPanel.hidePanel();
+        muPanel.hidePanel();
+        rbacPanel.hidePanel();
+        manRolePanel.hidePanel();
+        manRolPermPanel.hidePanel();
+        manUsRoPanel.hidePanel();
+        manPermPanel.hidePanel();
+        manRBACConstrPanel.hidePanel();
+        manDevConstrPanel.hidePanel();
+        manRoomConstrPanel.hidePanel();
+        viewRBACPanel.hidePanel();
+        butlerPanel.init(user);
+        cl.show(cards,BUTLER);
+		
+	}
+	
+	private void addListAgenttoCards(JPanel cards) {
+	       for(TucsonAgentInterface tucAgentInterface:ManageAgent.getInstance().getListAgent()){
+	           cards.add(tucAgentInterface.getInterface(),tucAgentInterface.getName());
+	       }
+	       for(TucsonAgentInterface tucAgentInterface:ManageAgent.getInstance().getListAgent()){
+	           cards.add(tucAgentInterface.getInterface(),tucAgentInterface.getName());
+	       }
+	    }
+
+}

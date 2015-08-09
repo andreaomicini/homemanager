@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <qualifiedTypeNameHistroy>
-<fullyQualifiedTypeName name="it.unibo.homemanager.meteo.MeteoAgent"/>
 <fullyQualifiedTypeName name="it.unibo.homemanager.userinterfaces.TracePanel"/>
 <fullyQualifiedTypeName name="it.unibo.homemanager.meteo.ParserMeteo"/>
 <fullyQualifiedTypeName name="javax.xml.parsers.DocumentBuilderFactory"/>
@@ -15,11 +14,21 @@
 <fullyQualifiedTypeName name="java.lang.Thread"/>
 <fullyQualifiedTypeName name="it.unibo.homemanager.meteo.Previsioni"/>
 <fullyQualifiedTypeName name="java.lang.Character.Subset"/>
-<fullyQualifiedTypeName name="alice.logictuple.Var"/>
 <fullyQualifiedTypeName name="alice.tucson.api.ITucsonOperation"/>
 <fullyQualifiedTypeName name="java.lang.Double"/>
 <fullyQualifiedTypeName name="java.lang.Integer"/>
 <fullyQualifiedTypeName name="java.util.StringTokenizer"/>
-<fullyQualifiedTypeName name="alice.logictuple.LogicTuple"/>
 <fullyQualifiedTypeName name="alice.logictuple.Value"/>
+<fullyQualifiedTypeName name="it.unibo.homemanager.meteo.TucsonAgentInterface"/>
+<fullyQualifiedTypeName name="it.unibo.homemanager.userinterfaces.ViewMeteoAgentPanel"/>
+<fullyQualifiedTypeName name="it.unibo.homemanager.userinterfaces.ViewManageAgentPanel"/>
+<fullyQualifiedTypeName name="it.unibo.homemanager.meteo.ManageAgent"/>
+<fullyQualifiedTypeName name="java.util.ArrayList"/>
+<fullyQualifiedTypeName name="java.util.List"/>
+<fullyQualifiedTypeName name="alice.logictuple.LogicTuple"/>
+<fullyQualifiedTypeName name="alice.logictuple.Var"/>
+<fullyQualifiedTypeName name="it.unibo.homemanager.meteo.MeteoAgent"/>
+<fullyQualifiedTypeName name="java.awt.Dimension"/>
+<fullyQualifiedTypeName name="java.util.Vector"/>
+<fullyQualifiedTypeName name="java.util.Arrays"/>
 </qualifiedTypeNameHistroy>

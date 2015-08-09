@@ -20,6 +20,7 @@ import it.unibo.homemanager.home_agents.exec_plan.BrightnessAgent;
 import it.unibo.homemanager.home_agents.exec_plan.DeviceAgent;
 import it.unibo.homemanager.home_agents.exec_plan.LampAgent;
 import it.unibo.homemanager.home_agents.exec_plan.WindowAgent;
+import it.unibo.homemanager.meteo.ManageAgent;
 import it.unibo.homemanager.meteo.MeteoAgent;
 import it.unibo.homemanager.tablemap.Blind;
 import it.unibo.homemanager.tablemap.Device;
@@ -332,7 +333,8 @@ public class Initializer {
             initBrightnessAgents(tupleCenters, tracePanel, casa_tc);
             //submitted by Alessandro Celi
             System.out.println("Initializing MeteoAgents..");
-            initMeteoAgents(tupleCenters, tracePanel, casa_tc);
+            //initMeteoAgents(tupleCenters, tracePanel, casa_tc); V1.0
+            initAgent();
             //
             System.out.println("Initializing Blinds..");
             initBlinds(tupleCenters, tracePanel);
@@ -468,7 +470,8 @@ public class Initializer {
     }
     
     //submitted by Alessandro Celi 
-    private void initMeteoAgents(Vector tupleCenters, TracePanel tracePanel,
+    /*V1.0
+     * private void initMeteoAgents(Vector tupleCenters, TracePanel tracePanel,
 			TucsonTupleCentreId casa_tc) {
     	try {
     		for(int i=0;i<tupleCenters.size();i++)
@@ -484,7 +487,11 @@ public class Initializer {
         catch(Exception ex) {
             ex.printStackTrace();
         }
-	}
+	}*/
+    //V1.2
+    public void initAgent(){
+        ManageAgent.getInstance().goListAgent();
+    }
     //
     
     public void initLamps(Vector tc, TracePanel tp) {
