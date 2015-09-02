@@ -15,6 +15,7 @@ import it.unibo.homemanager.tablemap.User;
 
 import java.awt.CardLayout;
 import java.awt.event.ActionEvent;
+import java.util.ArrayList;
 import java.util.Vector;
 
 import javax.swing.BorderFactory;
@@ -110,7 +111,9 @@ public class MainPanel extends JPanel {
 			if(((TucsonTupleCentreId)tCenters.elementAt(i)).getName().equals("meteo_tc"))
 			{
 				butlerPanel=new ViewManageAgentPanel(this, ((TucsonTupleCentreId)tCenters.elementAt(i)), tp,sf);
-				AgentManager.getInstance().inizializeComponet(butlerPanel, sf, tp,((TucsonTupleCentreId)tCenters.elementAt(i)) );
+				ArrayList<TucsonTupleCentreId> l=new ArrayList<TucsonTupleCentreId>();
+			    l.add((TucsonTupleCentreId)tCenters.elementAt(i));
+				AgentManager.getInstance().inizializeComponet(butlerPanel, sf, tp,l);
 				break;
 			}
 		}

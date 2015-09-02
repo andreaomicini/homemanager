@@ -36,7 +36,9 @@ public class ViewManageAgentPanel extends javax.swing.JPanel {
         this.mp=mpanel;
         this.meteo_tc=meteo_tc;
         this.tp=tp;
-        AgentManager.getInstance().inizializeComponet(this,sf, tp, meteo_tc);
+        ArrayList<TucsonTupleCentreId> l=new ArrayList<TucsonTupleCentreId>();
+        l.add(meteo_tc);
+        AgentManager.getInstance().inizializeComponet(this,sf, tp, l);
         initComponents();
     }
     

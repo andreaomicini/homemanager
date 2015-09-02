@@ -3,7 +3,6 @@
 <fullyQualifiedTypeName name="it.unibo.homemanager.userinterfaces.TracePanel"/>
 <fullyQualifiedTypeName name="it.unibo.homemanager.meteo.ParserMeteo"/>
 <fullyQualifiedTypeName name="javax.xml.parsers.DocumentBuilderFactory"/>
-<fullyQualifiedTypeName name="java.lang.Exception"/>
 <fullyQualifiedTypeName name="javax.xml.parsers.DocumentBuilder"/>
 <fullyQualifiedTypeName name="java.io.InputStream"/>
 <fullyQualifiedTypeName name="org.w3c.dom.Document"/>
@@ -22,13 +21,18 @@
 <fullyQualifiedTypeName name="it.unibo.homemanager.userinterfaces.ViewMeteoAgentPanel"/>
 <fullyQualifiedTypeName name="it.unibo.homemanager.userinterfaces.ViewManageAgentPanel"/>
 <fullyQualifiedTypeName name="it.unibo.homemanager.meteo.ManageAgent"/>
-<fullyQualifiedTypeName name="java.util.ArrayList"/>
 <fullyQualifiedTypeName name="java.util.List"/>
-<fullyQualifiedTypeName name="alice.logictuple.LogicTuple"/>
 <fullyQualifiedTypeName name="alice.logictuple.Var"/>
 <fullyQualifiedTypeName name="it.unibo.homemanager.meteo.MeteoAgent"/>
 <fullyQualifiedTypeName name="java.awt.Dimension"/>
 <fullyQualifiedTypeName name="java.util.Vector"/>
 <fullyQualifiedTypeName name="java.util.Arrays"/>
 <fullyQualifiedTypeName name="java.net.URL"/>
+<fullyQualifiedTypeName name="alice.tucson.api.TucsonTupleCentreId"/>
+<fullyQualifiedTypeName name="java.util.ArrayList"/>
+<fullyQualifiedTypeName name="alice.logictuple.LogicTuple"/>
+<fullyQualifiedTypeName name="alice.tucson.api.exceptions.TucsonOperationNotPossibleException"/>
+<fullyQualifiedTypeName name="alice.tucson.api.exceptions.UnreachableNodeException"/>
+<fullyQualifiedTypeName name="alice.tuplecentre.api.exceptions.OperationTimeOutException"/>
+<fullyQualifiedTypeName name="java.lang.Exception"/>
 </qualifiedTypeNameHistroy>

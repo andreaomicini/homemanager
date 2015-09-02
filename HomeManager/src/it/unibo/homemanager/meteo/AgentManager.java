@@ -17,6 +17,7 @@ import it.unibo.homemanager.dbmanagement.Database;
 import it.unibo.homemanager.dbmanagement.TucsonDatabase;
 import it.unibo.homemanager.userinterfaces.TracePanel;
 import it.unibo.homemanager.userinterfaces.ViewManageAgentPanel;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.StringTokenizer;
@@ -29,7 +30,7 @@ import java.util.logging.Logger;
  */
 public class AgentManager {
     
-    private TucsonTupleCentreId meteo_tc;
+    private List<TucsonTupleCentreId> tcs=null;
     private ArrayList<TucsonAgentInterface> listAgentInterface;
     private Database database;
     //private List listAgent;
@@ -48,15 +49,15 @@ public class AgentManager {
             return istanza;
     }
     
-    public void inizializeComponet(ViewManageAgentPanel viewManageAgentPanel,ServiceFactory sf,TracePanel tp,TucsonTupleCentreId meteo_tc){
+    public void inizializeComponet(ViewManageAgentPanel viewManageAgentPanel,ServiceFactory sf,TracePanel tp,List<TucsonTupleCentreId> tcs){
     	this.viewManagerAgent=viewManageAgentPanel;
         try {
             this.database = sf.getDatabaseInterface();
         } catch (Exception ex) {
             ex.printStackTrace();
         }
-        if(this.meteo_tc==null){
-                this.meteo_tc=meteo_tc;
+        if(this.tcs==null){
+                this.tcs=tcs;
         }
        /* try {
             listAgent = getListAgentService();
@@ -72,7 +73,7 @@ public class AgentManager {
         MeteoAgent m = null;
         try {
            
-        	m=new MeteoAgent("meteoAgent_1",tp,meteo_tc);  
+        	m=new MeteoAgent("meteoAgent_1",tp,tcs.get(0));  
         	m.setPanel(viewManagerAgent);
         	
         } catch (TucsonInvalidAgentIdException ex) {
@@ -81,9 +82,7 @@ public class AgentManager {
         listAgentInterface.add(m);
     }
      
-    public ArrayList<TucsonAgentInterface> getListAgent(){
-        return this.listAgentInterface;
-    }
+    
     
    /* private List getListAgentService() throws InvalidVarNameException {
         List listAgent = null;
@@ -99,7 +98,12 @@ public class AgentManager {
         return listAgent;  //ritorna null
     }*/
     
-    private String getNameAgent(String s) {
+    public ArrayList<TucsonAgentInterface> getListAgent(){
+        return this.listAgentInterface;
+    }
+    
+    @SuppressWarnings("unused")
+	private String getNameAgent(String s) {
         String s1 = s.substring(s.indexOf("(") + 1, s.length() - 1);
         StringTokenizer t = new StringTokenizer(s1, ",");
         String result = "";

@@ -142,23 +142,42 @@ public class MeteoAgent extends AbstractTucsonAgent implements TucsonAgentInterf
 	            	
 	            	
 	            	tp.appendText("-- METEO AGENT UPDATED.");
-	            	Thread.sleep(28800000);  //imposto che le previsioni si aggiornano ogni 8 ore(=28800000 millisec)
+	            	Thread.sleep(900000);  //imposto che le previsioni si aggiornano ogni 15 minuti(=900000 millisec)          [ 8 ore(=28800000 millisec)]
 	            	
 	            	//elimino le tuple precedenti nel centro di tuple per poi salvare quelle piu aggiornate
 	            	//vers2.0 però devo metterla dopo l aggiunta perchè senno la inAll è bloccante fino a quando non trova tuple
-	            	template=new LogicTuple("meteo", new Var(), new Var(), new Var(), new Var(), new Var(), new Var(), new Var());
-	            	acc.inAll(myTid, template, Long.MAX_VALUE);
-	            	template=new LogicTuple("meteo", new Var(), new Var(), new Var(), new Var(), new Var(), new Var());
-	            	acc.inAll(myTid, template, Long.MAX_VALUE);
-	            	template=new LogicTuple("meteo",new Var(), new Var(), new Var(), new Var());
-	            	acc.inAll(myTid, template, Long.MAX_VALUE);
+	            	
+	            	reset();
 	            	
 	            }
 	            //acc.exit();
-	          }catch(Exception ex){
+	          }catch(TucsonOperationNotPossibleException ex){
 	              ex.printStackTrace();
 	              tp.appendText("MeteoAgent : error in activity.");
 	          }
+	          catch(UnreachableNodeException ex){
+	              ex.printStackTrace();
+	              tp.appendText("MeteoAgent : error in activity.");
+	          }
+	          catch(OperationTimeOutException ex){
+	              ex.printStackTrace();
+	              tp.appendText("MeteoAgent : error in activity.");
+	          }
+	          catch(Exception ex)
+	          {
+	        	  ex.printStackTrace();
+	              tp.appendText("MeteoAgent : error in activity.");
+	          }
+		}
+		
+		private void reset() throws OperationTimeOutException,UnreachableNodeException,TucsonOperationNotPossibleException
+		{
+			LogicTuple template=new LogicTuple("meteo", new Var(), new Var(), new Var(), new Var(), new Var(), new Var(), new Var());
+        	acc.inAll(myTid, template, Long.MAX_VALUE);
+        	template=new LogicTuple("meteo", new Var(), new Var(), new Var(), new Var(), new Var(), new Var());
+        	acc.inAll(myTid, template, Long.MAX_VALUE);
+        	template=new LogicTuple("meteo",new Var(), new Var(), new Var(), new Var());
+        	acc.inAll(myTid, template, Long.MAX_VALUE);
 		}
 
 		@Override
