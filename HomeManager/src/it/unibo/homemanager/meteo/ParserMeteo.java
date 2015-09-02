@@ -19,6 +19,8 @@ public class ParserMeteo {
 	private static String city;   	//città dove fare rilevazioni meteo inizializzata durante il metodo init
 	private static String state; 	//serve per google
 	private static String woeid;  	//woeid di yahoo
+	private static String lat;
+	private static String lon;
 	
 	
 	
@@ -38,7 +40,8 @@ public class ParserMeteo {
 		doc.normalizeDocument();
 		city=doc.getElementsByTagName("city").item(0).getChildNodes().item(0).getNodeValue().trim();
 		state=doc.getElementsByTagName("countryCode").item(0).getChildNodes().item(0).getNodeValue().trim();
-		
+		lat=doc.getElementsByTagName("lat").item(0).getChildNodes().item(0).getNodeValue().trim();
+		lon=doc.getElementsByTagName("lon").item(0).getChildNodes().item(0).getNodeValue().trim();
 		//
 		//inizializzazione woeid di yahoo   DA MODIFICARE CON UNA ALTRA KEY DELL UNI
 		url=new URL("https://api.flickr.com/services/rest/?method=flickr.places.find&api_key=e32bc8926257d72948f7f956556bd1c7&query="+city+"&format=rest");
@@ -57,7 +60,7 @@ public class ParserMeteo {
 		InputStream stream=url.openStream();
 		Document doc=domParser.parse(stream);  
 		doc.normalizeDocument();
-		return openweathermap(doc);
+		return openweathermapw(doc);
 	}
 	public static Meteo previsioniY() throws Exception
 	{
@@ -71,7 +74,9 @@ public class ParserMeteo {
 	public static Meteo previsioniG() throws Exception
 	{
 		//DA MODIFICARE CON UNA ALTRA KEY DELL UNI
-		URL url2=new URL("http://api.wunderground.com/api/2cae48e983982ec4/conditions/lang:it/q/"+state+"/"+city+".xml");
+		//questa non funziona per nomi di città diversi nella lingua inglese quindi meglio usare quello con lat e lon
+		//URL url2=new URL("http://api.wunderground.com/api/2cae48e983982ec4/conditions/lang:it/q/"+state+"/"+city+".xml");
+		URL url2=new URL("http://api.wunderground.com/api/2cae48e983982ec4/conditions/lang:it/q/"+lat+","+lon+".xml");
 		InputStream stream2=url2.openStream();
 		Document doc2=domParser.parse(stream2);
 		doc2.normalizeDocument();
@@ -118,7 +123,7 @@ public class ParserMeteo {
 		return p;
 	}
 
-	private static Meteo openweathermap(Document doc)
+	private static Meteo openweathermapw(Document doc)
 	{
 		int oraA=0,oraT=0,minA=0,minT=0;
 		Meteo p=new Meteo();

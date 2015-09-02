@@ -8,7 +8,7 @@ package it.unibo.homemanager.userinterfaces;
 
 import alice.tucson.api.TucsonTupleCentreId;
 import it.unibo.homemanager.ServiceFactory;
-import it.unibo.homemanager.meteo.ManageAgent;
+import it.unibo.homemanager.meteo.AgentManager;
 import it.unibo.homemanager.meteo.MeteoAgent;
 import it.unibo.homemanager.meteo.TucsonAgentInterface;
 import it.unibo.homemanager.tablemap.User;
@@ -110,7 +110,7 @@ public class MainPanel extends JPanel {
 			if(((TucsonTupleCentreId)tCenters.elementAt(i)).getName().equals("meteo_tc"))
 			{
 				butlerPanel=new ViewManageAgentPanel(this, ((TucsonTupleCentreId)tCenters.elementAt(i)), tp,sf);
-				ManageAgent.getInstance().inizializeComponet(butlerPanel, sf, tp,((TucsonTupleCentreId)tCenters.elementAt(i)) );
+				AgentManager.getInstance().inizializeComponet(butlerPanel, sf, tp,((TucsonTupleCentreId)tCenters.elementAt(i)) );
 				break;
 			}
 		}
@@ -800,10 +800,10 @@ public class MainPanel extends JPanel {
 	}
 	
 	private void addListAgenttoCards(JPanel cards) {
-	       for(TucsonAgentInterface tucAgentInterface:ManageAgent.getInstance().getListAgent()){
+	       for(TucsonAgentInterface tucAgentInterface:AgentManager.getInstance().getListAgent()){
 	           cards.add(tucAgentInterface.getInterface(),tucAgentInterface.getName());
 	       }
-	       for(TucsonAgentInterface tucAgentInterface:ManageAgent.getInstance().getListAgent()){
+	       for(TucsonAgentInterface tucAgentInterface:AgentManager.getInstance().getListAgent()){
 	           cards.add(tucAgentInterface.getInterface(),tucAgentInterface.getName());
 	       }
 	    }

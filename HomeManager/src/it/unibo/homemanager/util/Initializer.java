@@ -20,7 +20,7 @@ import it.unibo.homemanager.home_agents.exec_plan.BrightnessAgent;
 import it.unibo.homemanager.home_agents.exec_plan.DeviceAgent;
 import it.unibo.homemanager.home_agents.exec_plan.LampAgent;
 import it.unibo.homemanager.home_agents.exec_plan.WindowAgent;
-import it.unibo.homemanager.meteo.ManageAgent;
+import it.unibo.homemanager.meteo.AgentManager;
 import it.unibo.homemanager.meteo.MeteoAgent;
 import it.unibo.homemanager.tablemap.Blind;
 import it.unibo.homemanager.tablemap.Device;
@@ -490,7 +490,7 @@ public class Initializer {
 	}*/
     //V1.2
     public void initAgent(){
-        ManageAgent.getInstance().goListAgent();
+        AgentManager.getInstance().goListAgent();
     }
     //
     

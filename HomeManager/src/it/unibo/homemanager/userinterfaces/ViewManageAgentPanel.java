@@ -8,7 +8,7 @@ package it.unibo.homemanager.userinterfaces;
 import alice.logictuple.exceptions.InvalidVarNameException;
 import alice.tucson.api.TucsonTupleCentreId;
 import it.unibo.homemanager.ServiceFactory;
-import it.unibo.homemanager.meteo.ManageAgent;
+import it.unibo.homemanager.meteo.AgentManager;
 //import it.unibo.homemanager.meteo.ManageAgent;
 import it.unibo.homemanager.meteo.TucsonAgentInterface;
 import it.unibo.homemanager.tablemap.User;
@@ -36,7 +36,7 @@ public class ViewManageAgentPanel extends javax.swing.JPanel {
         this.mp=mpanel;
         this.meteo_tc=meteo_tc;
         this.tp=tp;
-        ManageAgent.getInstance().inizializeComponet(this,sf, tp, meteo_tc);
+        AgentManager.getInstance().inizializeComponet(this,sf, tp, meteo_tc);
         initComponents();
     }
     
@@ -136,7 +136,7 @@ public class ViewManageAgentPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_btMenuActionPerformed
 
     private void jlistAgentComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jlistAgentComboBoxActionPerformed
-        if(ManageAgent.getInstance().getListStringAgent().contains(jlistAgentComboBox.getSelectedItem())) 
+        if(AgentManager.getInstance().getListStringAgent().contains(jlistAgentComboBox.getSelectedItem())) 
             /*String[] nameAndId = this.jlistAgentComboBox.getSelectedItem().toString().split(" ");
             String name = nameAndId[0];
             TucsonAgentInterface t = ManageAgent.getInstance().getAgentbyName(name);
@@ -153,9 +153,9 @@ public class ViewManageAgentPanel extends javax.swing.JPanel {
         String name = nameAndId[0];
         TucsonAgentInterface t = ManageAgent.getInstance().getAgentbyName(name);
         if(t!=null)*/
-    	if(ManageAgent.getInstance().getListStringAgent().contains(jlistAgentComboBox.getSelectedItem())) 
+    	if(AgentManager.getInstance().getListStringAgent().contains(jlistAgentComboBox.getSelectedItem())) 
     	{
-    		TucsonAgentInterface t = ManageAgent.getInstance().getAgentbyName(this.jlistAgentComboBox.getSelectedItem().toString());
+    		TucsonAgentInterface t = AgentManager.getInstance().getAgentbyName(this.jlistAgentComboBox.getSelectedItem().toString());
             this.mp.loadAgentPanel(t);
     	}
     }//GEN-LAST:event_showButtonActionPerformed
@@ -184,7 +184,7 @@ public class ViewManageAgentPanel extends javax.swing.JPanel {
         this.jlistAgentComboBox.removeAllItems();
         /* ArrayList<String> listA=new ArrayList<String>();
          listA.add("Meteo Agent");*/
-        ArrayList<String> listA=ManageAgent.getInstance().getListStringAgent();
+        ArrayList<String> listA=AgentManager.getInstance().getListStringAgent();
         //this.jlistAgentComboBox.addItem(null);
        
         for (String s:listA) {
