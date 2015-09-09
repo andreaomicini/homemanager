@@ -24,6 +24,7 @@ import javax.swing.LayoutStyle.ComponentPlacement;
 
 import java.awt.Font;
 import java.awt.event.ActionEvent;
+import java.awt.Dimension;
 
 /**
  *
@@ -250,6 +251,7 @@ public class InitAdminPanel extends javax.swing.JPanel {
         });
         
         JButton AgentButton = new JButton("Agenti");
+        AgentButton.setMaximumSize(new Dimension(33, 9));
         AgentButton.setFont(new java.awt.Font("Courier New", 1, 14)); // NOI18N
         AgentButton.setForeground(new java.awt.Color(102, 0, 102));
         AgentButton.setText("Butlers");
@@ -264,18 +266,16 @@ public class InitAdminPanel extends javax.swing.JPanel {
         	layout.createParallelGroup(Alignment.LEADING)
         		.addGroup(layout.createSequentialGroup()
         			.addGap(89)
-        			.addGroup(layout.createParallelGroup(Alignment.LEADING)
-        				.addGroup(layout.createSequentialGroup()
-        					.addGroup(layout.createParallelGroup(Alignment.LEADING)
-        						.addComponent(btProfile, GroupLayout.DEFAULT_SIZE, 209, Short.MAX_VALUE)
-        						.addComponent(btPolicy, GroupLayout.DEFAULT_SIZE, 209, Short.MAX_VALUE)
-        						.addComponent(btUsers, GroupLayout.DEFAULT_SIZE, 209, Short.MAX_VALUE)
-        						.addComponent(btVisitors, GroupLayout.DEFAULT_SIZE, 209, Short.MAX_VALUE)
-        						.addComponent(AgentButton, Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 155, Short.MAX_VALUE))
-        					.addGap(44))
+        			.addGroup(layout.createParallelGroup(Alignment.LEADING, false)
         				.addGroup(layout.createParallelGroup(Alignment.TRAILING)
         					.addComponent(lHi, GroupLayout.PREFERRED_SIZE, 253, GroupLayout.PREFERRED_SIZE)
-        					.addComponent(lRole, GroupLayout.PREFERRED_SIZE, 253, GroupLayout.PREFERRED_SIZE)))
+        					.addComponent(lRole, GroupLayout.PREFERRED_SIZE, 253, GroupLayout.PREFERRED_SIZE))
+        				.addGroup(layout.createParallelGroup(Alignment.TRAILING, false)
+        					.addComponent(btProfile, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        					.addComponent(btPolicy, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        					.addComponent(btUsers, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        					.addComponent(btVisitors, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        					.addComponent(AgentButton, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 162, Short.MAX_VALUE)))
         			.addGroup(layout.createParallelGroup(Alignment.LEADING)
         				.addGroup(layout.createSequentialGroup()
         					.addPreferredGap(ComponentPlacement.RELATED, 66, Short.MAX_VALUE)
@@ -300,7 +300,7 @@ public class InitAdminPanel extends javax.swing.JPanel {
         			.addPreferredGap(ComponentPlacement.RELATED, 18, Short.MAX_VALUE)
         			.addGroup(layout.createParallelGroup(Alignment.BASELINE)
         				.addComponent(btManRBAC)
-        				.addComponent(AgentButton))
+        				.addComponent(AgentButton, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
         			.addGap(18)
         			.addGroup(layout.createParallelGroup(Alignment.BASELINE)
         				.addComponent(btViewInfo, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)

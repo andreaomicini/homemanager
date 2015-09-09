@@ -197,7 +197,7 @@ public class MeteoAgent extends AbstractTucsonAgent implements TucsonAgentInterf
 
 		@Override
 		public String getName() {
-			return "Agente Meteo";
+			return "Weather Agent";
 		}
 
 		public String[] getColumnNames(String site) {
@@ -304,10 +304,23 @@ public class MeteoAgent extends AbstractTucsonAgent implements TucsonAgentInterf
 					tp.appendText("MeteoAgent : error in activity.");
 				}
 				}
-				catch(Exception ex){
-	              ex.printStackTrace();
-	              tp.appendText("MeteoAgent : error in activity.");
-				}
+				catch(TucsonOperationNotPossibleException ex){
+		              ex.printStackTrace();
+		              tp.appendText("MeteoAgent : error in activity.");
+		          }
+		          catch(UnreachableNodeException ex){
+		              ex.printStackTrace();
+		              tp.appendText("MeteoAgent : error in activity.");
+		          }
+		          catch(OperationTimeOutException ex){
+		              ex.printStackTrace();
+		              tp.appendText("MeteoAgent : error in activity.");
+		          }
+		          catch(Exception ex)
+		          {
+		        	  ex.printStackTrace();
+		              tp.appendText("MeteoAgent : error in activity.");
+		          }
 			
 				return data;
 				
@@ -347,10 +360,23 @@ public class MeteoAgent extends AbstractTucsonAgent implements TucsonAgentInterf
 						tp.appendText("MeteoAgent : error in activity.");
 					}
 					}
-					catch(Exception ex){
+				catch(TucsonOperationNotPossibleException ex){
 		              ex.printStackTrace();
 		              tp.appendText("MeteoAgent : error in activity.");
-					}
+		          }
+		          catch(UnreachableNodeException ex){
+		              ex.printStackTrace();
+		              tp.appendText("MeteoAgent : error in activity.");
+		          }
+		          catch(OperationTimeOutException ex){
+		              ex.printStackTrace();
+		              tp.appendText("MeteoAgent : error in activity.");
+		          }
+		          catch(Exception ex)
+		          {
+		        	  ex.printStackTrace();
+		              tp.appendText("MeteoAgent : error in activity.");
+		          }
 				
 					return data;
 				
@@ -390,10 +416,23 @@ public class MeteoAgent extends AbstractTucsonAgent implements TucsonAgentInterf
 						tp.appendText("MeteoAgent : error in activity.");
 					}
 					}
-					catch(Exception ex){
+				catch(TucsonOperationNotPossibleException ex){
 		              ex.printStackTrace();
 		              tp.appendText("MeteoAgent : error in activity.");
-					}
+		          }
+		          catch(UnreachableNodeException ex){
+		              ex.printStackTrace();
+		              tp.appendText("MeteoAgent : error in activity.");
+		          }
+		          catch(OperationTimeOutException ex){
+		              ex.printStackTrace();
+		              tp.appendText("MeteoAgent : error in activity.");
+		          }
+		          catch(Exception ex)
+		          {
+		        	  ex.printStackTrace();
+		              tp.appendText("MeteoAgent : error in activity.");
+		          }
 				
 					return data;
 				
@@ -429,10 +468,23 @@ public class MeteoAgent extends AbstractTucsonAgent implements TucsonAgentInterf
 					tp.appendText("MeteoAgent : error in activity.");
 				}
 				}
-				catch(Exception ex){
-	              ex.printStackTrace();
-	              tp.appendText("MeteoAgent : error in activity.");
-				}
+				catch(TucsonOperationNotPossibleException ex){
+		              ex.printStackTrace();
+		              tp.appendText("MeteoAgent : error in activity.");
+		          }
+		          catch(UnreachableNodeException ex){
+		              ex.printStackTrace();
+		              tp.appendText("MeteoAgent : error in activity.");
+		          }
+		          catch(OperationTimeOutException ex){
+		              ex.printStackTrace();
+		              tp.appendText("MeteoAgent : error in activity.");
+		          }
+		          catch(Exception ex)
+		          {
+		        	  ex.printStackTrace();
+		              tp.appendText("MeteoAgent : error in activity.");
+		          }
 			
 				return data;
 				
@@ -461,10 +513,23 @@ public class MeteoAgent extends AbstractTucsonAgent implements TucsonAgentInterf
 						tp.appendText("MeteoAgent : error in activity.");
 					}
 					}
-					catch(Exception ex){
+				catch(TucsonOperationNotPossibleException ex){
 		              ex.printStackTrace();
 		              tp.appendText("MeteoAgent : error in activity.");
-					}
+		          }
+		          catch(UnreachableNodeException ex){
+		              ex.printStackTrace();
+		              tp.appendText("MeteoAgent : error in activity.");
+		          }
+		          catch(OperationTimeOutException ex){
+		              ex.printStackTrace();
+		              tp.appendText("MeteoAgent : error in activity.");
+		          }
+		          catch(Exception ex)
+		          {
+		        	  ex.printStackTrace();
+		              tp.appendText("MeteoAgent : error in activity.");
+		          }
 				
 					return data;
 				
@@ -502,10 +567,23 @@ public class MeteoAgent extends AbstractTucsonAgent implements TucsonAgentInterf
 						tp.appendText("MeteoAgent : error in activity.");
 					}
 					}
-					catch(Exception ex){
+				catch(TucsonOperationNotPossibleException ex){
 		              ex.printStackTrace();
 		              tp.appendText("MeteoAgent : error in activity.");
-					}
+		          }
+		          catch(UnreachableNodeException ex){
+		              ex.printStackTrace();
+		              tp.appendText("MeteoAgent : error in activity.");
+		          }
+		          catch(OperationTimeOutException ex){
+		              ex.printStackTrace();
+		              tp.appendText("MeteoAgent : error in activity.");
+		          }
+		          catch(Exception ex)
+		          {
+		        	  ex.printStackTrace();
+		              tp.appendText("MeteoAgent : error in activity.");
+		          }
 				
 					return data;
 				
@@ -545,10 +623,23 @@ public class MeteoAgent extends AbstractTucsonAgent implements TucsonAgentInterf
 					tp.appendText("MeteoAgent : error in activity.");
 				}
 				}
-				catch(Exception ex){
-	              ex.printStackTrace();
-	              tp.appendText("MeteoAgent : error in activity.");
-				}
+				catch(TucsonOperationNotPossibleException ex){
+		              ex.printStackTrace();
+		              tp.appendText("MeteoAgent : error in activity.");
+		          }
+		          catch(UnreachableNodeException ex){
+		              ex.printStackTrace();
+		              tp.appendText("MeteoAgent : error in activity.");
+		          }
+		          catch(OperationTimeOutException ex){
+		              ex.printStackTrace();
+		              tp.appendText("MeteoAgent : error in activity.");
+		          }
+		          catch(Exception ex)
+		          {
+		        	  ex.printStackTrace();
+		              tp.appendText("MeteoAgent : error in activity.");
+		          }
 			
 				return data;
 				
@@ -581,10 +672,23 @@ public class MeteoAgent extends AbstractTucsonAgent implements TucsonAgentInterf
 						tp.appendText("MeteoAgent : error in activity.");
 					}
 					}
-					catch(Exception ex){
+				catch(TucsonOperationNotPossibleException ex){
 		              ex.printStackTrace();
 		              tp.appendText("MeteoAgent : error in activity.");
-					}
+		          }
+		          catch(UnreachableNodeException ex){
+		              ex.printStackTrace();
+		              tp.appendText("MeteoAgent : error in activity.");
+		          }
+		          catch(OperationTimeOutException ex){
+		              ex.printStackTrace();
+		              tp.appendText("MeteoAgent : error in activity.");
+		          }
+		          catch(Exception ex)
+		          {
+		        	  ex.printStackTrace();
+		              tp.appendText("MeteoAgent : error in activity.");
+		          }
 				
 					return data;
 				
@@ -611,10 +715,23 @@ public class MeteoAgent extends AbstractTucsonAgent implements TucsonAgentInterf
 						tp.appendText("MeteoAgent : error in activity.");
 					}
 					}
-					catch(Exception ex){
+				catch(TucsonOperationNotPossibleException ex){
 		              ex.printStackTrace();
 		              tp.appendText("MeteoAgent : error in activity.");
-					}
+		          }
+		          catch(UnreachableNodeException ex){
+		              ex.printStackTrace();
+		              tp.appendText("MeteoAgent : error in activity.");
+		          }
+		          catch(OperationTimeOutException ex){
+		              ex.printStackTrace();
+		              tp.appendText("MeteoAgent : error in activity.");
+		          }
+		          catch(Exception ex)
+		          {
+		        	  ex.printStackTrace();
+		              tp.appendText("MeteoAgent : error in activity.");
+		          }
 				
 					return data;
 				
@@ -648,10 +765,23 @@ public class MeteoAgent extends AbstractTucsonAgent implements TucsonAgentInterf
 					tp.appendText("MeteoAgent : error in activity.");
 				}
 				}
-				catch(Exception ex){
-	              ex.printStackTrace();
-	              tp.appendText("MeteoAgent : error in activity.");
-				}
+				catch(TucsonOperationNotPossibleException ex){
+		              ex.printStackTrace();
+		              tp.appendText("MeteoAgent : error in activity.");
+		          }
+		          catch(UnreachableNodeException ex){
+		              ex.printStackTrace();
+		              tp.appendText("MeteoAgent : error in activity.");
+		          }
+		          catch(OperationTimeOutException ex){
+		              ex.printStackTrace();
+		              tp.appendText("MeteoAgent : error in activity.");
+		          }
+		          catch(Exception ex)
+		          {
+		        	  ex.printStackTrace();
+		              tp.appendText("MeteoAgent : error in activity.");
+		          }
 			
 				return data;
 				
@@ -678,10 +808,23 @@ public class MeteoAgent extends AbstractTucsonAgent implements TucsonAgentInterf
 						tp.appendText("MeteoAgent : error in activity.");
 					}
 					}
-					catch(Exception ex){
+				catch(TucsonOperationNotPossibleException ex){
 		              ex.printStackTrace();
 		              tp.appendText("MeteoAgent : error in activity.");
-					}
+		          }
+		          catch(UnreachableNodeException ex){
+		              ex.printStackTrace();
+		              tp.appendText("MeteoAgent : error in activity.");
+		          }
+		          catch(OperationTimeOutException ex){
+		              ex.printStackTrace();
+		              tp.appendText("MeteoAgent : error in activity.");
+		          }
+		          catch(Exception ex)
+		          {
+		        	  ex.printStackTrace();
+		              tp.appendText("MeteoAgent : error in activity.");
+		          }
 				
 					return data;
 				
@@ -712,5 +855,49 @@ public class MeteoAgent extends AbstractTucsonAgent implements TucsonAgentInterf
 			default:
 				return -1;
 			}
+		}
+
+		//DA TESTARE
+		
+		public String[] getShuttersActions() {
+			
+			 LogicTuple t3=new LogicTuple("shutters_action", new Value("up"), new Var(), new Var());
+			 LogicTuple t4=new LogicTuple("shutters_action", new Value("down"), new Var(), new Var());
+			 try{
+				ITucsonOperation op3=acc.rdp(myTid, t3, Long.MAX_VALUE);
+				ITucsonOperation op4=acc.rdp(myTid, t4, Long.MAX_VALUE);
+				
+				if(op3.isResultSuccess() && op4.isResultSuccess())
+				{
+					String one=""+t3.getArg(1)+" "+t3.getArg(2)+":"+t3.getArg(3);
+					String two=""+t4.getArg(1)+" "+t4.getArg(2)+":"+t4.getArg(3);
+					String[] ar = {one, two};
+					return ar;
+				}
+				else
+				{
+					tp.appendText("MeteoAgent : error in activity.");
+					return null;
+				}
+				}
+				catch(TucsonOperationNotPossibleException ex){
+		              ex.printStackTrace();
+		              tp.appendText("MeteoAgent : error in activity.");
+		          }
+		          catch(UnreachableNodeException ex){
+		              ex.printStackTrace();
+		              tp.appendText("MeteoAgent : error in activity.");
+		          }
+		          catch(OperationTimeOutException ex){
+		              ex.printStackTrace();
+		              tp.appendText("MeteoAgent : error in activity.");
+		          }
+		          catch(Exception ex)
+		          {
+		        	  ex.printStackTrace();
+		              tp.appendText("MeteoAgent : error in activity.");
+		          }
+			 return null;
+	
 		}
 }

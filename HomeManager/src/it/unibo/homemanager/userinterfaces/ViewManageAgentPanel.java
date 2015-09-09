@@ -13,9 +13,14 @@ import it.unibo.homemanager.meteo.AgentManager;
 import it.unibo.homemanager.meteo.TucsonAgentInterface;
 import it.unibo.homemanager.tablemap.User;
 
+import java.io.IOException;
+import java.net.InetSocketAddress;
+import java.net.Socket;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -157,8 +162,23 @@ public class ViewManageAgentPanel extends javax.swing.JPanel {
         if(t!=null)*/
     	if(AgentManager.getInstance().getListStringAgent().contains(jlistAgentComboBox.getSelectedItem())) 
     	{
+    		String site="www.google.it";
+    		
+    		Socket sock=new Socket();
+    		InetSocketAddress addr=new InetSocketAddress(site,80);
+    		try {
+					sock.connect(addr, 3000);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+    		if(sock.isConnected()){
     		TucsonAgentInterface t = AgentManager.getInstance().getAgentbyName(this.jlistAgentComboBox.getSelectedItem().toString());
             this.mp.loadAgentPanel(t);
+    		}
+    		else
+    		{
+    			JOptionPane.showMessageDialog(this, "Connessione ad internet assente");
+    		}
     	}
     }//GEN-LAST:event_showButtonActionPerformed
 

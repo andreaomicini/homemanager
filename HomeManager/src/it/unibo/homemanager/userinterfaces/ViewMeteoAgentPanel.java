@@ -11,6 +11,9 @@ import it.unibo.homemanager.meteo.AgentManager;
 import it.unibo.homemanager.meteo.MeteoAgent;
 import it.unibo.homemanager.tablemap.User;
 
+import java.io.IOException;
+import java.net.InetSocketAddress;
+import java.net.Socket;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -18,10 +21,12 @@ import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import javax.swing.DefaultListModel;
 import javax.swing.JOptionPane;
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
 import javax.swing.JLabel;
+import javax.swing.ListModel;
 
 import java.awt.Font;
 
@@ -38,7 +43,11 @@ import javax.swing.JComboBox;
 import javax.swing.JTable;
 import javax.swing.JScrollPane;
 import javax.swing.ScrollPaneConstants;
+
 import java.awt.Dimension;
+
+import javax.swing.JEditorPane;
+import javax.swing.JList;
 
 /**
  *
@@ -63,8 +72,8 @@ public class ViewMeteoAgentPanel extends javax.swing.JPanel {
         siti=meteoAgent.getSiti();
         
         
-        JLabel lblMeteoAgent = new JLabel("Meteo Agent");
-        lblMeteoAgent.setBounds(20, 12, 121, 21);
+        JLabel lblMeteoAgent = new JLabel("Weather Agent");
+        lblMeteoAgent.setBounds(20, 12, 150, 21);
         lblMeteoAgent.setFont(new Font("Courier New", Font.BOLD, 18));
         
         JButton jButton4 = new JButton();
@@ -89,12 +98,12 @@ public class ViewMeteoAgentPanel extends javax.swing.JPanel {
         jButton3.setForeground(new Color(102, 0, 102));
         jButton3.setFont(new Font("Courier New", Font.BOLD, 14));
         
-        JLabel lblSelezionaSitoMeteo = new JLabel("Seleziona sito meteo");
-        lblSelezionaSitoMeteo.setBounds(20, 48, 140, 14);
+        JLabel lblSelezionaSitoMeteo = new JLabel("Select weather site");
+        lblSelezionaSitoMeteo.setBounds(99, 51, 140, 14);
         lblSelezionaSitoMeteo.setFont(new Font("Courier New", Font.PLAIN, 11));
         
         siticomboBox = new JComboBox();
-        siticomboBox.setBounds(168, 47, 237, 20);
+        siticomboBox.setBounds(240, 47, 237, 20);
         siticomboBox.removeAllItems();
         for(String s : siti)
         {
@@ -107,11 +116,6 @@ public class ViewMeteoAgentPanel extends javax.swing.JPanel {
                 sitiComboBoxActionPerformed(evt);
             }
         });
-        
-        
-        JLabel imagelabel = new JLabel("");
-        imagelabel.setBounds(20, 73, 140, 108);
-        imagelabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icone-meteo.jpg")));
         
         JLabel lblNewLabel = new JLabel("");
         lblNewLabel.setBounds(216, 70, 100, 132);
@@ -154,11 +158,20 @@ public class ViewMeteoAgentPanel extends javax.swing.JPanel {
         add(jButton4);
         add(jButton3);
         add(lblSelezionaSitoMeteo);
-        add(imagelabel);
         add(lblNewLabel);
         add(lblNewLabel_1);
         add(siticomboBox);
         add(label);
+        
+        JLabel lblShuttersActions = new JLabel("Shutters actions");
+        lblShuttersActions.setFont(new Font("Courier New", Font.PLAIN, 11));
+        lblShuttersActions.setBounds(23, 103, 121, 14);
+        add(lblShuttersActions);
+        
+        listModel=new DefaultListModel();
+        JList actions=new JList(listModel);
+        actions.setBounds(20, 117, 173, 35);
+        add(actions);
 	}
 	
 	private JComboBox siticomboBox;
@@ -168,11 +181,21 @@ public class ViewMeteoAgentPanel extends javax.swing.JPanel {
 	private JScrollPane scrollPane_2;
 	private JTable table_1;
 	private JTable table_2;
+	private DefaultListModel listModel;
 	
 
 	private void sitiComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jlistAgentComboBoxActionPerformed
         if(siti.contains(siticomboBox.getSelectedItem())) 
         {
+        	String site="www.google.it";
+        	Socket sock=new Socket();
+    		InetSocketAddress addr=new InetSocketAddress(site,80);
+    		try {
+					sock.connect(addr, 3000);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+    		if(sock.isConnected()){
         	//cerca nel centro di tuple e stampa fuori le tuple
         	String[] columnNames = meteoAgent.getColumnNames(""+siticomboBox.getSelectedItem());
         	if(columnNames!=null)
@@ -200,9 +223,14 @@ public class ViewMeteoAgentPanel extends javax.swing.JPanel {
         			scrollPane_2.setViewportView(null);
         		}
         		
-
-        		
         	}
+    		
+        	}
+        	else
+    		{
+    			JOptionPane.showMessageDialog(this, "Connessione ad internet assente");
+    		}
+        
         }
         
     }//GEN-LAST:event_jlistAgentComboBoxActionPerformed
@@ -225,6 +253,14 @@ public class ViewMeteoAgentPanel extends javax.swing.JPanel {
 	     
 	public void init() {
 	        if(!isVisible())
-	            setVisible(true);
+	        {
+	        	setVisible(true);
+	        	String[] ar=meteoAgent.getShuttersActions();
+	        	if(ar!=null){
+	        	listModel.addElement(ar[0]);
+	        	listModel.addElement(ar[1]);
+	        	}
+	        }
+	        
 	    }
 }
