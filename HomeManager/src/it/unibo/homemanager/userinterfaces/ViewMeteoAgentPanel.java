@@ -59,6 +59,7 @@ public class ViewMeteoAgentPanel extends javax.swing.JPanel {
 	private MeteoAgent meteoAgent;
 	private TracePanel tp;
 	private static List<String> siti;
+	
 
 	public ViewMeteoAgentPanel(ViewManageAgentPanel maPanel, MeteoAgent meteoAgent, TracePanel tp) {
 		setPreferredSize(new Dimension(538, 343));
@@ -68,8 +69,6 @@ public class ViewMeteoAgentPanel extends javax.swing.JPanel {
         this.meteoAgent=meteoAgent;
         this.tp=tp;
         
-        //inizializzo la lista dei siti
-        siti=meteoAgent.getSiti();
         
         
         JLabel lblMeteoAgent = new JLabel("Weather Agent");
@@ -98,36 +97,27 @@ public class ViewMeteoAgentPanel extends javax.swing.JPanel {
         jButton3.setForeground(new Color(102, 0, 102));
         jButton3.setFont(new Font("Courier New", Font.BOLD, 14));
         
-        JLabel lblSelezionaSitoMeteo = new JLabel("Select weather site");
-        lblSelezionaSitoMeteo.setBounds(99, 51, 140, 14);
+        JLabel lblSelezionaSitoMeteo = new JLabel("Weather site");
+        lblSelezionaSitoMeteo.setBounds(136, 51, 94, 14);
         lblSelezionaSitoMeteo.setFont(new Font("Courier New", Font.PLAIN, 11));
         
         siticomboBox = new JComboBox();
         siticomboBox.setBounds(240, 47, 237, 20);
-        siticomboBox.removeAllItems();
-        for(String s : siti)
-        {
-        	siticomboBox.addItem(s);
-        }
-        siticomboBox.setSelectedIndex(-1);
+       
         
-        siticomboBox.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                sitiComboBoxActionPerformed(evt);
-            }
-        });
         
-        JLabel lblNewLabel = new JLabel("");
+        
+        lblNewLabel = new JLabel("");
         lblNewLabel.setBounds(216, 70, 100, 132);
-        lblNewLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/google-iconBis.png")));
         
-        JLabel lblNewLabel_1 = new JLabel("");
+        
+        lblNewLabel_1 = new JLabel("");
         lblNewLabel_1.setBounds(306, 63, 99, 127);
-        lblNewLabel_1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/OpenWeatherMap_logo.png")));
         
-        JLabel label = new JLabel("");
+        
+        label = new JLabel("");
         label.setBounds(392, 87, 100, 100);
-        label.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Yahoo.jpg")));
+        
         
         
         scrollPane = new JScrollPane();
@@ -182,7 +172,9 @@ public class ViewMeteoAgentPanel extends javax.swing.JPanel {
 	private JTable table_1;
 	private JTable table_2;
 	private DefaultListModel listModel;
-	
+	private JLabel lblNewLabel;
+	private JLabel lblNewLabel_1;
+	private JLabel label;
 
 	private void sitiComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jlistAgentComboBoxActionPerformed
         if(siti.contains(siticomboBox.getSelectedItem())) 
@@ -203,7 +195,44 @@ public class ViewMeteoAgentPanel extends javax.swing.JPanel {
         		Object[][] data1 = meteoAgent.getData1(""+siticomboBox.getSelectedItem());
         		Object[][] data2 = meteoAgent.getData2(""+siticomboBox.getSelectedItem());
         		Object[][] data3 = meteoAgent.getData3(""+siticomboBox.getSelectedItem());
-        		if(data1!=null)
+        		String scelto=""+siticomboBox.getSelectedItem();
+        		
+        		if(scelto.equals(siti.get(1)))//google
+        		{
+        			table = new JTable(data1, Arrays.copyOfRange(columnNames, 0, 6));
+        			scrollPane.setViewportView(table);
+        			
+        			table_1 = new JTable(data2, Arrays.copyOfRange(columnNames, 6, 8));
+        			scrollPane_1.setViewportView(table_1);
+        			
+        			scrollPane_2.setViewportView(null);
+        		}
+        		if(scelto.equals(siti.get(2)))//yahoo
+        		{
+        			table = new JTable(data1, Arrays.copyOfRange(columnNames, 0, 4));
+        			scrollPane.setViewportView(table);
+        			
+        			table_1 = new JTable(data2, Arrays.copyOfRange(columnNames, 4 ,10 ));
+        			scrollPane_1.setViewportView(table_1);
+        			
+        			table_2 = new JTable(data3, Arrays.copyOfRange(columnNames,10,11)); //da controllare!!!
+        			scrollPane_2.setViewportView(table_2);
+        		}
+        		if(scelto.equals(siti.get(0)))//openweathermap
+        		{
+        			table = new JTable(data1, Arrays.copyOfRange(columnNames, 0, 4));
+        			scrollPane.setViewportView(table);
+        			
+        			table_1 = new JTable(data2, Arrays.copyOfRange(columnNames, 4 ,10 ));
+        			scrollPane_1.setViewportView(table_1);
+        			
+        			table_2 = new JTable(data3, Arrays.copyOfRange(columnNames,10,12));
+        			scrollPane_2.setViewportView(table_2);
+        		}
+        		
+        		
+        		
+        		/*if(data1!=null)
         		{
         			table = new JTable(data1, Arrays.copyOfRange(columnNames, 0, 6));
         			scrollPane.setViewportView(table);
@@ -221,7 +250,7 @@ public class ViewMeteoAgentPanel extends javax.swing.JPanel {
         		else
         		{
         			scrollPane_2.setViewportView(null);
-        		}
+        		}*/
         		
         	}
     		
@@ -255,11 +284,30 @@ public class ViewMeteoAgentPanel extends javax.swing.JPanel {
 	        if(!isVisible())
 	        {
 	        	setVisible(true);
-	        	String[] ar=meteoAgent.getShuttersActions();
+	        	String[] ar=meteoAgent.getShuttersActions();   //PREPARARE REAZIONE
 	        	if(ar!=null){
 	        	listModel.addElement(ar[0]);
 	        	listModel.addElement(ar[1]);
 	        	}
+	        	
+	        	//inizializzo la lista dei siti
+	            siti=meteoAgent.getSiti();
+	            siticomboBox.removeAllItems();
+	            for(String s : siti)
+	            {
+	            	siticomboBox.addItem(s);
+	            }
+	            siticomboBox.setSelectedIndex(-1);
+	            siticomboBox.addActionListener(new java.awt.event.ActionListener() {
+	                public void actionPerformed(java.awt.event.ActionEvent evt) {
+	                    sitiComboBoxActionPerformed(evt);
+	                }
+	            });
+	            
+	            List<String> icons=meteoAgent.getIcon();
+	            lblNewLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource(icons.get(0))));
+	            lblNewLabel_1.setIcon(new javax.swing.ImageIcon(getClass().getResource(icons.get(1))));
+	            label.setIcon(new javax.swing.ImageIcon(getClass().getResource(icons.get(2))));
 	        }
 	        
 	    }

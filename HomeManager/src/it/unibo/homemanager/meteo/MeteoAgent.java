@@ -1,10 +1,18 @@
 package it.unibo.homemanager.meteo;
 
+import java.math.RoundingMode;
+import java.sql.Timestamp;
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
+import java.text.NumberFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.swing.JPanel;
 
+import it.unibo.homemanager.dbmanagement.Database;
+import it.unibo.homemanager.dbmanagement.TucsonDatabase;
 import it.unibo.homemanager.tablemap.User;
 import it.unibo.homemanager.userinterfaces.TracePanel;
 import it.unibo.homemanager.userinterfaces.ViewManageAgentPanel;
@@ -34,15 +42,20 @@ public class MeteoAgent extends AbstractTucsonAgent implements TucsonAgentInterf
 	    private TracePanel tp;
 	    private EnhancedSynchACC acc;
 	    private ViewMeteoAgentPanel panel;
+	    private Database db;
+	    private List<String> siti=new ArrayList<String>();
+	    private List<String> url=new ArrayList<String>();
+	    private List<String> path=new ArrayList<String>();
 	    
 	    /**
 	     * Creates a new instance of MeteoAgent
+	     * @param database 
 	     */
-	    public MeteoAgent(String id,TracePanel tp, TucsonTupleCentreId tuple) throws TucsonInvalidAgentIdException {
+	    public MeteoAgent(String id,TracePanel tp, TucsonTupleCentreId tuple, Database database) throws TucsonInvalidAgentIdException {
 	        super(id);
 	        this.tp=tp;
 	        this.myTid=tuple;
-	       
+	        this.db=database;
 	    }
 	    
 	    public void setPanel(ViewManageAgentPanel maPanel)
@@ -60,30 +73,76 @@ public class MeteoAgent extends AbstractTucsonAgent implements TucsonAgentInterf
 	        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
 	    }
 
-	    public List<String> getSiti()
+	    public List<String> getSiti()  //DA MODIFICARE
 	    {
-	    	List<String> siti=new ArrayList<String>();
+	    	/*List<String> siti=new ArrayList<String>();
 	    	siti.add("Google");
 	        siti.add("Yahoo");
-	        siti.add("OpenWeatherMap");
+	        siti.add("OpenWeatherMap");*/
 	        return siti;
 	    }
+	    
+	    public List<String> getIcon()
+	    {
+	    	return path;
+	    }
+	    
+	    private void inizializzaCampi() {
+			try{
+				LogicTuple t=new LogicTuple("meteo_site",new Var(),new Var(),new Var());
+				ITucsonOperation op_rdAll=this.acc.rdAll(((TucsonDatabase)db).getTucsonTupleCentreId(),t,Long.MAX_VALUE);
+				if(op_rdAll.isResultSuccess())
+				{
+					List<LogicTuple> l = op_rdAll.getLogicTupleListResult();
+					for (LogicTuple logicTuple : l) {
+						siti.add(logicTuple.getArg(0).toString().substring(1, logicTuple.getArg(0).toString().length()-1));
+						url.add(logicTuple.getArg(1).toString().substring(1, logicTuple.getArg(1).toString().length()-1));
+						path.add(logicTuple.getArg(2).toString().substring(1, logicTuple.getArg(2).toString().length()-1));
+					}
+				}
+			}
+	    catch(TucsonOperationNotPossibleException ex){
+            ex.printStackTrace();
+            tp.appendText("MeteoAgent : error in activity.");
+        }
+        catch(UnreachableNodeException ex){
+            ex.printStackTrace();
+            tp.appendText("MeteoAgent : error in activity.");
+        }
+        catch(OperationTimeOutException ex){
+            ex.printStackTrace();
+            tp.appendText("MeteoAgent : error in activity.");
+        }
+        catch(Exception ex)
+        {
+      	  ex.printStackTrace();
+            tp.appendText("MeteoAgent : error in activity.");
+        }
+		}
 	    
 		@Override
 		protected void main() {
 			tp.appendText("-- METEO AGENT STARTED.");
 	        this.acc = this.getContext();
-	        LogicTuple t1a,t1b,t1c,t2a,t2b,t2c,t3a,t3b,t3c;
+	        LogicTuple t1a,t1b,t1c,t2a,t2b,t2c,t3a,t3b,t3c,tdate;
 	        Meteo m1,m2,m3;
-	        LogicTuple template;
+	        inizializzaCampi();
 	        try{
 	            while(true) {
 	            	
 	            	ParserMeteo.init();		//inizializza la posizione per i parser
 	            	//Thread.sleep(5000);
-	            	m1=ParserMeteo.previsioniM();	//weathermap
-	            	m2=ParserMeteo.previsioniY();	//yahoo
-	            	m3=ParserMeteo.previsioniG();	//google
+	            	m1=ParserMeteo.previsioniM(url.get(0));	//weathermap
+	            	m2=ParserMeteo.previsioniY(url.get(2));	//yahoo
+	            	m3=ParserMeteo.previsioniG(url.get(1));	//google
+	            	
+	            	
+	            	//INSERISCO LE TUPLE DI ESEMPIO PER LA REAZIONE------>una volta impostata la reazione sono da eliminare queste righe
+	            	LogicTuple test1=new LogicTuple("shutters_action",new Value("up"),new Value(5),new Value(55));
+	            	LogicTuple test2=new LogicTuple("shutters_action",new Value("down"),new Value(20),new Value(5));
+	            	this.acc.out(this.myTid, test1, null);
+	            	this.acc.out(this.myTid, test2, null);
+	            	//
 	            	
 	            	
 	            	
@@ -102,6 +161,9 @@ public class MeteoAgent extends AbstractTucsonAgent implements TucsonAgentInterf
 	            	t3b=new LogicTuple("meteo",new Value(m3.getNomeSito()) ,new Value(m3.getTemperaturaMax()),new Value(m3.getTemperaturaMin()),new Value(m3.getUmidita()),new Value(m3.getPressione()),new Value(m3.getVento()));
 	            	t3c=new LogicTuple("meteo",new Value(m3.getNomeSito()),new Value(m3.getPrecipitazioni()), new Value(m3.getMeteoCode()),new Value(m3.getMeteo()));
 	            	
+	            	Date data=new Date();
+	            	Timestamp t=new Timestamp(data.getTime());
+	            	tdate=new LogicTuple("meteo",new Value(t.toString()));
 	            	
 	            	//blocco vers1.0 di eliminazione tuple vecchie
 	            	/*{
@@ -140,6 +202,8 @@ public class MeteoAgent extends AbstractTucsonAgent implements TucsonAgentInterf
 	            	acc.out(this.myTid,t3b, null);
 	            	acc.out(this.myTid,t3c, null);
 	            	
+	            	acc.out(this.myTid, tdate, null);
+	            	
 	            	
 	            	tp.appendText("-- METEO AGENT UPDATED.");
 	            	Thread.sleep(900000);  //imposto che le previsioni si aggiornano ogni 15 minuti(=900000 millisec)          [ 8 ore(=28800000 millisec)]
@@ -170,6 +234,8 @@ public class MeteoAgent extends AbstractTucsonAgent implements TucsonAgentInterf
 	          }
 		}
 		
+		
+
 		private void reset() throws OperationTimeOutException,UnreachableNodeException,TucsonOperationNotPossibleException
 		{
 			LogicTuple template=new LogicTuple("meteo", new Var(), new Var(), new Var(), new Var(), new Var(), new Var(), new Var());
@@ -177,6 +243,8 @@ public class MeteoAgent extends AbstractTucsonAgent implements TucsonAgentInterf
         	template=new LogicTuple("meteo", new Var(), new Var(), new Var(), new Var(), new Var(), new Var());
         	acc.inAll(myTid, template, Long.MAX_VALUE);
         	template=new LogicTuple("meteo",new Var(), new Var(), new Var(), new Var());
+        	acc.inAll(myTid, template, Long.MAX_VALUE);
+        	template=new LogicTuple("meteo",new Var());
         	acc.inAll(myTid, template, Long.MAX_VALUE);
 		}
 
@@ -204,59 +272,59 @@ public class MeteoAgent extends AbstractTucsonAgent implements TucsonAgentInterf
 			
 			switch (site) {
 			case "OpenWeatherMap":
-				String[] uscita1={"Sito",
-                        "Città",
-                        "Ora alba",
-                        "Minut alba",
-                        "Ora tramonto",
-                       "Minut tramonto",
-                        "Temperatura",
-                        "Temp max",
-                        "Temp min",
-                        "Umidità %",
-                        "Pressione",
-                        "Vento",
-                        "Precipitazioni",
-                        "Code meteo",
-                        "Meteo",
+				String[] uscita1={"Site",
+                        "City",
+                        "Hour sunrise",
+                        
+                        "Hour sunset",
+                       
+                        "T avg °C",
+                        "T max °C",
+                        "T min °C",
+                        "Humidity %",
+                        "Pressure mb",
+                        "Wind km/h",
+                        "Rainfall %",
+                        
+                        "Forecast",
                         };
 				return uscita1;
 				
 			case "Yahoo":
-				String[] uscita2={"Sito",
-                        "Città",
-                        "Ora alba",
-                        "Minut alba",
-                        "Ora tramonto",
-                       "Minut tramonto",
-                        "Temperatura",
-                        "Temp max",
-                        "Temp min",
-                        "Umidità %",
-                        "Pressione",
-                        "Vento",
-                        //"Precipitazioni",
-                        "Code meteo",
-                        "Meteo",
+				String[] uscita2={"Site",
+                        "City",
+                        "Hour sunrise",
+                        
+                        "Hour sunset",
+                       
+                        "T avg °C",
+                        "T max °C",
+                        "T min °C",
+                        "Humidity %",
+                        "Pressure mb",
+                        "Wind km/h",
+                        //"Rainfall %",
+                        
+                        "Forecast",
                         };
 				return uscita2;
 				
 			case "Google":
-				String[] uscita3={"Sito",
-                        "Città",
+				String[] uscita3={"Site",
+                        "City",
                         //"Ora alba",
                         //"Minut alba",
                         //"Ora tramonto",
                        //"Minut tramonto",
-                        "Temperatura",
+                        "T avg °C",
                         //"Temp max",
                         //"Temp min",
-                        "Umidità %",
-                        "Pressione",
-                        "Vento",
-                        "Precipitazioni",
+                        "Humidity %",
+                        "Pressure mb",
+                        "Wind km/h",
+                        "Rainfall %",
                         //"Code meteo",
-                        "Meteo",
+                        "Forecast",
                         };
 				return uscita3;
 				
@@ -454,14 +522,11 @@ public class MeteoAgent extends AbstractTucsonAgent implements TucsonAgentInterf
 				
 				if(op1.isResultSuccess())
 				{
-					data= new Object[1][6];
+					data= new Object[1][4];
 					data[0][0]=t1.getArg(0); //sito
 					data[0][1]=t1.getArg(1); //citta
-					data[0][2]=t1.getArg(2); //ora alba
-					data[0][3]=t1.getArg(3); //min alba
-					data[0][4]=t1.getArg(4); //ora tram
-					data[0][5]=t1.getArg(5); //min tram
-					
+					data[0][2]=""+t1.getArg(2)+":"+t1.getArg(3); //ora alba
+					data[0][3]=""+t1.getArg(4)+":"+t1.getArg(5); //ora tram
 				}
 				else
 				{
@@ -499,14 +564,11 @@ public class MeteoAgent extends AbstractTucsonAgent implements TucsonAgentInterf
 					
 					if(op1.isResultSuccess())
 					{
-						data= new Object[1][6];
+						data= new Object[1][4];
 						data[0][0]=t1.getArg(0); //sito
 						data[0][1]=t1.getArg(1); //citta
-						data[0][2]=t1.getArg(2); //ora alba
-						data[0][3]=t1.getArg(3); //min alba
-						data[0][4]=t1.getArg(4); //ora tram
-						data[0][5]=t1.getArg(5); //min tram
-						
+						data[0][2]=""+t1.getArg(2)+":"+t1.getArg(3); //ora alba
+						data[0][3]=""+t1.getArg(4)+":"+t1.getArg(5); //ora tram
 					}
 					else
 					{
@@ -608,13 +670,21 @@ public class MeteoAgent extends AbstractTucsonAgent implements TucsonAgentInterf
 				{
 					data= new Object[1][6];
 					
-					data[0][0]=t1.getArg(6); //temp
+					double d=Double.parseDouble(""+t1.getArg(6));
+					DecimalFormat decForm = new DecimalFormat("#.##", new DecimalFormatSymbols());
+				    decForm.setRoundingMode(RoundingMode.CEILING); // solo da JAVA 6 in poi
+				     
+				    
+					data[0][0]=decForm.format(d); //temp
 					
-					data[0][1]=t2.getArg(1); //temp max
-					data[0][2]=t2.getArg(2); //temp min
+					d=Double.parseDouble(""+t2.getArg(1));
+					data[0][1]=decForm.format(d); //temp max
+					d=Double.parseDouble(""+t2.getArg(2));
+					data[0][2]=decForm.format(d); //temp min
 					data[0][3]=t2.getArg(3); //umidita
 					data[0][4]=t2.getArg(4); //pressione
-					data[0][5]=t2.getArg(5); //vento
+					d=Double.parseDouble(""+t2.getArg(5));
+					data[0][5]=decForm.format(d); //vento
 					
 					
 				}
@@ -753,12 +823,12 @@ public class MeteoAgent extends AbstractTucsonAgent implements TucsonAgentInterf
 				
 				if(op3.isResultSuccess())
 				{
-					data= new Object[1][3];
+					data= new Object[1][2];
 					
 					
 					data[0][0]=t3.getArg(1); //precip
-					data[0][1]=t3.getArg(2); //code meteo
-					data[0][2]=t3.getArg(3); //meteo
+					//data[0][1]=t3.getArg(2); //code meteo
+					data[0][1]=t3.getArg(3); //meteo
 				}
 				else
 				{
@@ -796,12 +866,12 @@ public class MeteoAgent extends AbstractTucsonAgent implements TucsonAgentInterf
 					
 					if(op3.isResultSuccess())
 					{
-						data= new Object[1][2];
+						data= new Object[1][1];
 						
 						
 						//data[0][12]=t3.getArg(1); //precip
-						data[0][0]=t3.getArg(2); //code meteo
-						data[0][1]=t3.getArg(3); //meteo
+						//data[0][0]=t3.getArg(2); //code meteo
+						data[0][0]=t3.getArg(3); //meteo
 					}
 					else
 					{
@@ -838,24 +908,6 @@ public class MeteoAgent extends AbstractTucsonAgent implements TucsonAgentInterf
 		}
 
 		
-		//in questo modo è piu estendibile
-		public int getIndex(String site) {
-			switch (site) {
-			case "Yahoo":
-				return 12;
-				
-			case "Google":
-				
-				return 8;
-
-			case "OpenWeatherMap":
-				
-				return 12;
-
-			default:
-				return -1;
-			}
-		}
 
 		//DA TESTARE
 		
@@ -869,8 +921,8 @@ public class MeteoAgent extends AbstractTucsonAgent implements TucsonAgentInterf
 				
 				if(op3.isResultSuccess() && op4.isResultSuccess())
 				{
-					String one=""+t3.getArg(1)+" "+t3.getArg(2)+":"+t3.getArg(3);
-					String two=""+t4.getArg(1)+" "+t4.getArg(2)+":"+t4.getArg(3);
+					String one=""+t3.getArg(0)+"         "+t3.getArg(1)+":"+t3.getArg(2);
+					String two=""+t4.getArg(0)+"    "+t4.getArg(1)+":"+t4.getArg(2);
 					String[] ar = {one, two};
 					return ar;
 				}

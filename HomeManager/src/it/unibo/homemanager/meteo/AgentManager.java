@@ -73,7 +73,7 @@ public class AgentManager {
         MeteoAgent m = null;
         try {
            
-        	m=new MeteoAgent("meteoAgent_1",tp,tcs.get(0));  
+        	m=new MeteoAgent("meteoAgent_1",tp,tcs.get(0),database);  
         	m.setPanel(viewManagerAgent);
         	
         } catch (TucsonInvalidAgentIdException ex) {

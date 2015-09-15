@@ -33,6 +33,11 @@ public class TucsonDatabase extends Database{
 	}
     }
 	
+    public TucsonTupleCentreId getTucsonTupleCentreId()
+    {
+    	return this.tc;
+    }
+    
     //@SuppressWarnings("rawtypes")
     public List readCentreArray(TupleArgument template) throws Exception {
 	List l = null;

@@ -42,6 +42,7 @@ public class ParserMeteo {
 		state=doc.getElementsByTagName("countryCode").item(0).getChildNodes().item(0).getNodeValue().trim();
 		lat=doc.getElementsByTagName("lat").item(0).getChildNodes().item(0).getNodeValue().trim();
 		lon=doc.getElementsByTagName("lon").item(0).getChildNodes().item(0).getNodeValue().trim();
+		System.out.println("lat "+lat+" lon "+lon);
 		//
 		//inizializzazione woeid di yahoo   DA MODIFICARE CON UNA ALTRA KEY DELL UNI
 		url=new URL("https://api.flickr.com/services/rest/?method=flickr.places.find&api_key=e32bc8926257d72948f7f956556bd1c7&query="+city+"&format=rest");
@@ -53,30 +54,30 @@ public class ParserMeteo {
 		//
 		//Thread.sleep(1000);
 	}
-	public static Meteo previsioniM() throws Exception
+	public static Meteo previsioniM(String urlBase) throws Exception
 	{
 		//DA MODIFICARE CON UNA ALTRA KEY DELL UNI
-		URL url=new URL("http://api.openweathermap.org/data/2.5/weather?q="+city+"&mode=xml&APPID=941ba071203d6de5eea40c02c4aac22a");
+		URL url=new URL(urlBase+city+"&mode=xml&APPID=941ba071203d6de5eea40c02c4aac22a");
 		InputStream stream=url.openStream();
 		Document doc=domParser.parse(stream);  
 		doc.normalizeDocument();
 		return openweathermapw(doc);
 	}
-	public static Meteo previsioniY() throws Exception
+	public static Meteo previsioniY(String urlBase) throws Exception
 	{
 		//qui non c è bisogno di modifica con una nuova key ma c è bisogno per flickr sopra
-		URL url3=new URL("http://weather.yahooapis.com/forecastrss?w="+woeid+"&u=c");
+		URL url3=new URL(urlBase+woeid+"&u=c");
 		InputStream stream3=url3.openStream();
 		Document doc3=domParser.parse(stream3);
 		doc3.normalizeDocument();
 		return yahoow(doc3);
 	}
-	public static Meteo previsioniG() throws Exception
+	public static Meteo previsioniG(String urlBase) throws Exception
 	{
 		//DA MODIFICARE CON UNA ALTRA KEY DELL UNI
 		//questa non funziona per nomi di città diversi nella lingua inglese quindi meglio usare quello con lat e lon
 		//URL url2=new URL("http://api.wunderground.com/api/2cae48e983982ec4/conditions/lang:it/q/"+state+"/"+city+".xml");
-		URL url2=new URL("http://api.wunderground.com/api/2cae48e983982ec4/conditions/lang:it/q/"+lat+","+lon+".xml");
+		URL url2=new URL(urlBase+lat+","+lon+".xml");
 		InputStream stream2=url2.openStream();
 		Document doc2=domParser.parse(stream2);
 		doc2.normalizeDocument();
@@ -177,7 +178,7 @@ public class ParserMeteo {
 		p.setUmidita(Integer.parseInt(estrai2(doc,"relative_humidity").substring(0,estrai2(doc,"relative_humidity").length()-1))); //es 73 (si intende in %)
 		p.setPressione(Float.parseFloat(estrai2(doc,"pressure_mb")));   //es 982 (si intende in hpa che equivale al mb)
 		p.setVento(Float.parseFloat(estrai2(doc,"wind_kph")));  //es 9.43 (si intende in km/h)
-		p.setPrecipitazioni(Float.parseFloat(estrai2(doc,"precip_today_in")));    
+		p.setPrecipitazioni(Float.parseFloat(estrai2(doc,"precip_1hr_metric")));    
 		p.setMeteo(estrai2(doc,"weather"));
 		//manca codice meteo
 		
