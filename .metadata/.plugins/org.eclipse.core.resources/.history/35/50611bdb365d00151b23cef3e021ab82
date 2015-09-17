@@ -91,7 +91,7 @@ public class ViewManageAgentPanel extends javax.swing.JPanel {
 
         jLabel1.setFont(new java.awt.Font("Courier New", 1, 24)); // NOI18N
         jLabel1.setForeground(new java.awt.Color(0, 51, 255));
-        jLabel1.setText("Manage Agent");
+        jLabel1.setText("Manage Agents");
 
         jlistAgentComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
         jlistAgentComboBox.addActionListener(new java.awt.event.ActionListener() {
@@ -101,7 +101,7 @@ public class ViewManageAgentPanel extends javax.swing.JPanel {
         });
 
         showButton.setFont(new java.awt.Font("Courier New", 1, 14)); // NOI18N
-        showButton.setText("Show");
+        showButton.setText("Properties");
         showButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 showButtonActionPerformed(evt);

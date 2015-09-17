@@ -177,7 +177,7 @@ public class ViewManageAgentPanel extends javax.swing.JPanel {
     		}
     		else
     		{
-    			JOptionPane.showMessageDialog(this, "Connessione ad internet assente");
+    			JOptionPane.showMessageDialog(this, "Error: can't connect to network");
     		}
     	}
     }//GEN-LAST:event_showButtonActionPerformed
