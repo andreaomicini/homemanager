@@ -8,10 +8,16 @@ package it.unibo.homemanager.userinterfaces;
 
 import alice.tucson.api.TucsonTupleCentreId;
 import it.unibo.homemanager.ServiceFactory;
+import it.unibo.homemanager.meteo.AgentManager;
+import it.unibo.homemanager.meteo.MeteoAgent;
+import it.unibo.homemanager.meteo.TucsonAgentInterface;
 import it.unibo.homemanager.tablemap.User;
+
 import java.awt.CardLayout;
 import java.awt.event.ActionEvent;
+import java.util.ArrayList;
 import java.util.Vector;
+
 import javax.swing.BorderFactory;
 import javax.swing.JPanel;
 import javax.swing.border.TitledBorder;
@@ -37,6 +43,10 @@ public class MainPanel extends JPanel {
     private ViewPolicyPanel vpoPanel;
     private ManageProfilePanel mpPanel;
     private ManageUsersPanel muPanel;
+    
+    private ViewManageAgentPanel butlerPanel;
+    
+    
     //RBAC
     private RBACManager rbacPanel;
     private ManRoles manRolePanel;
@@ -61,6 +71,8 @@ public class MainPanel extends JPanel {
     private final static String VIEW_POLICY_PANEL = "View Policy";
     private final static String MANAGE_PROFILE_PANEL = "Manage Profile";
     private final static String MANAGE_USERS_PANEL = "Manage Users";
+    
+    private final static String BUTLER="BUTLER";
     // RBAC
     private final static String MANAGE_RBAC_PANEL = "Manage RBAC";
     private final static String ROLES_PANEL = "Manage ROLES";
@@ -73,6 +85,7 @@ public class MainPanel extends JPanel {
     private final static String VIEW_RBAC_PANEL = "Manage RBAC POLICY";
     private final static String VIEW_RBAC_USR_PANEL = "Manage RBAC USER POLICY";
     private final static String RBAC_STATISTICS = "Manage RBAC STATISTICS";
+ 
     
     public MainPanel() {
         lookAndFeel();
@@ -93,6 +106,21 @@ public class MainPanel extends JPanel {
         mpPanel = new ManageProfilePanel(this, rbac_tc, sf);
         muPanel = new ManageUsersPanel(this, tCenters, sf);
         
+        for(int i=0;i<tCenters.size();i++)
+		{
+			if(((TucsonTupleCentreId)tCenters.elementAt(i)).getName().equals("meteo_tc"))
+			{
+				butlerPanel=new ViewManageAgentPanel(this, ((TucsonTupleCentreId)tCenters.elementAt(i)), tp,sf);
+				ArrayList<TucsonTupleCentreId> l=new ArrayList<TucsonTupleCentreId>();
+			    l.add((TucsonTupleCentreId)tCenters.elementAt(i));
+				AgentManager.getInstance().inizializeComponet(butlerPanel, sf, tp,l);
+				break;
+			}
+		}
+       
+        /*MeteoAgent finded=(MeteoAgent)ManageAgent.getInstance().getAgentbyName("Agente Meteo 1");
+        finded.setPanel(butlerPanel);*/
+        
         //create RBAC panels
         rbacPanel = new RBACManager(this);
         manRolePanel = new ManRoles(this, rbac_tc, this.rbacPanel);
@@ -106,7 +134,11 @@ public class MainPanel extends JPanel {
         viewuserRBAC = new ViewUserRBAC(this, rbac_tc, casa_tc);
         rbacStatistics = new RBACStatistics(this, rbac_tc, rbacPanel, sf);
         
+        
         cards = new JPanel(new CardLayout());
+        
+        cards.add(butlerPanel,BUTLER);
+        addListAgenttoCards(cards);
         
         cards.add(icPanel,ISSUE_CMD_PANEL);
         cards.add(iaPanel,INIT_ADMIN_PANEL);
@@ -150,6 +182,7 @@ public class MainPanel extends JPanel {
 
     private void loadAccessPanel() {
         aPanel.init();
+        butlerPanel.hidePanel();
         icPanel.hidePanel();
         iaPanel.hidePanel();
         cl.show(cards,ACCESS_PANEL);
@@ -168,6 +201,7 @@ public class MainPanel extends JPanel {
 
     private void loadInitAdminPanel() {
         iaPanel.init(user);
+        butlerPanel.hidePanel();
         icPanel.hidePanel();
         aPanel.hidePanel();
         iPanel.hidePanel();
@@ -194,6 +228,7 @@ public class MainPanel extends JPanel {
 
     private void loadInitOrdinaryPanel() {
         ioPanel.init(user);
+        butlerPanel.hidePanel();
         icPanel.hidePanel();
         aPanel.hidePanel();
         iPanel.hidePanel();
@@ -220,6 +255,7 @@ public class MainPanel extends JPanel {
 
     void loadIssueCmdPanel() {
         icPanel.init(user);
+        butlerPanel.hidePanel();
         iaPanel.hidePanel();
         ioPanel.hidePanel();
         aPanel.hidePanel();
@@ -250,6 +286,7 @@ public class MainPanel extends JPanel {
     //RBAC
     void loadManRBACPanel() {
         rbacPanel.init(user);
+        butlerPanel.hidePanel();
         icPanel.hidePanel();
         iaPanel.hidePanel();
         ioPanel.hidePanel();
@@ -276,6 +313,7 @@ public class MainPanel extends JPanel {
 
     void loadManRolePanel() {
         manRolePanel.init(user);
+        butlerPanel.hidePanel();
         rbacPanel.hidePanel();
         icPanel.hidePanel();
         iaPanel.hidePanel();
@@ -302,6 +340,7 @@ public class MainPanel extends JPanel {
 
     void loadManUsRolPanel() {
         manRolePanel.hidePanel();
+        butlerPanel.hidePanel();
         rbacPanel.hidePanel();
         icPanel.hidePanel();
         iaPanel.hidePanel();
@@ -328,6 +367,7 @@ public class MainPanel extends JPanel {
 
     void loadManRolPermPanel() {
         manRolePanel.hidePanel();
+        butlerPanel.hidePanel();
         rbacPanel.hidePanel();
         icPanel.hidePanel();
         iaPanel.hidePanel();
@@ -354,6 +394,7 @@ public class MainPanel extends JPanel {
 
     void loadManPermPanel() {
         manRolePanel.hidePanel();
+        butlerPanel.hidePanel();
         rbacPanel.hidePanel();
         icPanel.hidePanel();
         iaPanel.hidePanel();
@@ -380,6 +421,7 @@ public class MainPanel extends JPanel {
 
     void loadManRBACContrPanel() {
         manRolePanel.hidePanel();
+        butlerPanel.hidePanel();
         rbacPanel.hidePanel();
         icPanel.hidePanel();
         iaPanel.hidePanel();
@@ -406,6 +448,7 @@ public class MainPanel extends JPanel {
 
     void loadManDevContrPanel() {
         manRolePanel.hidePanel();
+        butlerPanel.hidePanel();
         rbacPanel.hidePanel();
         icPanel.hidePanel();
         iaPanel.hidePanel();
@@ -432,6 +475,7 @@ public class MainPanel extends JPanel {
 
     void loadManRoomContrPanel() {
         manRolePanel.hidePanel();
+        butlerPanel.hidePanel();
         rbacPanel.hidePanel();
         icPanel.hidePanel();
         iaPanel.hidePanel();
@@ -458,6 +502,7 @@ public class MainPanel extends JPanel {
 
     void loadViewRBACPanel() {
         manRolePanel.hidePanel();
+        butlerPanel.hidePanel();
         rbacPanel.hidePanel();
         icPanel.hidePanel();
         iaPanel.hidePanel();
@@ -484,6 +529,7 @@ public class MainPanel extends JPanel {
 
     void loadRBACStatisticsPanel() {
         manRolePanel.hidePanel();
+        butlerPanel.hidePanel();
         rbacPanel.hidePanel();
         icPanel.hidePanel();
         iaPanel.hidePanel();
@@ -511,6 +557,7 @@ public class MainPanel extends JPanel {
     //Misc
     void loadInfoPanel() {
         iPanel.init(user);
+        butlerPanel.hidePanel();
         iaPanel.hidePanel();
         ioPanel.hidePanel();
         aPanel.hidePanel();
@@ -537,6 +584,7 @@ public class MainPanel extends JPanel {
 
     void loadVisitorsPanel() {
         vPanel.init(user);
+        butlerPanel.hidePanel();
         iaPanel.hidePanel();
         ioPanel.hidePanel();
         aPanel.hidePanel();
@@ -563,6 +611,7 @@ public class MainPanel extends JPanel {
 
     void loadPolicyPanel() {
         pPanel.init(user);
+        butlerPanel.hidePanel();
         iaPanel.hidePanel();
         ioPanel.hidePanel();
         aPanel.hidePanel();
@@ -589,6 +638,7 @@ public class MainPanel extends JPanel {
 
     void loadViewPlanPanel() {
         vpPanel.init(user);
+        butlerPanel.hidePanel();
         iaPanel.hidePanel();
         ioPanel.hidePanel();
         aPanel.hidePanel();
@@ -615,6 +665,7 @@ public class MainPanel extends JPanel {
 
     void loadViewPolicyPanel() {
         vpoPanel.init(user);
+        butlerPanel.hidePanel();
         iaPanel.hidePanel();
         ioPanel.hidePanel();
         aPanel.hidePanel();
@@ -641,6 +692,7 @@ public class MainPanel extends JPanel {
 
     void loadManageProfilePanel() {
         mpPanel.init(user);
+        butlerPanel.hidePanel();
         iaPanel.hidePanel();
         ioPanel.hidePanel();
         aPanel.hidePanel();
@@ -667,6 +719,7 @@ public class MainPanel extends JPanel {
 
     void loadManageUsersPanel() {
         iaPanel.hidePanel();
+        butlerPanel.hidePanel();
         ioPanel.hidePanel();
         aPanel.hidePanel();
         iPanel.hidePanel();
@@ -693,6 +746,7 @@ public class MainPanel extends JPanel {
     
     void loadViewUsersRBACPanel() {
         iaPanel.hidePanel();
+        butlerPanel.hidePanel();
         ioPanel.hidePanel();
         aPanel.hidePanel();
         iPanel.hidePanel();
@@ -716,5 +770,45 @@ public class MainPanel extends JPanel {
         rbacStatistics.hidePanel();
         cl.show(cards,VIEW_RBAC_USR_PANEL);
     }
+
+	public void loadAgentPanel(TucsonAgentInterface t) {
+        butlerPanel.hidePanel();
+        t.show();
+	}
+
+	public void loadButlerPanel() {
+		iaPanel.hidePanel();
+        ioPanel.hidePanel();
+        aPanel.hidePanel();
+        iPanel.hidePanel();
+        pPanel.hidePanel();
+        icPanel.hidePanel();
+        vPanel.hidePanel();
+        vpPanel.hidePanel();
+        vpoPanel.hidePanel();
+        mpPanel.hidePanel();
+        muPanel.hidePanel();
+        rbacPanel.hidePanel();
+        manRolePanel.hidePanel();
+        manRolPermPanel.hidePanel();
+        manUsRoPanel.hidePanel();
+        manPermPanel.hidePanel();
+        manRBACConstrPanel.hidePanel();
+        manDevConstrPanel.hidePanel();
+        manRoomConstrPanel.hidePanel();
+        viewRBACPanel.hidePanel();
+        butlerPanel.init(user);
+        cl.show(cards,BUTLER);
+		
+	}
+	
+	private void addListAgenttoCards(JPanel cards) {
+	       for(TucsonAgentInterface tucAgentInterface:AgentManager.getInstance().getListAgent()){
+	           cards.add(tucAgentInterface.getInterface(),tucAgentInterface.getName());
+	       }
+	       for(TucsonAgentInterface tucAgentInterface:AgentManager.getInstance().getListAgent()){
+	           cards.add(tucAgentInterface.getInterface(),tucAgentInterface.getName());
+	       }
+	    }
 
 }

@@ -13,8 +13,18 @@ import java.util.List;
 
 import alice.tucson.api.*;
 import alice.logictuple.*;
+
 import java.util.ArrayList;
 import java.util.Vector;
+
+import javax.swing.JButton;
+import javax.swing.GroupLayout;
+import javax.swing.GroupLayout.Alignment;
+import javax.swing.LayoutStyle.ComponentPlacement;
+
+import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.Dimension;
 
 /**
  *
@@ -239,68 +249,87 @@ public class InitAdminPanel extends javax.swing.JPanel {
                 btManRBACActionPerformed(evt);
             }
         });
+        
+        JButton AgentButton = new JButton("Agenti");
+        AgentButton.setMaximumSize(new Dimension(33, 9));
+        AgentButton.setFont(new java.awt.Font("Courier New", 1, 14)); // NOI18N
+        AgentButton.setForeground(new java.awt.Color(102, 0, 102));
+        AgentButton.setText("Butlers");
+        AgentButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                AgentButtonActionPerformed(evt);
+            }
+        });
 
-        org.jdesktop.layout.GroupLayout layout = new org.jdesktop.layout.GroupLayout(this);
-        this.setLayout(layout);
+        GroupLayout layout = new GroupLayout(this);
         layout.setHorizontalGroup(
-            layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(layout.createSequentialGroup()
-                .add(89, 89, 89)
-                .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.TRAILING)
-                    .add(layout.createSequentialGroup()
-                        .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-                            .add(btProfile, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .add(btPolicy, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .add(btUsers, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .add(btVisitors, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                        .add(44, 44, 44)
-                        .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING, false)
-                            .add(btViewInfo, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .add(org.jdesktop.layout.GroupLayout.TRAILING, btManCmd, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .add(org.jdesktop.layout.GroupLayout.TRAILING, btViewPolicy, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .add(org.jdesktop.layout.GroupLayout.TRAILING, btViewPlan, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .add(btManRBAC, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                    .add(org.jdesktop.layout.GroupLayout.LEADING, layout.createSequentialGroup()
-                        .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.TRAILING)
-                            .add(lHi, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 253, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                            .add(lRole, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 253, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .add(btLogOut)))
-                .add(101, 101, 101))
+        	layout.createParallelGroup(Alignment.LEADING)
+        		.addGroup(layout.createSequentialGroup()
+        			.addGap(89)
+        			.addGroup(layout.createParallelGroup(Alignment.LEADING, false)
+        				.addGroup(layout.createParallelGroup(Alignment.TRAILING)
+        					.addComponent(lHi, GroupLayout.PREFERRED_SIZE, 253, GroupLayout.PREFERRED_SIZE)
+        					.addComponent(lRole, GroupLayout.PREFERRED_SIZE, 253, GroupLayout.PREFERRED_SIZE))
+        				.addGroup(layout.createParallelGroup(Alignment.TRAILING, false)
+        					.addComponent(btProfile, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        					.addComponent(btPolicy, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        					.addComponent(btUsers, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        					.addComponent(btVisitors, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        					.addComponent(AgentButton, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 162, Short.MAX_VALUE)))
+        			.addGroup(layout.createParallelGroup(Alignment.LEADING)
+        				.addGroup(layout.createSequentialGroup()
+        					.addPreferredGap(ComponentPlacement.RELATED, 66, Short.MAX_VALUE)
+        					.addComponent(btLogOut))
+        				.addGroup(layout.createParallelGroup(Alignment.LEADING, false)
+        					.addComponent(btViewInfo, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        					.addComponent(btManCmd, Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        					.addComponent(btViewPolicy, Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        					.addComponent(btViewPlan, Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        					.addComponent(btManRBAC, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+        			.addGap(101))
         );
         layout.setVerticalGroup(
-            layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(layout.createSequentialGroup()
-                .add(29, 29, 29)
-                .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.TRAILING)
-                    .add(lHi, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 22, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                    .add(btLogOut))
-                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                .add(lRole, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 23, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .add(btManRBAC)
-                .add(18, 18, 18)
-                .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
-                    .add(btViewInfo, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                    .add(btVisitors))
-                .add(19, 19, 19)
-                .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
-                    .add(btViewPlan)
-                    .add(btUsers))
-                .add(18, 18, 18)
-                .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-                    .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
-                        .add(btViewPolicy)
-                        .add(btPolicy))
-                    .add(layout.createSequentialGroup()
-                        .add(47, 47, 47)
-                        .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
-                            .add(btProfile)
-                            .add(btManCmd, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 25, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))))
-                .add(33, 33, 33))
+        	layout.createParallelGroup(Alignment.LEADING)
+        		.addGroup(layout.createSequentialGroup()
+        			.addGap(29)
+        			.addGroup(layout.createParallelGroup(Alignment.TRAILING)
+        				.addComponent(lHi, GroupLayout.PREFERRED_SIZE, 22, GroupLayout.PREFERRED_SIZE)
+        				.addComponent(btLogOut))
+        			.addPreferredGap(ComponentPlacement.UNRELATED)
+        			.addComponent(lRole, GroupLayout.PREFERRED_SIZE, 23, GroupLayout.PREFERRED_SIZE)
+        			.addPreferredGap(ComponentPlacement.RELATED, 18, Short.MAX_VALUE)
+        			.addGroup(layout.createParallelGroup(Alignment.BASELINE)
+        				.addComponent(btManRBAC)
+        				.addComponent(AgentButton, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+        			.addGap(18)
+        			.addGroup(layout.createParallelGroup(Alignment.BASELINE)
+        				.addComponent(btViewInfo, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+        				.addComponent(btVisitors))
+        			.addGap(19)
+        			.addGroup(layout.createParallelGroup(Alignment.BASELINE)
+        				.addComponent(btViewPlan)
+        				.addComponent(btUsers))
+        			.addGap(18)
+        			.addGroup(layout.createParallelGroup(Alignment.LEADING)
+        				.addGroup(layout.createParallelGroup(Alignment.BASELINE)
+        					.addComponent(btViewPolicy)
+        					.addComponent(btPolicy))
+        				.addGroup(layout.createSequentialGroup()
+        					.addGap(47)
+        					.addGroup(layout.createParallelGroup(Alignment.BASELINE)
+        						.addComponent(btProfile)
+        						.addComponent(btManCmd, GroupLayout.PREFERRED_SIZE, 25, GroupLayout.PREFERRED_SIZE))))
+        			.addGap(33))
         );
+        this.setLayout(layout);
     }// </editor-fold>//GEN-END:initComponents
 
+    
+	private void AgentButtonActionPerformed(ActionEvent evt) {
+		mp.loadButlerPanel();
+	}
+    
+    
     private void btUsersActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btUsersActionPerformed
         mp.loadManageUsersPanel();
     }//GEN-LAST:event_btUsersActionPerformed
@@ -356,6 +385,4 @@ public class InitAdminPanel extends javax.swing.JPanel {
     private javax.swing.JButton btVisitors;
     private javax.swing.JLabel lHi;
     private javax.swing.JLabel lRole;
-    // End of variables declaration//GEN-END:variables
-
 }

@@ -54,6 +54,8 @@ public class Main {
             TucsonTupleCentreId camera_doppia_tc = new TucsonTupleCentreId("camera_doppia_tc", "localhost", "20504");
             TucsonTupleCentreId bagno_priv_tc = new TucsonTupleCentreId("bagno_privato_tc", "localhost", "20504");
             TucsonTupleCentreId garage_tc = new TucsonTupleCentreId("garage_tc", "localhost", "20504");
+            //submitted by Alessandro Celi
+            TucsonTupleCentreId meteo_tc = new TucsonTupleCentreId("meteo_tc", "localhost", "20504");
             //RC replaced rbac_tc with rbac
             System.out.println("Creo rbac_tc");
             TucsonTupleCentreId rbac_tc = new TucsonTupleCentreId("rbac", "localhost", "20504");
@@ -74,6 +76,8 @@ public class Main {
             tupleCenters.add(8, camera_doppia_tc);
             tupleCenters.add(9, bagno_priv_tc);
             tupleCenters.add(10, garage_tc);
+            //subamitted by Alessandro Celi
+            tupleCenters.add(11, meteo_tc); 
             
             JFrame.setDefaultLookAndFeelDecorated(true);
             GeneralFrame gf = new GeneralFrame("HOME MANAGER", tupleCenters, 3, 5, casa_tc, rbac_tc, sf);
