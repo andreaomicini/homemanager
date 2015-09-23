@@ -138,8 +138,8 @@ public class MeteoAgent extends AbstractTucsonAgent implements TucsonAgentInterf
 	            	
 	            	
 	            	//INSERISCO LE TUPLE DI ESEMPIO PER LA REAZIONE------>una volta impostata la reazione sono da eliminare queste righe
-	            	LogicTuple test1=new LogicTuple("shutters_action",new Value("up"),new Value(5),new Value(55));
-	            	LogicTuple test2=new LogicTuple("shutters_action",new Value("down"),new Value(20),new Value(5));
+	            	LogicTuple test1=new LogicTuple("shutters_action",new Value("up"),new Value(6),new Value(44));
+	            	LogicTuple test2=new LogicTuple("shutters_action",new Value("down"),new Value(7),new Value(8));
 	            	this.acc.out(this.myTid, test1, null);
 	            	this.acc.out(this.myTid, test2, null);
 	            	//
@@ -209,7 +209,7 @@ public class MeteoAgent extends AbstractTucsonAgent implements TucsonAgentInterf
 	            	Thread.sleep(900000);  //imposto che le previsioni si aggiornano ogni 15 minuti(=900000 millisec)          [ 8 ore(=28800000 millisec)]
 	            	
 	            	//elimino le tuple precedenti nel centro di tuple per poi salvare quelle piu aggiornate
-	            	//vers2.0 però devo metterla dopo l aggiunta perchè senno la inAll è bloccante fino a quando non trova tuple
+	            	//vers2.0 perï¿½ devo metterla dopo l aggiunta perchï¿½ senno la inAll ï¿½ bloccante fino a quando non trova tuple
 	            	
 	            	reset();
 	            	
@@ -238,9 +238,11 @@ public class MeteoAgent extends AbstractTucsonAgent implements TucsonAgentInterf
 
 		private void reset() throws OperationTimeOutException,UnreachableNodeException,TucsonOperationNotPossibleException
 		{
-			LogicTuple template=new LogicTuple("meteo", new Var(), new Var(), new Var(), new Var(), new Var(), new Var(), new Var());
+			LogicTuple template=new LogicTuple("meteo", new Var(), new Var(),
+					new Var(), new Var(), new Var(), new Var(), new Var());
         	acc.inAll(myTid, template, Long.MAX_VALUE);
-        	template=new LogicTuple("meteo", new Var(), new Var(), new Var(), new Var(), new Var(), new Var());
+        	template=new LogicTuple("meteo", new Var(), new Var(), new Var(),
+        			new Var(), new Var(), new Var());
         	acc.inAll(myTid, template, Long.MAX_VALUE);
         	template=new LogicTuple("meteo",new Var(), new Var(), new Var(), new Var());
         	acc.inAll(myTid, template, Long.MAX_VALUE);
@@ -268,7 +270,7 @@ public class MeteoAgent extends AbstractTucsonAgent implements TucsonAgentInterf
 			return "Weather Agent";
 		}
 
-		public String[] getColumnNames(String site) {
+public String[] getColumnNames(String site) {
 			
 			switch (site) {
 			case "OpenWeatherMap":
@@ -278,9 +280,9 @@ public class MeteoAgent extends AbstractTucsonAgent implements TucsonAgentInterf
                         
                         "Hour sunset",
                        
-                        "T avg °C",
-                        "T max °C",
-                        "T min °C",
+                        "T avg \u00b0C",
+                        "T max \u00b0C",
+                        "T min \u00b0C",
                         "Humidity %",
                         "Pressure mb",
                         "Wind km/h",
@@ -297,9 +299,9 @@ public class MeteoAgent extends AbstractTucsonAgent implements TucsonAgentInterf
                         
                         "Hour sunset",
                        
-                        "T avg °C",
-                        "T max °C",
-                        "T min °C",
+                        "T avg \u00b0C",
+                        "T max \u00b0C",
+                        "T min \u00b0C",
                         "Humidity %",
                         "Pressure mb",
                         "Wind km/h",
@@ -316,7 +318,7 @@ public class MeteoAgent extends AbstractTucsonAgent implements TucsonAgentInterf
                         //"Minut alba",
                         //"Ora tramonto",
                        //"Minut tramonto",
-                        "T avg °C",
+                        "T avg \u00b0C",
                         //"Temp max",
                         //"Temp min",
                         "Humidity %",
@@ -525,8 +527,14 @@ public class MeteoAgent extends AbstractTucsonAgent implements TucsonAgentInterf
 					data= new Object[1][4];
 					data[0][0]=t1.getArg(0); //sito
 					data[0][1]=t1.getArg(1); //citta
-					data[0][2]=""+t1.getArg(2)+":"+t1.getArg(3); //ora alba
-					data[0][3]=""+t1.getArg(4)+":"+t1.getArg(5); //ora tram
+					if((""+t1.getArg(3)).length()==1)
+						data[0][2]=""+t1.getArg(2)+":0"+t1.getArg(3); //ora alba
+					else
+						data[0][2]=""+t1.getArg(2)+":"+t1.getArg(3);
+					if((""+t1.getArg(5)).length()==1)
+						data[0][3]=""+t1.getArg(4)+":0"+t1.getArg(5); //ora tram
+					else
+						data[0][3]=""+t1.getArg(4)+":"+t1.getArg(5);
 				}
 				else
 				{
@@ -567,8 +575,14 @@ public class MeteoAgent extends AbstractTucsonAgent implements TucsonAgentInterf
 						data= new Object[1][4];
 						data[0][0]=t1.getArg(0); //sito
 						data[0][1]=t1.getArg(1); //citta
-						data[0][2]=""+t1.getArg(2)+":"+t1.getArg(3); //ora alba
-						data[0][3]=""+t1.getArg(4)+":"+t1.getArg(5); //ora tram
+						if((""+t1.getArg(3)).length()==1)
+							data[0][2]=""+t1.getArg(2)+":0"+t1.getArg(3); //ora alba
+						else
+							data[0][2]=""+t1.getArg(2)+":"+t1.getArg(3);
+						if((""+t1.getArg(5)).length()==1)
+							data[0][3]=""+t1.getArg(4)+":0"+t1.getArg(5); //ora tram
+						else
+							data[0][3]=""+t1.getArg(4)+":"+t1.getArg(5);
 					}
 					else
 					{
@@ -912,17 +926,23 @@ public class MeteoAgent extends AbstractTucsonAgent implements TucsonAgentInterf
 		//DA TESTARE
 		
 		public String[] getShuttersActions() {
-			
 			 LogicTuple t3=new LogicTuple("shutters_action", new Value("up"), new Var(), new Var());
 			 LogicTuple t4=new LogicTuple("shutters_action", new Value("down"), new Var(), new Var());
 			 try{
 				ITucsonOperation op3=acc.rdp(myTid, t3, Long.MAX_VALUE);
 				ITucsonOperation op4=acc.rdp(myTid, t4, Long.MAX_VALUE);
-				
 				if(op3.isResultSuccess() && op4.isResultSuccess())
 				{
-					String one=""+t3.getArg(0)+"         "+t3.getArg(1)+":"+t3.getArg(2);
-					String two=""+t4.getArg(0)+"    "+t4.getArg(1)+":"+t4.getArg(2);
+					String one;
+					String two;
+					if((""+t3.getArg(2)).length()==1)
+						one=""+t3.getArg(0)+"         "+t3.getArg(1)+":0"+t3.getArg(2);
+					else
+						one=""+t3.getArg(0)+"         "+t3.getArg(1)+":"+t3.getArg(2);
+					if((""+t4.getArg(2)).length()==1)
+						two=""+t4.getArg(0)+"    "+t4.getArg(1)+":0"+t4.getArg(2);
+					else
+						two=""+t4.getArg(0)+"    "+t4.getArg(1)+":"+t4.getArg(2);
 					String[] ar = {one, two};
 					return ar;
 				}
@@ -950,6 +970,5 @@ public class MeteoAgent extends AbstractTucsonAgent implements TucsonAgentInterf
 		              tp.appendText("MeteoAgent : error in activity.");
 		          }
 			 return null;
-	
 		}
 }
