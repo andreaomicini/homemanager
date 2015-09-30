@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <persistency>
-    <snapshot tc="'@'(db,':'(localhost,'20504'))" time="2015-09-22_13.30.23">
+    <snapshot tc="'@'(db,':'(localhost,'20504'))" time="2015-09-30_16.27.22">
         <tuples>
             <tuple>device(1,'Stereo Philips MCM 190/22',20,'on;off;cd;tuner','R',2)</tuple>
             <tuple>device(2,'TV Plasma Samsung PS 42C7H',20,'on;off','R',2)</tuple>
@@ -36,11 +36,12 @@
             <tuple>lamp(5,'BEDROOM_PC_DESK',5)</tuple>
             <tuple>lamp(6,'BEDROOM_MAIN_LIGHT',6)</tuple>
             <tuple>lamp(7,'BATHROOM_MAIN_LIGHT',7)</tuple>
+            <tuple>credenziali_twitter(1,rKV5Os2ldMzQZkTLqhY8qAWVUhJaiUhxbg9zt51vXFo4gRjVGK,kfljIEHSF0cpnIAWXionCCocZcrzx6pjYVcV816xr02PX)</tuple>
         </tuples>
         <specTuples/>
         <predicates/>
     </snapshot>
-<updates time="2015-09-22_13.30.23">
+<updates time="2015-09-30_16.27.22">
         <update action="addition" subject="tuple">is_persistent(db)</update>
     </updates>
 </persistency>

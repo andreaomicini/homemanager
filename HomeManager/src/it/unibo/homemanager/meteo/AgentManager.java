@@ -15,6 +15,7 @@ import alice.tucson.api.exceptions.TucsonInvalidAgentIdException;
 import it.unibo.homemanager.ServiceFactory;
 import it.unibo.homemanager.dbmanagement.Database;
 import it.unibo.homemanager.dbmanagement.TucsonDatabase;
+import it.unibo.homemanager.social.TwitterAgent;
 import it.unibo.homemanager.userinterfaces.TracePanel;
 import it.unibo.homemanager.userinterfaces.ViewManageAgentPanel;
 
@@ -71,15 +72,24 @@ public class AgentManager {
     private void initListAgent() {
         listAgentInterface=new ArrayList<TucsonAgentInterface>();
         MeteoAgent m = null;
-        try {
+        TwitterAgent t = null;
+        try 
+        {
            
         	m=new MeteoAgent("meteoAgent_1",tp,tcs.get(0),database);  
         	m.setPanel(viewManagerAgent);
         	
-        } catch (TucsonInvalidAgentIdException ex) {
+        	t=new TwitterAgent("twitterAgent", tp, tcs.get(1), database);
+        	t.setPanel(viewManagerAgent);
+        	
+        } 
+        catch (TucsonInvalidAgentIdException ex) 
+        {
             Logger.getLogger(AgentManager.class.getName()).log(Level.SEVERE, null, ex);
         }
+        
         listAgentInterface.add(m);
+        listAgentInterface.add(t);
     }
      
     

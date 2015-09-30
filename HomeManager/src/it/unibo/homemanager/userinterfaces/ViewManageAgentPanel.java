@@ -37,12 +37,13 @@ public class ViewManageAgentPanel extends javax.swing.JPanel {
     private TracePanel tp;
 
     
-    public ViewManageAgentPanel(MainPanel mpanel, TucsonTupleCentreId meteo_tc,TracePanel tp,ServiceFactory sf) {
+    public ViewManageAgentPanel(MainPanel mpanel, ArrayList<TucsonTupleCentreId> tcList,TracePanel tp,ServiceFactory sf) {
         this.mp=mpanel;
-        this.meteo_tc=meteo_tc;
+        //this.meteo_tc=meteo_tc;
         this.tp=tp;
-        ArrayList<TucsonTupleCentreId> l=new ArrayList<TucsonTupleCentreId>();
-        l.add(meteo_tc);
+        //ArrayList<TucsonTupleCentreId> l=new ArrayList<TucsonTupleCentreId>();
+        //l.add(meteo_tc);
+        ArrayList<TucsonTupleCentreId> l = tcList;
         AgentManager.getInstance().inizializeComponet(this,sf, tp, l);
         initComponents();
     }
@@ -77,7 +78,8 @@ public class ViewManageAgentPanel extends javax.swing.JPanel {
         jLabel1 = new javax.swing.JLabel();
         jlistAgentComboBox = new javax.swing.JComboBox();
         showButton = new javax.swing.JButton();
-
+        
+        setBackground(new java.awt.Color(204, 204, 255));
         setMaximumSize(new java.awt.Dimension(538, 343));
         setMinimumSize(new java.awt.Dimension(538, 343));
 

@@ -106,7 +106,22 @@ public class MainPanel extends JPanel {
         mpPanel = new ManageProfilePanel(this, rbac_tc, sf);
         muPanel = new ManageUsersPanel(this, tCenters, sf);
         
+        ArrayList<TucsonTupleCentreId> l=new ArrayList<TucsonTupleCentreId>();
         for(int i=0;i<tCenters.size();i++)
+		{
+			if(((TucsonTupleCentreId)tCenters.elementAt(i)).getName().equals("meteo_tc"))
+			{
+			    l.add((TucsonTupleCentreId)tCenters.elementAt(i));
+			}
+			else if(((TucsonTupleCentreId)tCenters.elementAt(i)).getName().equals("twitter_tc"))
+			{
+				l.add((TucsonTupleCentreId)tCenters.elementAt(i));
+			}
+		}
+        butlerPanel=new ViewManageAgentPanel(this, l, tp, sf);
+        AgentManager.getInstance().inizializeComponet(butlerPanel, sf, tp,l);
+        
+        /*for(int i=0;i<tCenters.size();i++)
 		{
 			if(((TucsonTupleCentreId)tCenters.elementAt(i)).getName().equals("meteo_tc"))
 			{
@@ -116,7 +131,7 @@ public class MainPanel extends JPanel {
 				AgentManager.getInstance().inizializeComponet(butlerPanel, sf, tp,l);
 				break;
 			}
-		}
+		}*/
        
         /*MeteoAgent finded=(MeteoAgent)ManageAgent.getInstance().getAgentbyName("Agente Meteo 1");
         finded.setPanel(butlerPanel);*/
