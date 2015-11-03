@@ -27,7 +27,7 @@ public class Conversion {
     indexTo = inputString.indexOf("'", indexFrom);
     while (indexTo >= 0) {
       temp.append(inputString.substring(indexFrom, indexTo));
-      temp.append("`");
+      temp.append("'");
       indexFrom = indexTo;
       indexTo = inputString.indexOf("'", ++indexFrom);
     }

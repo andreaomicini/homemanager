@@ -60,7 +60,7 @@ public class Main {
             //submitted by Alessandro Celi
             TucsonTupleCentreId meteo_tc = new TucsonTupleCentreId("meteo_tc", "localhost", "20504");
             //RC replaced rbac_tc with rbac
-            System.out.println("Creo rbac_tc");
+            System.out.println("Creo rbac");
             TucsonTupleCentreId rbac_tc = new TucsonTupleCentreId("rbac", "localhost", "20504");
             TucsonTupleCentreId casa_tc = new TucsonTupleCentreId("casa_tc", "localhost", "20504");
             
@@ -69,12 +69,12 @@ public class Main {
             
             Vector tupleCenters = new Vector();
             tupleCenters.add(0, ingresso_tc);
-            tupleCenters.add(1, cucina_tc);
-            tupleCenters.add(2, sala_tc);
+            tupleCenters.add(1, sala_tc);
+            tupleCenters.add(2, camera_tc);
             tupleCenters.add(3, studio_tc);
-            tupleCenters.add(4, corridoio_tc);
+            tupleCenters.add(4, cucina_tc);
             tupleCenters.add(5, bagno_tc);
-            tupleCenters.add(6, camera_tc);
+            tupleCenters.add(6, corridoio_tc);
             tupleCenters.add(7, ripostiglio_tc);
             tupleCenters.add(8, camera_doppia_tc);
             tupleCenters.add(9, bagno_priv_tc);

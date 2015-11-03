@@ -185,7 +185,7 @@ public class Initializer {
         try {
             TucsonAgentId agent = new TucsonAgentId("initMaxEnergyVal");
             EnhancedSynchACC acc = TucsonMetaACC.getContext(agent);
-            LogicTuple updPrioFactorTemplate = new LogicTuple("upd_max_energy",new Value(120));
+            LogicTuple updPrioFactorTemplate = new LogicTuple("upd_max_energy",new Value(1000));
             
             acc.out(casa_tc, updPrioFactorTemplate, null);
             
@@ -216,9 +216,9 @@ public class Initializer {
             TucsonAgentId agent = new TucsonAgentId("initIndispensableDevice");
             EnhancedSynchACC acc = TucsonMetaACC.getContext(agent);
             
-            LogicTuple indispensableDeviceTemplate = new LogicTuple("indispensable_device",new Value(8));
+            LogicTuple indispensableDeviceTemplate = new LogicTuple("indispensable_device",new Value(7));
             acc.out(casa_tc, indispensableDeviceTemplate, null);
-            indispensableDeviceTemplate = new LogicTuple("indispensable_device",new Value(9));
+            indispensableDeviceTemplate = new LogicTuple("indispensable_device",new Value(6));
             acc.out(casa_tc, indispensableDeviceTemplate, null);
             
             acc.exit();
@@ -282,13 +282,13 @@ public class Initializer {
             
             LogicTuple unnecessaryDeviceTemplate = new LogicTuple("unnecessary_device",new Value(1));
             acc.out(casa_tc, unnecessaryDeviceTemplate, null);
+            unnecessaryDeviceTemplate = new LogicTuple("unnecessary_device",new Value(4));
+            acc.out(casa_tc, unnecessaryDeviceTemplate, null);
             unnecessaryDeviceTemplate = new LogicTuple("unnecessary_device",new Value(3));
             acc.out(casa_tc, unnecessaryDeviceTemplate, null);
             unnecessaryDeviceTemplate = new LogicTuple("unnecessary_device",new Value(5));
             acc.out(casa_tc, unnecessaryDeviceTemplate, null);
-            unnecessaryDeviceTemplate = new LogicTuple("unnecessary_device",new Value(10));
-            acc.out(casa_tc, unnecessaryDeviceTemplate, null);
-            unnecessaryDeviceTemplate = new LogicTuple("unnecessary_device",new Value(11));
+            unnecessaryDeviceTemplate = new LogicTuple("unnecessary_device",new Value(2));
             acc.out(casa_tc, unnecessaryDeviceTemplate, null);
             
             acc.exit();
@@ -365,10 +365,15 @@ public class Initializer {
             String theory = Utils.fileToString("it/unibo/homemanager/theory_room.rsp");
             System.out.println("Writing ReSpecT into " + ((TucsonTupleCentreId) tuplecenters.get(2)).getName());
             
-            for(int i=0; i<tuplecenters.size(); i++) {
+           
+            for(int i=0; i<tuplecenters.size()-2; i++) {
+           	System.out.println(tuplecenters.get(i).toString());
                 ITucsonOperation op_set = acc.setS((TucsonTupleCentreId) tuplecenters.get(i), theory, null);
-                System.out.println(((TucsonTupleCentreId) tuplecenters.get(i)).getName() + " - Respect initialization: " + String.valueOf(op_set.isResultSuccess()));
+               // System.out.println(((TucsonTupleCentreId) tuplecenters.get(i)).getName() + " - Respect initialization: " + String.valueOf(op_set.isResultSuccess()));
             }
+            
+            
+           
 
             theory = Utils.fileToString("it/unibo/homemanager/theory_casa.rsp");
             acc.setS(casa_tc, theory, null);
@@ -780,6 +785,12 @@ public class Initializer {
         try {
             LogicTuple init = new LogicTuple("upd_dev_curr_st",new Value(d.idDev),new Value("off"));
             acc.out(tid,init, null);
+            //device che hanno una temperatura
+            if ((d.idDev>=5) && (d.idDev<=7))
+                {
+            	   LogicTuple init_temp = new LogicTuple("temp_curr", new Value(d.idDev), new Value(0));
+                   acc.out(tid,init_temp,null);
+                }
         }
         catch(Exception ex) {
             ex.printStackTrace();

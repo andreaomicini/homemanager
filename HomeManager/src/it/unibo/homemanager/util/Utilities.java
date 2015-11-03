@@ -142,7 +142,8 @@ public class Utilities {
     }
 
     public static String[] getDevCmds(String param) {
-        return param.split(",");
+        param = param.substring(1, param.length()-1);
+    	return param.split(";");
     }
 
     public static Room findRoomByName(Vector rooms, String name) {

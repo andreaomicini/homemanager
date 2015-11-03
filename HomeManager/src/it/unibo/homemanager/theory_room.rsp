@@ -10,7 +10,7 @@ reaction(
     (operation, completion),
     (
         current_time(Tc),
-        rbac_tc@localhost:20504?out(dev_acts(Y,Z,K,Tc))
+        rbac@localhost:20504?out(dev_acts(Y,Z,K,Tc))
     )
 ).
 
@@ -20,7 +20,7 @@ reaction(
     (operation, completion),
     (
         current_time(Tc),
-        rbac_tc@localhost:20504?out(room_acts(X,Z,K,Tc))
+        rbac@localhost:20504?out(room_acts(X,Z,K,Tc))
     )
 ).
 
@@ -131,6 +131,31 @@ reaction(
         no(dev_curr_st(X,_)),
         out(dev_curr_st(X,Y)),
         in(upd_dev_curr_st(X,Y))
+    )
+).
+
+
+% Device State Update with temperature: upd_dev_curr_st->dev_curr_st
+reaction(
+    out(upd_dev_curr_st(X,Y,W)),
+    (operation, completion),
+    (
+        in(dev_curr_st(X,_)),
+        out(dev_curr_st(X,Y)),
+		in(temp_curr(X,_)),
+		out(temp_curr(X,W)),
+        in(upd_dev_curr_st(X,Y,W))
+    )
+).
+reaction(
+    out(upd_dev_curr_st(X,Y,W)),
+    (operation, completion),
+    (
+        no(dev_curr_st(X,_)),
+        out(dev_curr_st(X,Y)),
+		no(temp_curr(X,_)),
+		out(temp_curr(X,W)),
+        in(upd_dev_curr_st(X,Y,W))
     )
 ).
 
@@ -337,8 +362,10 @@ reaction(
         new_trap(_,Y,finished_act(X))
     )
 ).
+
 reaction(
     trap(finished_act(X)),
+    (operation, completion),
     (
         out(change_st(X,Y,W,Z))
     )

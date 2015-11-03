@@ -106,7 +106,7 @@ public class CmdControllerAgent extends AbstractTucsonAgent {
             LogicTuple inAllTemplate = new LogicTuple("send_cmd",
                             new Var("W"), // user id
                             room,         // room
-                            new Var("W"), // device
+                            new Var("Y"), // device
                             new Var("Z")); // command
             ITucsonOperation op_inAll = acc.inAll(myTid, inAllTemplate, Long.MAX_VALUE);
             List l = op_inAll.getLogicTupleListResult();
@@ -129,9 +129,9 @@ public class CmdControllerAgent extends AbstractTucsonAgent {
         boolean result = false;
         try{
             Device dev = sf.getDeviceServiceInterface().getDeviceById(sf.getDatabaseInterface().getDatabase(), parse.getArg(2).intValue());
-            LogicTuple outTemplate = new LogicTuple("device_req", new Value(this.myName()), parse.getArg(0), new Value(dev.name));
+            LogicTuple outTemplate = new LogicTuple("device_req", new Value(this.myName()), parse.getArg(0), new Value(dev.name.substring(1, dev.name.length()-1)));
             acc.out(this.myTid, outTemplate, null);
-            LogicTuple inTemplate = new LogicTuple("device_resp", new Value(this.myName()), parse.getArg(0), new Value(dev.name), new Var("X"));
+            LogicTuple inTemplate = new LogicTuple("device_resp", new Value(this.myName()), parse.getArg(0), new Value(dev.name.substring(1, dev.name.length()-1)), new Var("X"));
             ITucsonOperation op_in = acc.in(myTid, inTemplate, Long.MAX_VALUE);
             LogicTuple response = op_in.getLogicTupleResult();
             if(response.getArg(3).intValue() == 1)

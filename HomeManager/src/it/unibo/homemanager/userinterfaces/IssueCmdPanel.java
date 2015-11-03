@@ -388,8 +388,8 @@ public class IssueCmdPanel extends javax.swing.JPanel {
                 new Value(d.idDev),new Value(cbCmd.getSelectedItem().toString()));
             
             acc.out((TucsonTupleCentreId)tid.elementAt(r.idRoom-1), cmd, null);
-            //ctx.out((TupleCentreId)tid.elementAt(r.idRoom-1),cmd);
-            //Utilities.insertTupleInto((TucsonTupleCentreId)tid.elementAt(r.idRoom-1), cmd);
+           // ctx.out((TupleCentreId)tid.elementAt(r.idRoom-1),cmd);
+            Utilities.insertTupleInto((TucsonTupleCentreId)tid.elementAt(r.idRoom-1), cmd);
             System.err.println("CMD SENT: "+this.tCmd.getText()+" / "+cmd);
             acc.exit();
         }

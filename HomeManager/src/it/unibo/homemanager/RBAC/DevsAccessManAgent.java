@@ -72,8 +72,9 @@ public class DevsAccessManAgent extends AbstractTucsonAgent {
             LogicTuple lt = op_in.getLogicTupleResult();
             this.agentId = lt.getArg(0).getName();
             this.UserId = lt.getArg(1).intValue();
-            this.dev_name = lt.getArg(2).getName().substring(1, lt.getArg(2).getName().length()-1);
-	    if(this.dev_name.contains("`"))
+            this.dev_name = lt.getArg(2).getName();
+            	
+	   if(this.dev_name.contains("'"))
 		this.dev_name = this.dev_name.substring(1, this.dev_name.length()-1);
             System.err.println("[DevsAccessManAgent] Data: " + agentId + "||" + UserId + "||" + dev_name);
             //ass_class_devs('Home_Entertainment','PC Hp Pavilon')

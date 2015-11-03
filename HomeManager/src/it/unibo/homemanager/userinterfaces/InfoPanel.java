@@ -407,7 +407,7 @@ public class InfoPanel extends javax.swing.JPanel {
                 String devName = tokenizer.nextToken().trim();
                 String rName = tokenizer.nextToken().trim();
                 Room rm = Utilities.findRoomByName(rs.getRooms(database.getDatabase()),rName);
-                d = ds.getDevice(database.getDatabase(),devName,rm.idRoom);
+                d = ds.getDevice(database.getDatabase(),devName.substring(1, devName.length()-1),rm.idRoom);
             }
             catch(Exception ex) {
                 ex.printStackTrace();

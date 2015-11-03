@@ -60,7 +60,7 @@ public class PlanEntitiesAgent extends AbstractTucsonAgent {
 
     @Override
     protected void main() {
-        tp.appendText("-- PLAN ENTITIES AGENT STARTED.");
+        tp.appendText("-- PLAN ENTITIES AGENT STARTED."+ myTid);
         acc = this.getContext();
         
         try {
@@ -68,7 +68,7 @@ public class PlanEntitiesAgent extends AbstractTucsonAgent {
                 LogicTuple newPlanTemplate = new LogicTuple("new_plan",new Var("X"));
                 ITucsonOperation op_in = acc.in(myTid, newPlanTemplate, Long.MAX_VALUE);
                 LogicTuple tuple = op_in.getLogicTupleResult();
-                tp.appendText("** "+tuple+" **");
+                tp.appendText("** ho ricevuto "+tuple+" **");
                 room = tuple.getArg(0);
                 // launch entities related to preferences and commands
                 PrefControllerAgent pca = new PrefControllerAgent("pref_controller", myTid,room, tp, sf);

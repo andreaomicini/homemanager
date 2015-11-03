@@ -176,7 +176,7 @@ public class PrefControllerAgent extends AbstractTucsonAgent {
                 prefs[i] = st.nextToken();
                 System.err.println("prefs["+i+"]:" + prefs[i]);
                 StringTokenizer st2 = new StringTokenizer(prefs[i], "-");
-		int roomPrefs = Integer.parseInt(st2.nextToken());
+		int roomPrefs = Integer.parseInt(st2.nextToken().substring(1));
 		int devPrefs = Integer.parseInt(st2.nextToken());
                 if(this.room.intValue() == roomPrefs) {//Integer.parseInt(st2.nextToken())){
                     System.err.println("Sono entrato nell'if con la preferenza " + i + ": " + prefs[i]);
