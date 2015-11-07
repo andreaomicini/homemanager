@@ -78,7 +78,7 @@ public class TucsonUserService implements UserServiceInterface {
 
 			if (exist) {
 				throw new Exception("User: insert(): Tentativo di inserimento "+
-					"di un utente giï¿½ presente.");
+					"di un utente già presente.");
 				}
 			
 			/*inserimento del dispositivo*/
@@ -92,6 +92,7 @@ public class TucsonUserService implements UserServiceInterface {
 			if((this.calcId(db)+1)==0){throw new Exception("Problema calcolo id");}
 			 arr= new LogicTuple().parse("user"+"(["+newId+","+ Sfirstname+","+Ssurname+
 					 ","+ un+","+p+","+Srole+","+th+","+tac+",'"+act+"'])");
+			 System.out.println("Si vuole inserire "+ arr.toString());
 			db.insert(arr);
 			
 		} catch (Exception e1) {
@@ -197,15 +198,15 @@ public class TucsonUserService implements UserServiceInterface {
 			String Sfirstname=u.firstname;
 			String Ssurname=u.surname;
 			String Srole=u.role;
-			if(!Conversion.islow(u.firstname)) Sfirstname="'"+u.firstname+"'";
-			if(!Conversion.islow(u.surname)) Ssurname="'"+u.surname+"'";
+			
 			Srole="'"+u.role+"'";
 			
 			LogicTuple arr= new LogicTuple().parse("user"+"(["+u.idUser+","+ Sfirstname+","+Ssurname+
-					 ","+ u.username+","+u.pwd+","+Srole+","+u.temp_heat+","+u.temp_ac+",'"+u.activate+"'])");
+					 ","+ u.username+","+u.pwd+","+Srole+","+u.temp_heat+","+u.temp_ac+","+ u.activate+"])");
 		    db.insert(arr);
 	     }catch(Exception e){e.printStackTrace();}
 		}
+		
 		//  
 		@SuppressWarnings("static-access")
 		public void deleteUser(Database database, User u) 
@@ -221,7 +222,7 @@ public class TucsonUserService implements UserServiceInterface {
 						}
 				
 				LogicTuple arr= new LogicTuple().parse("user"+"(["+u.idUser+","+ u.firstname+","+u.surname+
-						 ","+u.username+","+u.pwd+","+u.role+","+u.temp_heat+","+u.temp_ac+",'"+u.activate+"'])");
+						 ","+u.username+","+u.pwd+","+u.role+","+u.temp_heat+","+u.temp_ac+","+u.activate+"])");
 				db.delete(arr);
 			}catch (Exception e1) {
 

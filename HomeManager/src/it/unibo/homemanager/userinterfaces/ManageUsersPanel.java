@@ -261,6 +261,7 @@ public class ManageUsersPanel extends javax.swing.JPanel {
         if(choice == JOptionPane.OK_OPTION) {
             try {
                 usr.role = Utilities.getOtherRoleChar(usr.getRoleChar());//role.charAt(0));
+                System.out.println("Voglio modificare "+ usr.username+ "che diventi "+ usr.role);
                 //usr.update(database.getDatabase());
 		userService.updateUser(database.getDatabase(), usr);
                 fillList();

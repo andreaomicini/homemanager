@@ -135,27 +135,23 @@ reaction(
 ).
 
 
-% Device State Update with temperature: upd_dev_curr_st->dev_curr_st
+% Device State Update temperature: 
 reaction(
-    out(upd_dev_curr_st(X,Y,W)),
+    out(upd_curr_temp_dev(X,Y)),
     (operation, completion),
     (
-        in(dev_curr_st(X,_)),
-        out(dev_curr_st(X,Y)),
-		in(temp_curr(X,_)),
-		out(temp_curr(X,W)),
-        in(upd_dev_curr_st(X,Y,W))
+        in(temp_curr_dev(X,_)),
+		out(temp_curr_dev(X,Y)),
+        in(upd_curr_temp_dev(X,Y))
     )
 ).
 reaction(
-    out(upd_dev_curr_st(X,Y,W)),
+    out(upd_curr_temp_dev(X,Y)),
     (operation, completion),
     (
-        no(dev_curr_st(X,_)),
-        out(dev_curr_st(X,Y)),
-		no(temp_curr(X,_)),
-		out(temp_curr(X,W)),
-        in(upd_dev_curr_st(X,Y,W))
+        no(temp_curr_dev(X,_)),
+		out(temp_curr_dev(X,Y)),
+        in(upd_curr_temp_dev(X,Y))
     )
 ).
 

@@ -105,7 +105,7 @@ public class VisitorsPanel extends javax.swing.JPanel {
         jLabel5 = new javax.swing.JLabel();
         btOkModify = new javax.swing.JButton();
         jLabel7 = new javax.swing.JLabel();
-        jButton1 = new javax.swing.JButton();
+        jScrollPane1 = new javax.swing.JScrollPane();
 
         setBackground(new java.awt.Color(204, 204, 255));
         setFont(new java.awt.Font("Courier New", 0, 13));
@@ -177,6 +177,7 @@ public class VisitorsPanel extends javax.swing.JPanel {
         jLabel3.setFont(new java.awt.Font("Courier New", 0, 12));
         jLabel3.setForeground(new java.awt.Color(0, 0, 51));
         jLabel3.setText("Surname:");
+        jScrollPane1.setViewportView(modifyPanel);
 
         org.jdesktop.layout.GroupLayout insertPanelLayout = new org.jdesktop.layout.GroupLayout(insertPanel);
         insertPanel.setLayout(insertPanelLayout);
@@ -278,13 +279,7 @@ public class VisitorsPanel extends javax.swing.JPanel {
         jLabel7.setFont(new java.awt.Font("Courier New", 0, 12));
         jLabel7.setText("Insert new Visitors or modify/delete those already present.");
 
-        jButton1.setForeground(new java.awt.Color(255, 0, 0));
-        jButton1.setText("FINGERPRINT");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
-            }
-        });
+       
 
         org.jdesktop.layout.GroupLayout layout = new org.jdesktop.layout.GroupLayout(this);
         this.setLayout(layout);
@@ -295,8 +290,7 @@ public class VisitorsPanel extends javax.swing.JPanel {
                     .add(org.jdesktop.layout.GroupLayout.LEADING, layout.createSequentialGroup()
                         .addContainerGap()
                         .add(lbRes, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 358, Short.MAX_VALUE)
-                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                        .add(jButton1, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 105, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED))
                     .add(org.jdesktop.layout.GroupLayout.LEADING, layout.createParallelGroup(org.jdesktop.layout.GroupLayout.TRAILING, false)
                         .add(org.jdesktop.layout.GroupLayout.LEADING, layout.createSequentialGroup()
                             .add(10, 10, 10)
@@ -339,7 +333,7 @@ public class VisitorsPanel extends javax.swing.JPanel {
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
                     .add(lbRes, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 21, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                    .add(jButton1))
+                    )
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
                     .add(layout.createSequentialGroup()
@@ -465,7 +459,6 @@ public class VisitorsPanel extends javax.swing.JPanel {
     private javax.swing.JButton btModify;
     private javax.swing.JButton btOkModify;
     private javax.swing.JPanel insertPanel;
-    private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -479,6 +472,7 @@ public class VisitorsPanel extends javax.swing.JPanel {
     private javax.swing.JTextField tfNameMod;
     private javax.swing.JTextField tfSName;
     private javax.swing.JTextField tfSNameMod;
+    private javax.swing.JScrollPane jScrollPane1;
     // End of variables declaration//GEN-END:variables
     
 }

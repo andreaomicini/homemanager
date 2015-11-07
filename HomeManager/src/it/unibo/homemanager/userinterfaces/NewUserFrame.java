@@ -74,11 +74,11 @@ public class NewUserFrame extends javax.swing.JFrame {
         //pane.setBorder(BorderFactory.createEtchedBorder());
         actPanel.setBackground(new java.awt.Color(102, 0, 102));
         actPanel.setLayout(new BoxLayout(actPanel,BoxLayout.Y_AXIS));
-        pane.setViewportView(actPanel);
-        pane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-        pane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
-        //pane.setBounds(190,180,342,150);
-        this.genPanel.add(pane);
+        pane1.setViewportView(actPanel);
+        pane1.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+        pane1.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
+        pane1.setBounds(190,180,342,150);
+        this.genPanel.add(pane1);
     }
     
     private void fillActPanel() {
@@ -149,7 +149,7 @@ public class NewUserFrame extends javax.swing.JFrame {
             JCheckBox cb = (JCheckBox)checkBoxes.elementAt(i);
             if(cb.isSelected()) {
                 Device dev = devices.get(i);//Device)devices.elementAt(i);
-                str += dev.roomId+"-"+dev.idDev+",";
+                str += dev.roomId+"-"+dev.idDev+";";
             }
         }
         System.err.println("str: " + str);
@@ -190,11 +190,17 @@ public class NewUserFrame extends javax.swing.JFrame {
         jLabel19 = new javax.swing.JLabel();
         cbRole = new javax.swing.JComboBox();
         btSave1 = new javax.swing.JButton();
-        pane = new javax.swing.JScrollPane();
-
+        pane1 = new javax.swing.JScrollPane();
+       
+        
+        
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setBackground(new java.awt.Color(204, 204, 255));
         setResizable(false);
+        
+        pane2 = new JScrollPane(actPanel,
+                JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
+                JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
 
         genPanel.setBackground(new java.awt.Color(204, 204, 255));
         genPanel.setMaximumSize(new java.awt.Dimension(538, 343));
@@ -383,8 +389,8 @@ public class NewUserFrame extends javax.swing.JFrame {
             }
         });
 
-        pane.setBackground(new java.awt.Color(102, 0, 102));
-        pane.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        pane1.setBackground(new java.awt.Color(102, 0, 102));
+        pane1.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
         org.jdesktop.layout.GroupLayout genPanelLayout = new org.jdesktop.layout.GroupLayout(genPanel);
         genPanel.setLayout(genPanelLayout);
@@ -400,7 +406,7 @@ public class NewUserFrame extends javax.swing.JFrame {
                             .add(namesPanel, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                         .add(genPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-                            .add(pane)
+                            .add(pane1)
                             .add(genPanelLayout.createSequentialGroup()
                                 .add(tempPanel, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
@@ -427,7 +433,7 @@ public class NewUserFrame extends javax.swing.JFrame {
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(genPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
                     .add(namesPanel, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                    .add(pane, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 114, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
+                    .add(pane1, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 114, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(43, Short.MAX_VALUE))
         );
 
@@ -457,7 +463,7 @@ public class NewUserFrame extends javax.swing.JFrame {
             usr = userService.insertUser(database.getDatabase(),
                     tName.getText(),tSName.getText(),tUn.getText(),
                     String.copyValueOf(fPwd.getPassword()),
-                    cbRole.getSelectedItem().toString(),//Utilities.getCharFromStringRole(cbRole.getSelectedItem().toString()),
+                    Utilities.getCharFromStringRole(cbRole.getSelectedItem().toString())+"",
                     Integer.parseInt(cbTempHeat.getSelectedItem().toString()),
                     Integer.parseInt(cbTempAc.getSelectedItem().toString()),
                     getActivateString());
@@ -488,7 +494,8 @@ public class NewUserFrame extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel19;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JPanel namesPanel;
-    private javax.swing.JScrollPane pane;
+    private javax.swing.JScrollPane pane1;
+    private javax.swing.JScrollPane pane2;
     private javax.swing.JPanel rolePanel;
     private javax.swing.JTextField tName;
     private javax.swing.JTextField tSName;

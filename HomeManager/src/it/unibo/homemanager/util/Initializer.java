@@ -788,7 +788,7 @@ public class Initializer {
             //device che hanno una temperatura
             if ((d.idDev>=5) && (d.idDev<=7))
                 {
-            	   LogicTuple init_temp = new LogicTuple("temp_curr", new Value(d.idDev), new Value(0));
+            	   LogicTuple init_temp = new LogicTuple("temp_curr_dev", new Value(d.idDev), new Value(0));
                    acc.out(tid,init_temp,null);
                 }
         }

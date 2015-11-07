@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/sfondo2" >
+    
+    <TextView
+        android:id="@+id/aliasRiscaldamento"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="20dp"
+        android:text="HotFire"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+    <ToggleButton
+        android:id="@+id/statoRiscaldamento"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/aliasRiscaldamento"
+        android:layout_below="@+id/aliasRiscaldamento"
+        android:layout_marginTop="71dp"
+        android:text="ToggleButton" />
+
+    <TextView
+        android:id="@+id/textView1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/statoRiscaldamento"
+        android:layout_below="@+id/aliasRiscaldamento"
+        android:layout_marginTop="32dp"
+        android:text="Current status"
+        android:textAppearance="?android:attr/textAppearanceLarge" />
+
+    <TextView
+        android:id="@+id/TestoTempRisc"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/statoRiscaldamento"
+        android:layout_below="@+id/statoRiscaldamento"
+        android:layout_marginTop="39dp"
+        android:text="Temperature"
+        android:textAppearance="?android:attr/textAppearanceLarge" />
+
+    <TextView
+        android:id="@+id/TemperaturaSelezionataRisc"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/TestoTempRisc"
+        android:layout_marginRight="16dp"
+        android:textAppearance="?android:attr/textAppearanceLarge" />
+
+    <SeekBar
+        android:id="@+id/BarraTemperaturaRisc"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/TemperaturaSelezionataRisc"
+        android:layout_marginTop="21dp"
+        android:max="@integer/Max_Riscaldamento" />
+        
+    <Button
+        android:id="@+id/salvaRiscaldamento"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/BarraTemperaturaRisc"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="39dp"
+        android:text="Save" />
+
+    <ImageView
+        android:id="@+id/imageView1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/textView1"
+        android:layout_toLeftOf="@+id/TemperaturaSelezionataRisc"
+        android:src="@drawable/termosifone2" />
+
+</RelativeLayout>
