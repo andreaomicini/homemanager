@@ -59,6 +59,10 @@ public class Main {
             TucsonTupleCentreId twitter_tc = new TucsonTupleCentreId("twitter_tc", "localhost", "20504");
             //submitted by Alessandro Celi
             TucsonTupleCentreId meteo_tc = new TucsonTupleCentreId("meteo_tc", "localhost", "20504");
+            
+            //subtmitted by Jacopo Ameli
+            TucsonTupleCentreId presence_tc = new TucsonTupleCentreId("presence_tc","localhost","20504");
+            
             //RC replaced rbac_tc with rbac
             System.out.println("Creo rbac");
             TucsonTupleCentreId rbac_tc = new TucsonTupleCentreId("rbac", "localhost", "20504");
@@ -83,6 +87,8 @@ public class Main {
             tupleCenters.add(11, meteo_tc); 
             //subamitted by Sara Bevilacqua
             tupleCenters.add(12,twitter_tc);
+            //submitted by Jacopo Ameli
+            tupleCenters.add(13, presence_tc);
             
             JFrame.setDefaultLookAndFeelDecorated(true);
             GeneralFrame gf = new GeneralFrame("HOME MANAGER", tupleCenters, 3, 5, casa_tc, rbac_tc, sf);

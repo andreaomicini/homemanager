@@ -15,6 +15,7 @@ import alice.tucson.api.exceptions.TucsonInvalidAgentIdException;
 import it.unibo.homemanager.ServiceFactory;
 import it.unibo.homemanager.dbmanagement.Database;
 import it.unibo.homemanager.dbmanagement.TucsonDatabase;
+import it.unibo.homemanager.humanpresence.PresenceAgent;
 import it.unibo.homemanager.social.TwitterAgent;
 import it.unibo.homemanager.userinterfaces.TracePanel;
 import it.unibo.homemanager.userinterfaces.ViewManageAgentPanel;
@@ -50,7 +51,7 @@ public class AgentManager {
             return istanza;
     }
     
-    public void inizializeComponet(ViewManageAgentPanel viewManageAgentPanel,ServiceFactory sf,TracePanel tp,List<TucsonTupleCentreId> tcs){
+    public void inizializeComponent(ViewManageAgentPanel viewManageAgentPanel,ServiceFactory sf,TracePanel tp,List<TucsonTupleCentreId> tcs){
     	this.viewManagerAgent=viewManageAgentPanel;
         try {
             this.database = sf.getDatabaseInterface();
@@ -73,6 +74,7 @@ public class AgentManager {
         listAgentInterface=new ArrayList<TucsonAgentInterface>();
         MeteoAgent m = null;
         TwitterAgent t = null;
+        PresenceAgent p = null;
         try 
         {
            
@@ -82,6 +84,9 @@ public class AgentManager {
         	t=new TwitterAgent("twitterAgent", tp, tcs.get(1), database);
         	t.setPanel(viewManagerAgent);
         	
+        	p=new PresenceAgent("presenceAgent",tp,tcs.get(2),database);
+        	p.setPanel(viewManagerAgent);
+        	
         } 
         catch (TucsonInvalidAgentIdException ex) 
         {
@@ -90,6 +95,7 @@ public class AgentManager {
         
         listAgentInterface.add(m);
         listAgentInterface.add(t);
+        listAgentInterface.add(p);
     }
      
     
