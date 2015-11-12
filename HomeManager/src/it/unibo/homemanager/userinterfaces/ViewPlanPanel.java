@@ -64,8 +64,7 @@ public class ViewPlanPanel extends javax.swing.JPanel {
             for(int i=0;i<l.size();i++) {
                 for(int j=0;j<((List)l.get(i)).size();j++) {
                 LogicTuple lt = LogicTuple.parse(((List)l.get(i)).get(j).toString());
-                tLights.setText(tLights.getText()+getLightString(lt)+
-                        (i==l.size()-1?"":"\n"));
+                tLights.setText(tLights.getText()+getLightString(lt)+("\n"));
                 }
             }
             // devices
@@ -165,17 +164,21 @@ public class ViewPlanPanel extends javax.swing.JPanel {
         try {
             EnhancedSynchACC acc = TucsonMetaACC.getContext(agent);
             
-            for(int i=0; i<tid.size();i++)
-            {
-            	//TODO: sfruttare l'attuatore
-                ITucsonOperation op_rdAll = acc.rdAll((TucsonTupleCentreId)tid.elementAt(i),
+            
+          //TODO: sfruttare l'attuatore
+            //for(int i=0; i<tid.size();i++)
+            //{
+            	
+                //ITucsonOperation op_rdAll = acc.rdAll((TucsonTupleCentreId)tid.elementAt(i),
+            	TucsonTupleCentreId illumination_tc = new TucsonTupleCentreId("illumination_tc", "localhost", "20504");
+            	ITucsonOperation op_rdAll = acc.rdAll(illumination_tc,
                         new LogicTuple("light_curr_st",
                                 new Var("Y"),
                                 new Var("Z")),
                         null);
                 l = op_rdAll.getLogicTupleListResult();
                 light.add(l);
-            }
+            //}
             acc.exit();
         }
         catch(Exception ex) {
