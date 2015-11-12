@@ -65,6 +65,9 @@ import alice.tucson.utilities.Utils;
  * @author sik
  */
 public class Initializer {
+	
+    private static final String DEFAULT_HOST = "localhost";
+    private static final String DEFAULT_PORT = "20504";
     
     private ServiceFactory sf;
     private Database database;
@@ -523,8 +526,10 @@ public class Initializer {
     
     private void initLamp(TucsonTupleCentreId tid, Lamp l, EnhancedSynchACC acc) {
         try {
-            LogicTuple init = new LogicTuple("upd_light_curr_st",new Value(l.sensId),new Value("off"));
-            acc.out(tid, init, null);
+        	//TODO[2015-11-12 AP]: da sistemare, bisogna usare i transducer anche qui
+        	TucsonTupleCentreId illumination_tc = new TucsonTupleCentreId("illumination_tc", this.DEFAULT_HOST, this.DEFAULT_PORT);
+            LogicTuple init = new LogicTuple("light_curr_st",new Value(l.sensId),new Value("off")); 
+            acc.out(illumination_tc, init, null);
         }
         catch(Exception ex) {
             ex.printStackTrace();

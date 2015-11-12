@@ -7,6 +7,7 @@
 package it.unibo.homemanager.home_agents.exec_plan;
 
 import alice.logictuple.LogicTuple;
+import alice.logictuple.TupleArgument;
 import alice.logictuple.Value;
 import alice.logictuple.Var;
 import alice.logictuple.exceptions.InvalidVarNameException;
@@ -15,7 +16,9 @@ import alice.tucson.api.EnhancedSynchACC;
 import alice.tucson.api.ITucsonOperation;
 import alice.tucson.api.TucsonTupleCentreId;
 import alice.tucson.api.exceptions.TucsonInvalidAgentIdException;
+import alice.tucson.utilities.Utils;
 import alice.tuplecentre.core.AbstractTupleCentreOperation;
+import cli.System.IO.IOException;
 import it.unibo.homemanager.tablemap.Lamp;
 import it.unibo.homemanager.userinterfaces.TracePanel;
 
@@ -56,7 +59,64 @@ public class LampAgent extends AbstractTucsonAgent {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     
+    
     @Override
+    protected void main() {
+    	try {
+    		
+	    	//Inizializzazione
+	        LogicTuple template_in = null;
+	        try {
+	            template_in = new LogicTuple("light_mode",new Value(l.sensId),new Var("X"));
+	        } catch (InvalidVarNameException e) {
+	            // cannot happen
+	        }
+	        
+	        EnhancedSynchACC acc = this.getContext();
+	        
+	        TucsonTupleCentreId configTc = new TucsonTupleCentreId("'$ENV'", "localhost", "20504");
+	        
+	        acc.setS(room_tc, Utils.fileToString("it/unibo/homemanager/situatedness/lightSpec.rsp"), null);
+	        
+	        final LogicTuple actuatorTuple = new LogicTuple(
+	                "createTransducerActuator",
+	                new TupleArgument(room_tc.toTerm()), // tuple centre id
+	                new Value(
+	                        "it.unibo.homemanager.situatedness.LightTransducer"), // java class implementing the transducer
+	                        new Value("lightTransducer_" + l.idL), // transducer id, ho scelto lo stesso del probe id 
+	                        new Value(
+	                                "it.unibo.homemanager.situatedness.ActualLight"), // java class implementing the probe
+	                                new Value("lamp_" + l.idL)); // probe id
+	        
+	        acc.out(configTc, actuatorTuple, null);
+	        
+	        tp.appendText("-- LAMP AGENT FOR "+l.name+" STARTED.");
+	
+	            
+	        while(true) {
+	            // wait for command
+	            ITucsonOperation op_in = acc.in(room_tc, template_in, Long.MAX_VALUE);
+	            
+	            LogicTuple result = op_in.getLogicTupleResult();
+	            
+	            System.out.println("LAMPAGENT "+l.name+": " + op_in.getLogicTupleResult());
+	            
+	            LogicTuple action = null;
+	            
+	            action = LogicTuple.parse("act(" + result +")");
+	            
+	            tp.appendText("LampAgent "+l.name+": cambio stato: " + action);
+	            
+	            acc.out(room_tc, action, null);
+	            
+	        }   
+        }
+        catch(Exception ex) {
+            ex.printStackTrace();
+            tp.appendText("LampAgent "+l.name+": error in lights activity.");
+        }
+    
+    /*    @Override
     protected void main() {
         LogicTuple template_in = null;
         try {
@@ -91,7 +151,7 @@ public class LampAgent extends AbstractTucsonAgent {
         catch(Exception ex) {
             ex.printStackTrace();
             tp.appendText("LampAgent "+l.name+": error in lights activity.");
-        }
+        }*/
     }
     
 }

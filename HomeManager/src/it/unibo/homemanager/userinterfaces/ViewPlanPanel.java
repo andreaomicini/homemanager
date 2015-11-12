@@ -167,6 +167,7 @@ public class ViewPlanPanel extends javax.swing.JPanel {
             
             for(int i=0; i<tid.size();i++)
             {
+            	//TODO: sfruttare l'attuatore
                 ITucsonOperation op_rdAll = acc.rdAll((TucsonTupleCentreId)tid.elementAt(i),
                         new LogicTuple("light_curr_st",
                                 new Var("Y"),

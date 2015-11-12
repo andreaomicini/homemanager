@@ -1,0 +1,17 @@
+% When requested to stimulate the actuator to change the environment, do so
+% exploiting ReSpecT situatedness.
+reaction(
+    out(act(light_mode(3, T))),
+    (operation, completion),
+    (
+        lamp_3@localhost:20504 ? setEnv(light_mode, T)
+    )
+).
+% Delete garbage tuple.
+reaction(
+    setEnv(light_mode, T),
+    (from_env, completion),
+    (
+        in(act(light_mode(ID, T)))
+    )
+).
