@@ -25,10 +25,22 @@ public class LightTransducer extends AbstractTransducer {
 	}
 
 	@Override
-	public boolean getEnv(String arg0) {
-        this.speakErr("[" + this.id
-                + "]: I'm an actuator transducer, I can't sense values!");
-        return false;
+	public boolean getEnv(final String key) {
+        this.speak("[" + this.id + "]: Reading...");
+        boolean success = true;
+        final Object[] keySet = this.probes.keySet().toArray();
+        /*
+         * for each probe this transducer models, stimulate it to sense its
+         * environment
+         */
+        for (final Object element : keySet) {
+            if (!((ISimpleProbe) this.probes.get(element)).readValue(key)) {
+                this.speakErr("[" + this.id + "]: Read failure!");
+                success = false;
+                break;
+            }
+        }
+        return success;
 	}
 
 	@Override

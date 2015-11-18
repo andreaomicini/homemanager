@@ -91,7 +91,12 @@ public class ActualLight implements ISimpleProbe{
 						            if (op.isResultSuccess()) {
 						                final String stato = op.getLogicTupleResult().getArg(1).toString();
 						                System.out.println("[" + this.pid + "]: lo stato della lampadina è: " + stato);
-						                final int state = Integer.parseInt(stato);
+						                final int state;
+						                if (stato == "off") {
+						                	state = 0;
+						                } else if (stato == "on") {
+						                	state = 1;
+						                } else state = 0;
 						                this.transducer.notifyEnvEvent(key, state, AbstractTransducer.GET_MODE);
 						            }
 						            return true;
@@ -107,9 +112,9 @@ public class ActualLight implements ISimpleProbe{
             e.printStackTrace();
         } catch (final InvalidOperationException e) {
             e.printStackTrace();
-        } catch (final InvalidLogicTupleException e) {
-            e.printStackTrace();
-        }
+        } catch (InvalidLogicTupleException e) {
+			e.printStackTrace();
+		}
         return false;
 		
 	}

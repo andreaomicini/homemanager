@@ -62,10 +62,10 @@ public class ViewPlanPanel extends javax.swing.JPanel {
             tLights.setText("");
             List<LogicTuple> l = getLightsStates();
             for(int i=0;i<l.size();i++) {
-                for(int j=0;j<((List)l.get(i)).size();j++) {
-                LogicTuple lt = LogicTuple.parse(((List)l.get(i)).get(j).toString());
+                //for(int j=0;j<((List)l.get(i)).size();j++) {
+                LogicTuple lt = LogicTuple.parse((l.get(i)).toString());
                 tLights.setText(tLights.getText()+getLightString(lt)+("\n"));
-                }
+                //}
             }
             // devices
             tDevs.setText("");
@@ -126,8 +126,18 @@ public class ViewPlanPanel extends javax.swing.JPanel {
         String str = "Light related to sensor ";
         try {
             //ss = new SensorService();
-            Sensor s = sensorService.getSensorById(database.getDatabase(),lt.getArg(0).intValue());
-            str += s.name+" : currently "+lt.getArg(1).toString();
+        	String stato;
+        	int sid = lt.getArg(0).getArg(0).intValue();
+            Sensor s = sensorService.getSensorById(database.getDatabase(),sid);
+            String value = lt.getArg(0).getArg(1).toString();
+            if (value.equals("0")) {
+            	stato = "'off'";
+            } else if (value.equals("1")) {
+            	stato = "'on'";
+            } else {
+            	stato = "'uknown state'";
+            }
+            str += s.name+" : currently "+ stato;
         }
         catch(Exception ex) {
             ex.printStackTrace();
@@ -159,26 +169,35 @@ public class ViewPlanPanel extends javax.swing.JPanel {
     }
     
     private Vector getLightsStates() {
-        List<LogicTuple> l = null;
         Vector light = new Vector();
         try {
             EnhancedSynchACC acc = TucsonMetaACC.getContext(agent);
             
             
           //TODO: sfruttare l'attuatore
-            //for(int i=0; i<tid.size();i++)
-            //{
+            for(int i=0; i<tid.size();i++)
+            {
+            	TucsonTupleCentreId stanza_tc = (TucsonTupleCentreId)tid.elementAt(i);
             	
-                //ITucsonOperation op_rdAll = acc.rdAll((TucsonTupleCentreId)tid.elementAt(i),
-            	TucsonTupleCentreId illumination_tc = new TucsonTupleCentreId("illumination_tc", "localhost", "20504");
-            	ITucsonOperation op_rdAll = acc.rdAll(illumination_tc,
-                        new LogicTuple("light_curr_st",
-                                new Var("Y"),
-                                new Var("Z")),
-                        null);
-                l = op_rdAll.getLogicTupleListResult();
-                light.add(l);
-            //}
+            	LogicTuple template;
+            	
+                template = LogicTuple.parse("sense(get_light_state(3,_))");
+                ITucsonOperation op = acc.inp(stanza_tc, template, null);
+                
+                if (op.isResultSuccess()) {
+                	LogicTuple l = op.getLogicTupleResult();
+                	light.add(l);
+                } else {
+                   	/*TucsonTupleCentreId illumination_tc = new TucsonTupleCentreId("illumination_tc", "localhost", "20504");
+                	ITucsonOperation op_rdAll = acc.rdAll(illumination_tc,
+                            new LogicTuple("light_curr_st",
+                                    new Var("Y"),
+                                    new Var("Z")),
+                            null);
+                    l = op_rdAll.getLogicTupleListResult();*/ 
+                }            	            	
+                
+            }
             acc.exit();
         }
         catch(Exception ex) {

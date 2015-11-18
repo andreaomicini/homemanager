@@ -1,5 +1,4 @@
-% When requested to stimulate the actuator to change the environment, do so
-% exploiting ReSpecT situatedness.
+% Reazione per le varie luci: modalità attuatore
 reaction(
     out(act(light_mode(3, T))),
     (operation, completion),
@@ -7,11 +6,31 @@ reaction(
         lamp_3@localhost:20504 ? setEnv(light_mode, T)
     )
 ).
+
+% Reazione per le varie luci: modalità sensore
+
+reaction(
+    inp(sense(get_light_state(3, T))),
+    (operation, invocation),
+    (
+        lamp_3@localhost:20504 ? getEnv(get_light_state, T)
+    )
+).
+
 % Delete garbage tuple.
 reaction(
     setEnv(light_mode, T),
     (from_env, completion),
     (
         in(act(light_mode(ID, T)))
+    )
+).
+
+
+reaction(
+    getEnv(get_light_state, T),
+    (from_env, completion),
+    (
+        out(sense(get_light_state(3, T)))
     )
 ).

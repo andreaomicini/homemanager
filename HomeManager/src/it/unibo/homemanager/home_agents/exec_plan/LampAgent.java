@@ -83,7 +83,7 @@ public class LampAgent extends AbstractTucsonAgent {
 	                new TupleArgument(room_tc.toTerm()), // tuple centre id
 	                new Value(
 	                        "it.unibo.homemanager.situatedness.LightTransducer"), // java class implementing the transducer
-	                        new Value("lightTransducer_" + l.idL), // transducer id, ho scelto lo stesso del probe id 
+	                        new Value("lightTransducer_" + l.idL), // transducer id
 	                        new Value(
 	                                "it.unibo.homemanager.situatedness.ActualLight"), // java class implementing the probe
 	                                new Value("lamp_" + l.idL)); // probe id
@@ -91,7 +91,6 @@ public class LampAgent extends AbstractTucsonAgent {
 	        acc.out(configTc, actuatorTuple, null);
 	        
 	        tp.appendText("-- LAMP AGENT FOR "+l.name+" STARTED.");
-	
 	            
 	        while(true) {
 	            // wait for command
@@ -108,6 +107,8 @@ public class LampAgent extends AbstractTucsonAgent {
 	            tp.appendText("LampAgent "+l.name+": cambio stato: " + action);
 	            
 	            acc.out(room_tc, action, null);
+	            
+	            
 	            
 	        }   
         }
