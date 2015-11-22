@@ -59,6 +59,21 @@ public class ViewPlanPanel extends javax.swing.JPanel {
         
         try {
             // lights
+        	
+        	
+        	/*String stato;
+        	int sid = lt.getArg(0).getArg(0).intValue();
+            Sensor s = sensorService.getSensorById(database.getDatabase(),sid);
+            String value = lt.getArg(0).getArg(1).toString();
+            if (value.equals("0")) {
+            	stato = "'off'";
+            } else if (value.equals("1")) {
+            	stato = "'on'";
+            } else {
+            	stato = "'uknown state'";
+            }
+            str += s.name+" : currently "+ stato;*/
+        	
             tLights.setText("");
             List<LogicTuple> l = getLightsStates();
             for(int i=0;i<l.size();i++) {
@@ -67,6 +82,11 @@ public class ViewPlanPanel extends javax.swing.JPanel {
                 tLights.setText(tLights.getText()+getLightString(lt)+("\n"));
                 //}
             }
+            
+            
+            
+            
+            
             // devices
             tDevs.setText("");
             l = getDevStates();
@@ -130,9 +150,9 @@ public class ViewPlanPanel extends javax.swing.JPanel {
         	int sid = lt.getArg(0).getArg(0).intValue();
             Sensor s = sensorService.getSensorById(database.getDatabase(),sid);
             String value = lt.getArg(0).getArg(1).toString();
-            if (value.equals("0")) {
+            if (Integer.parseInt(value) == 0) {
             	stato = "'off'";
-            } else if (value.equals("1")) {
+            } else if (Integer.parseInt(value) == 1) {
             	stato = "'on'";
             } else {
             	stato = "'uknown state'";
@@ -173,30 +193,28 @@ public class ViewPlanPanel extends javax.swing.JPanel {
         try {
             EnhancedSynchACC acc = TucsonMetaACC.getContext(agent);
             
+            Vector sensors = this.sensorService.getSensors(database.getDatabase());
+            
+            int size = sensors.size();
+           
             
           //TODO: sfruttare l'attuatore
-            for(int i=0; i<tid.size();i++)
+            for(int i=0; i<size ;i++)
             {
-            	TucsonTupleCentreId stanza_tc = (TucsonTupleCentreId)tid.elementAt(i);
+            	Sensor sensor = (Sensor) sensors.get(i);
+            	
+            	TucsonTupleCentreId stanza_tc = (TucsonTupleCentreId)tid.elementAt(sensor.roomId-1);
             	
             	LogicTuple template;
             	
-                template = LogicTuple.parse("sense(get_light_state(3,_))");
-                ITucsonOperation op = acc.inp(stanza_tc, template, null);
-                
+            	template = LogicTuple.parse("sense(light_state(" + sensor.idSens + ",_))");
+	            ITucsonOperation op = acc.in(stanza_tc, template, null);
+	                
                 if (op.isResultSuccess()) {
                 	LogicTuple l = op.getLogicTupleResult();
                 	light.add(l);
-                } else {
-                   	/*TucsonTupleCentreId illumination_tc = new TucsonTupleCentreId("illumination_tc", "localhost", "20504");
-                	ITucsonOperation op_rdAll = acc.rdAll(illumination_tc,
-                            new LogicTuple("light_curr_st",
-                                    new Var("Y"),
-                                    new Var("Z")),
-                            null);
-                    l = op_rdAll.getLogicTupleListResult();*/ 
-                }            	            	
-                
+                }
+	                                
             }
             acc.exit();
         }

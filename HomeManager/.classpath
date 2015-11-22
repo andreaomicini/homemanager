@@ -5,7 +5,7 @@
 	<classpathentry kind="lib" path="lib/mysql-connector-java-3.1.13-bin.jar"/>
 	<classpathentry kind="lib" path="lib/swing-layout/swing-layout-1.0.4.jar"/>
 	<classpathentry kind="lib" path="lib/tucson.jar"/>
-	<classpathentry kind="lib" path="lib/2p.jar"/>
+	<classpathentry kind="lib" path="lib/3.0.1/2p.jar"/>
 	<classpathentry kind="lib" path="lib/twitter4j-core-4.0.3.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

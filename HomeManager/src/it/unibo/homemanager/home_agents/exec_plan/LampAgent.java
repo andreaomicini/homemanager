@@ -6,17 +6,25 @@
 
 package it.unibo.homemanager.home_agents.exec_plan;
 
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import alice.logictuple.LogicTuple;
 import alice.logictuple.TupleArgument;
 import alice.logictuple.Value;
 import alice.logictuple.Var;
+import alice.logictuple.exceptions.InvalidTupleArgumentException;
 import alice.logictuple.exceptions.InvalidVarNameException;
 import alice.tucson.api.AbstractTucsonAgent;
 import alice.tucson.api.EnhancedSynchACC;
 import alice.tucson.api.ITucsonOperation;
 import alice.tucson.api.TucsonTupleCentreId;
 import alice.tucson.api.exceptions.TucsonInvalidAgentIdException;
+import alice.tucson.api.exceptions.TucsonOperationNotPossibleException;
+import alice.tucson.api.exceptions.UnreachableNodeException;
 import alice.tucson.utilities.Utils;
+import alice.tuplecentre.api.exceptions.OperationTimeOutException;
 import alice.tuplecentre.core.AbstractTupleCentreOperation;
 import cli.System.IO.IOException;
 import it.unibo.homemanager.tablemap.Lamp;
@@ -76,7 +84,12 @@ public class LampAgent extends AbstractTucsonAgent {
 	        
 	        TucsonTupleCentreId configTc = new TucsonTupleCentreId("'$ENV'", "localhost", "20504");
 	        
-	        acc.setS(room_tc, Utils.fileToString("it/unibo/homemanager/situatedness/lightSpec.rsp"), null);
+	        String config = Utils.fileToString("it/unibo/homemanager/situatedness/lightSpec.rsp");
+	        
+	        config = config.replaceAll("#", "" + l.idL);
+	        
+	        this.outS(room_tc, config);
+	        
 	        
 	        final LogicTuple actuatorTuple = new LogicTuple(
 	                "createTransducerActuator",
@@ -106,16 +119,14 @@ public class LampAgent extends AbstractTucsonAgent {
 	            
 	            tp.appendText("LampAgent "+l.name+": cambio stato: " + action);
 	            
-	            acc.out(room_tc, action, null);
-	            
-	            
-	            
+	            acc.out(room_tc, action, null);	            
 	        }   
         }
         catch(Exception ex) {
             ex.printStackTrace();
             tp.appendText("LampAgent "+l.name+": error in lights activity.");
         }
+    	
     
     /*    @Override
     protected void main() {
@@ -153,6 +164,81 @@ public class LampAgent extends AbstractTucsonAgent {
             ex.printStackTrace();
             tp.appendText("LampAgent "+l.name+": error in lights activity.");
         }*/
+    }
+    
+    protected boolean outS(TucsonTupleCentreId tc, String s) {
+    	
+    	EnhancedSynchACC acc = this.getContext();
+    	
+        ITucsonOperation attuale;
+		try {
+			attuale = acc.getS(tc, null);
+
+	        List<LogicTuple> tupleattuali =  attuale.getLogicTupleListResult();
+	        for(int i=0; i < tupleattuali.size(); i++) {
+	        	System.out.println( tupleattuali.get(i).toString());
+	        	String newconfig = tupleattuali.get(i).toString();
+	        	newconfig.replaceAll("[\\[\\]]","");
+	        	s = s + newconfig + ".\n";
+	        }
+	        
+	        acc.setS(tc, s, null);
+		} catch (TucsonOperationNotPossibleException | UnreachableNodeException | OperationTimeOutException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return false;
+		}
+		
+		return true;
+    	
+    	
+    	//acc.setS(room_tc, config, null);
+    	/*EnhancedSynchACC acc = this.getContext();
+    	
+    	String pattern1 = "reaction(";
+        String pattern2 = ").";
+        
+        Pattern p = Pattern.compile(Pattern.quote(pattern1) + "(.*?)" + Pattern.quote(pattern2), Pattern.DOTALL);
+        Matcher m = p.matcher(s);
+        while (m.find()) {
+        	
+        	try {
+        	String[] parts = m.group(1).split(Pattern.quote(",") + "\n");
+        	parts[0] = parts[0].replaceAll("\\s", "");
+        	parts[1] = parts[1].replaceAll("\\s", "");
+        	parts[2] = parts[2].replaceAll("\\s", "");
+        	 LogicTuple arg1 = new LogicTuple(TupleArgument.parse(parts[0]));
+        	 LogicTuple arg2 = new LogicTuple(TupleArgument.parse(parts[1]));
+        	 LogicTuple arg3 = new LogicTuple(parts[2]);
+        	//System.out.println("1 - " + m.group(1));
+        	 
+        	 
+				acc.outS(tc, arg1, arg2, arg3, null);
+			} catch (TucsonOperationNotPossibleException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				return false;
+			} catch (UnreachableNodeException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				return false;
+			} catch (OperationTimeOutException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				return false;
+			} catch (InvalidTupleArgumentException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				return false;
+			}
+        }
+        
+        
+        
+        return true;*/
+    	
+
+		
     }
     
 }

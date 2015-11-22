@@ -511,7 +511,12 @@ public class Initializer {
             
             for(int i=0;i<lamps.size();i++) {
                 Lamp l = (Lamp)lamps.elementAt(i);
-                LampAgent la = new LampAgent("lamp_"+l.idL, tp, (TucsonTupleCentreId)tc.elementAt(l.sensId-1),l);
+                //LampAgent la = new LampAgent("lamp_"+l.idL, tp, (TucsonTupleCentreId)tc.elementAt(l.sensId-1),l);
+                //[2015-11-21 AP] Fix per mette le luci nelle stanze corrette
+                SensorServiceInterface sensorService = sf.getSensorServiceInterface();
+                Sensor s = sensorService.getSensorById(database.getDatabase(),l.sensId);
+                LampAgent la = new LampAgent("lamp_"+l.idL, tp, (TucsonTupleCentreId)tc.elementAt(s.roomId-1),l);
+                //
                 initLamp((TucsonTupleCentreId)tc.elementAt(l.sensId-1), l, acc);
                 la.go();
                 Thread.sleep(250);

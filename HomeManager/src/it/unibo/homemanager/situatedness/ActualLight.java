@@ -83,25 +83,27 @@ public class ActualLight implements ISimpleProbe{
             }
         }
         
+        final String correct_light_state = "light_state_"+this.lamp_id;
         
         try {
-        	switch (key) {
-	        case "get_light_state": final LogicTuple template = LogicTuple.parse("light_curr_st(" + this.lamp_id + ",_)");
-						            final ITucsonOperation op = this.acc.rd(this.illumination_tc, template, null);
-						            if (op.isResultSuccess()) {
-						                final String stato = op.getLogicTupleResult().getArg(1).toString();
-						                System.out.println("[" + this.pid + "]: lo stato della lampadina è: " + stato);
-						                final int state;
-						                if (stato == "off") {
-						                	state = 0;
-						                } else if (stato == "on") {
-						                	state = 1;
-						                } else state = 0;
-						                this.transducer.notifyEnvEvent(key, state, AbstractTransducer.GET_MODE);
-						            }
-						            return true;
-	        default: System.err.println("[" + this.pid + "]: Proprietà sconosciuta " + key);
-            		 return false;
+        	if(key.equals(correct_light_state)) {
+        		final LogicTuple template = LogicTuple.parse("light_curr_st(" + this.lamp_id + ",_)");
+	            final ITucsonOperation op = this.acc.rd(this.illumination_tc, template, null);
+	            if (op.isResultSuccess()) {
+	                final String stato = op.getLogicTupleResult().getArg(1).toString();
+	                System.out.println("[" + this.pid + "]: lo stato della luce è: " + stato);
+	                final int state;
+	                if (stato.equals("off")) {
+	                	state = 0;
+	                } else if (stato.equals("on")) {
+	                	state = 1;
+	                } else state = 3;
+	                this.transducer.notifyEnvEvent(key, state, AbstractTransducer.GET_MODE);
+	            }
+	            return true;
+        	} else {
+	        	System.err.println("[" + this.pid + "]: Proprietà sconosciuta " + key);
+	        	return false;
         	}
         	
         } catch (final TucsonOperationNotPossibleException e) {
@@ -139,33 +141,35 @@ public class ActualLight implements ISimpleProbe{
             }
         }
         
-        try {
+        final String correct_light_mode = "light_mode_"+this.lamp_id;
         
-	        switch (key) {
-		        case "light_mode":  String stato;
-		        						if (state == 0) {
-								        	stato = "off";
-								        } else if (state == 1) {
-								        	stato = "on";
-								        } else {
-								        	System.err.println("[" + this.pid + "]: stato non valido: " + state);
-								        	return false;
-								        }
-		        						System.out.println("[" + this.pid + "]: devo impostare il valore della luce a " + stato);
-		        						final LogicTuple template = LogicTuple.parse("light_curr_st(" + lamp_id + ",_)");
-							            final ITucsonOperation op = this.acc.inp(this.illumination_tc, template, null); //TODO: verificare se è meglio con la in
-							            //TODO: dovrebbe verificare se la luce è già accesa o meno
-							            if (op.isResultSuccess()) {
-							                final LogicTuple nuovaTupla = LogicTuple.parse("light_curr_st(" + lamp_id + "," + stato  + ")");
-							                this.acc.out(this.illumination_tc, nuovaTupla, null);
-							                System.out.println("[" + this.pid + "]: stato della luce impostato a " + stato);
-							                this.transducer.notifyEnvEvent(key, state, AbstractTransducer.SET_MODE);
-							                return true;
-							            }
-							            System.err.println("[" + this.pid + "]: Errore generico.");
-							            return false;
-		        default: System.err.println("[" + this.pid + "]: Proprietà sconosciuta " + key);
-	            		 return false;
+        try {
+	        if(key.equals(correct_light_mode)) {
+	        	String stato;
+				if (state == 0) {
+		        	stato = "off";
+		        } else if (state == 1) {
+		        	stato = "on";
+		        } else {
+		        	System.err.println("[" + this.pid + "]: stato non valido: " + state);
+		        	return false;
+		        }
+				System.out.println("[" + this.pid + "]: devo impostare il valore della luce a " + stato);
+				final LogicTuple template = LogicTuple.parse("light_curr_st(" + lamp_id + ",_)");
+	            final ITucsonOperation op = this.acc.inp(this.illumination_tc, template, null); //TODO: verificare se è meglio con la in
+	            //TODO: dovrebbe verificare se la luce è già accesa o meno
+	            if (op.isResultSuccess()) {
+	                final LogicTuple nuovaTupla = LogicTuple.parse("light_curr_st(" + lamp_id + "," + stato  + ")");
+	                this.acc.out(this.illumination_tc, nuovaTupla, null);
+	                System.out.println("[" + this.pid + "]: stato della luce impostato a " + stato);
+	                this.transducer.notifyEnvEvent(key, state, AbstractTransducer.SET_MODE);
+	                return true;
+	            }
+	            System.err.println("[" + this.pid + "]: Errore generico.");
+	            return false;
+	        } else {
+	        	System.err.println("[" + this.pid + "]: Proprietà sconosciuta " + key);
+	            return false;
 	        }
                 	
         } catch (final TucsonOperationNotPossibleException e) {

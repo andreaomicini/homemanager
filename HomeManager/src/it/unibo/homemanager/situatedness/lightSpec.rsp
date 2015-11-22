@@ -1,36 +1,37 @@
 % Reazione per le varie luci: modalità attuatore
 reaction(
-    out(act(light_mode(3, T))),
+    out(act(light_mode(#, T))),
     (operation, completion),
     (
-        lamp_3@localhost:20504 ? setEnv(light_mode, T)
+        lamp_#@localhost:20504 ? setEnv(light_mode_#, T)
     )
 ).
+
+reaction(
+    setEnv(light_mode_#, T),
+    (from_env, completion),
+    (
+        in(act(light_mode(#, T)))
+    )
+).
+
 
 % Reazione per le varie luci: modalità sensore
 
 reaction(
-    inp(sense(get_light_state(3, T))),
+    in(sense(light_state(#, T))),
     (operation, invocation),
     (
-        lamp_3@localhost:20504 ? getEnv(get_light_state, T)
-    )
-).
-
-% Delete garbage tuple.
-reaction(
-    setEnv(light_mode, T),
-    (from_env, completion),
-    (
-        in(act(light_mode(ID, T)))
+        lamp_#@localhost:20504 ? getEnv(light_state_#, T)
     )
 ).
 
 
+
 reaction(
-    getEnv(get_light_state, T),
+    getEnv(light_state_#, T),
     (from_env, completion),
     (
-        out(sense(get_light_state(3, T)))
+        out(sense(light_state(#, T)))
     )
 ).
