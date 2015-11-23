@@ -6,8 +6,10 @@ import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
+import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -25,13 +27,16 @@ import it.unibo.homemanager.meteo.MeteoAgent;
 import it.unibo.homemanager.userinterfaces.MainPanel;
 import it.unibo.homemanager.userinterfaces.TracePanel;
 import it.unibo.homemanager.userinterfaces.ViewManageAgentPanel;
-
+/**
+ * @author 0000628533
+ *
+ */
 public class ViewPresenceAgentPanel extends javax.swing.JPanel  {
 
 	private ViewManageAgentPanel butlerPanel;
 	private PresenceAgent presenceAgent;
 	private TracePanel tp;
-	private VideoCameraFeedFrame video;
+	private JLabel videoFeed;
 	
 	public ViewPresenceAgentPanel(ViewManageAgentPanel maPanel,
 			PresenceAgent presenceAgent, TracePanel tp) {
@@ -79,6 +84,8 @@ public class ViewPresenceAgentPanel extends javax.swing.JPanel  {
         jButton2.setForeground(new Color(102, 0, 102));
         jButton2.setFont(new Font("Courier New", Font.BOLD, 14));
         
+        videoFeed= new JLabel();
+        add(videoFeed);
         add(lblPresenceAgent);
         add(jButton4);
         add(jButton3);
@@ -97,16 +104,20 @@ public class ViewPresenceAgentPanel extends javax.swing.JPanel  {
 	}//GEN-LAST:event_backButtonActionPerformed
 	
 	private void showFeedButtonActionPerformed(java.awt.event.ActionEvent evt) {
-		video = new VideoCameraFeedFrame();
-		video.init();
-		video.play("/src/testvideo2.mp4");
+		//Devo mostrare immagini prese direttamente dal video che l'agente sta analizzando
+		// con sopra un overlay 
+		this.videoFeed.setVisible(true);
 	}
 	
-	
+	public void setImage(BufferedImage img)
+	{
+		this.videoFeed.setIcon(new ImageIcon(img));
+	}
 	public void init()
 	{
 		if(!isVisible())
 			setVisible(true);
+		videoFeed.setVisible(false);
 		       
 	}
 	public void hidePanel() {

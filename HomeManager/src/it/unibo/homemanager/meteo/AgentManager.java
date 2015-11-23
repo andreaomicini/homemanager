@@ -84,7 +84,7 @@ public class AgentManager {
         	t=new TwitterAgent("twitterAgent", tp, tcs.get(1), database);
         	t.setPanel(viewManagerAgent);
         	
-        	p=new PresenceAgent("presenceAgent",tp,tcs.get(2),database);
+        	p=new PresenceAgent("presenceAgent",tp,tcs.get(2),database,"Living Room");
         	p.setPanel(viewManagerAgent);
         	
         } 
