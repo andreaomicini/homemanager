@@ -1,15 +1,14 @@
 package it.unibo.homemanager.humanpresence;
 
+import java.awt.image.BufferedImage;
 import java.sql.Timestamp;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
+import javax.swing.ImageIcon;
 import javax.swing.JPanel;
 
 import org.opencv.core.Core;
 import org.opencv.core.Mat;
-import org.opencv.core.Rect;
 import org.opencv.videoio.VideoCapture;
 
 import it.unibo.homemanager.dbmanagement.Database;
@@ -92,29 +91,24 @@ public class PresenceAgent extends AbstractTucsonAgent implements TucsonAgentInt
         System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
         
     	Mat frame= new Mat();
-    	Mat mask= new Mat();
-    	Mat result= new Mat();
+    	BufferedImage result= null;
     	boolean updatePresent=false;
-    	List<Rect> lastSeenBounds=new ArrayList<Rect>();
-    	List<Rect> tempBounds=null;
     	LogicTuple t1;
     	  
     	Mat firstFrame=new Mat();
-    	int min_area= 250;
       
         try{
         	reset();
+        	Thread.sleep(5000);
         	
-
-        	Thread.sleep(20000);
         	VideoCapture camera = new VideoCapture(
-    				"C:/Users/Ameli/Documents/homemanager/HomeManager/src/testvideo2a.mp4");
+    				"C:/Users/Ameli/Documents/homemanager/HomeManager/src/testvideo2b.mp4");
         	if (!camera.isOpened())
     			System.out.println("Error: camera not working");
         	camera.read(firstFrame);
-        	humanDetector = new HumanDetectorDifferential(firstFrame, 25);
+        	humanDetector = HumanDetectorFactory.createDifferential(firstFrame);
         	
-            while(true)
+            while(camera.isOpened())
             {
             	/*
             	 * Per gli obiettivi di questa tesi, l'implementazione attuale si basa su queste scelte ulteriori:
@@ -123,28 +117,12 @@ public class PresenceAgent extends AbstractTucsonAgent implements TucsonAgentInt
             	 * 3)La view aggiorna una label tramite l'agente, non tucson
             	 */
             	camera.read(frame);
-            	mask = humanDetector.getMask(frame);
-            	tempBounds=MovementDetectionUtilities.getHumanBounds(frame, mask, min_area);
-            	result=frame.clone();
-            	if(MovementDetectionUtilities.isRoomOccupied(tempBounds))
-            	{
-            		lastSeenBounds=tempBounds;
-            		updatePresent=true;
-            		result=MovementDetectionUtilities.drawHumanRecognition(frame, lastSeenBounds);
-            	}
-            	else
-            	{
-            		updatePresent=false;
-            		//Controllo se l'ultimo rilevamento era nel lato destro della stanza
-            		for (Rect bound : lastSeenBounds)
-            			if (bound.x>(frame.width())/2)
-            			{
-            				updatePresent=true;
-            				//test: uso gli ultimi dati per continuare a disegnare il rettangolo verde
-            				result=MovementDetectionUtilities.drawHumanRecognition(frame, lastSeenBounds);
-            			}
-            	}	
-            	this.panel.setImage(MovementDetectionUtilities.Mat2bufferedImage(result));
+            	if (frame.empty())
+            		break;
+            	humanDetector.processFrame(frame);
+            	result=MovementDetectionUtilities.resize(humanDetector.getCurrentProcessedFrame(), 480, 360);
+            	updatePresent=humanDetector.isHumanPresent();
+            	this.panel.setImage(result);
             	if (updatePresent != humanPresent)
             	{
             		//devo aggiornare il valore nel tupleCenter
@@ -161,6 +139,9 @@ public class PresenceAgent extends AbstractTucsonAgent implements TucsonAgentInt
             	}
             	
              }
+            camera.release();
+            tp.appendText("--PRESENCE AGENT: STREAM ENDED.");
+            this.panel.resetImage();
             
           }catch(TucsonOperationNotPossibleException ex){
               ex.printStackTrace();

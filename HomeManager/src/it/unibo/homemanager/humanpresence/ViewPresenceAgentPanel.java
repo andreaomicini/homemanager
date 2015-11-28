@@ -37,6 +37,7 @@ public class ViewPresenceAgentPanel extends javax.swing.JPanel  {
 	private PresenceAgent presenceAgent;
 	private TracePanel tp;
 	private JLabel videoFeed;
+	private JButton jButton2;
 	
 	public ViewPresenceAgentPanel(ViewManageAgentPanel maPanel,
 			PresenceAgent presenceAgent, TracePanel tp) {
@@ -74,7 +75,7 @@ public class ViewPresenceAgentPanel extends javax.swing.JPanel  {
         jButton3.setForeground(new Color(102, 0, 102));
         jButton3.setFont(new Font("Courier New", Font.BOLD, 14));
         
-        JButton jButton2 = new JButton();
+        jButton2 = new JButton();
         jButton2.addActionListener(new ActionListener() {
         	public void actionPerformed(ActionEvent e) {
         		showFeedButtonActionPerformed(e);
@@ -85,11 +86,12 @@ public class ViewPresenceAgentPanel extends javax.swing.JPanel  {
         jButton2.setFont(new Font("Courier New", Font.BOLD, 14));
         
         videoFeed= new JLabel();
-        add(videoFeed);
+        
         add(lblPresenceAgent);
         add(jButton4);
         add(jButton3);
         add(jButton2);
+        add(videoFeed);
 	}
 	private void menuButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuButtonActionPerformed
        
@@ -106,19 +108,34 @@ public class ViewPresenceAgentPanel extends javax.swing.JPanel  {
 	private void showFeedButtonActionPerformed(java.awt.event.ActionEvent evt) {
 		//Devo mostrare immagini prese direttamente dal video che l'agente sta analizzando
 		// con sopra un overlay 
-		this.videoFeed.setVisible(true);
+		if(this.videoFeed.isVisible())
+		{
+			this.videoFeed.setVisible(false);
+			this.jButton2.setText("Show Camera Feed");
+			
+		}
+		else
+		{
+			this.jButton2.setText("Hide Camera Feed");
+			this.videoFeed.setVisible(true);
+		}
+		
 	}
 	
 	public void setImage(BufferedImage img)
 	{
 		this.videoFeed.setIcon(new ImageIcon(img));
 	}
+	public void resetImage()
+	{
+		videoFeed.setIcon(new ImageIcon("C:/Users/Ameli/Documents/homemanager/HomeManager/src/Immagine.png"));
+	}
 	public void init()
 	{
 		if(!isVisible())
 			setVisible(true);
 		videoFeed.setVisible(false);
-		       
+		videoFeed.setIcon(new ImageIcon("C:/Users/Ameli/Documents/homemanager/HomeManager/src/Immagine.png"));
 	}
 	public void hidePanel() {
         if(isVisible())
