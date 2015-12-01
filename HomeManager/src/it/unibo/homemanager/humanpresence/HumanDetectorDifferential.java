@@ -1,6 +1,7 @@
 package it.unibo.homemanager.humanpresence;
 
 import java.awt.image.BufferedImage;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -9,35 +10,27 @@ import org.opencv.core.Mat;
 import org.opencv.core.Rect;
 import org.opencv.core.Size;
 import org.opencv.imgproc.Imgproc;
+import org.opencv.videoio.VideoCapture;
 
 /**
  * @author 0000628533
  *
  */
-public class HumanDetectorDifferential implements HumanDetectorInterface {
+public class HumanDetectorDifferential implements HumanDetectorVideoInterface {
 
-	Mat firstFrame=null;
-	double thresh;
-	List<Rect> lastSeenBounds=null;
-	List<Rect> tempBounds=null;
-	int min_area;
-	Mat mask;
-	boolean humanPresent;
-	Mat processedFrame=null;
+	private Mat firstFrame=null;
+	private double thresh;
+	private List<Rect> lastSeenBounds=null;
+	private List<Rect> tempBounds=null;
+	private int min_area;
+	private Mat mask;
+	private boolean humanPresent;
+	private Mat processedFrame=null;
+	private VideoCapture camera=null;
+	private String filePath;
 	
-	public HumanDetectorDifferential(Mat firstFrame,double thresh)
+	public HumanDetectorDifferential(String filePath,double thresh)
 	{
-		this.firstFrame=firstFrame;
-		Size sz = new Size(480, 360);
-		//imposto le dimensioni il frame catturato
-        Imgproc.resize(firstFrame, firstFrame, sz); 
-                
-        //converto il frame in scala di grigi
-        Imgproc.cvtColor(firstFrame, firstFrame,Imgproc.COLOR_BGR2GRAY); 
-                
-        //uso Gaussian blur per "sfumarlo" eliminando rumori dell'immagine
-        Imgproc.GaussianBlur(firstFrame, firstFrame, new Size(21,21), 0); 
-            
 		this.thresh=thresh;
 		mask=new Mat();
 		tempBounds=new ArrayList<Rect>();
@@ -45,8 +38,27 @@ public class HumanDetectorDifferential implements HumanDetectorInterface {
 		humanPresent=false;
 		lastSeenBounds=new ArrayList<Rect>();
 		processedFrame= new Mat();
+		this.filePath=filePath;
 	}
-	
+	public void init()throws IOException
+	{
+		firstFrame=new Mat();
+		this.camera = new VideoCapture(filePath);
+    	if (!camera.isOpened())
+    		throw new IOException("Camera not working");
+    	camera.read(firstFrame);
+
+		Size sz = new Size(480, 360);
+    	//imposto le dimensioni il frame catturato
+        Imgproc.resize(firstFrame,firstFrame, sz); 
+                
+        //converto il frame in scala di grigi
+        Imgproc.cvtColor(firstFrame, firstFrame,Imgproc.COLOR_BGR2GRAY); 
+                
+        //uso Gaussian blur per "sfumarlo" eliminando rumori dell'immagine
+        Imgproc.GaussianBlur(firstFrame, firstFrame, new Size(21,21), 0); 
+            
+	}
 	@Override
 	/*Algoritmo leggero, basato su semplice differenza tra il primo frame e tutti i successivi.
 	  *Prendendo come ipotesi: 
@@ -54,15 +66,22 @@ public class HumanDetectorDifferential implements HumanDetectorInterface {
 	  *2) Non ci saranno cambiamenti notevoli in luce e ombre, o grandi oggetti spostati durante il monitoraggio
 	  *3) La posizione della telecamera non cambia
 	  *
-	  *Prende come input il frame attuale
 	  */
-	public void processFrame(Mat frame) 
+	public void processFrame() 
 	{
 		Mat greyFrame = new Mat();
 		Mat frameDelta = new Mat();
 		Mat thresholded = new Mat();
 		Size sz = new Size(480, 360);
        
+		Mat frame= new Mat();
+		camera.read(frame);
+		if(frame.empty())
+		{
+			processedFrame=frame;
+			camera.release();
+			return;
+		}
         //imposto le dimensioni il frame catturato
         Imgproc.resize(frame, frame, sz); 
                 
@@ -110,6 +129,8 @@ public class HumanDetectorDifferential implements HumanDetectorInterface {
 
 	@Override
 	public BufferedImage getCurrentProcessedFrame() {
+		if(processedFrame.empty())
+			return null;
 		return MovementDetectionUtilities.Mat2bufferedImage(processedFrame);
 	}
 

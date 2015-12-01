@@ -1,6 +1,7 @@
 package it.unibo.homemanager.humanpresence;
 
 import java.awt.image.BufferedImage;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -8,21 +9,24 @@ import org.opencv.core.Mat;
 import org.opencv.core.Rect;
 import org.opencv.video.BackgroundSubtractorMOG2;
 import org.opencv.video.Video;
+import org.opencv.videoio.VideoCapture;
 /**
  * @author 0000628533
  *
  */
-public class HumanDetectorGaussian implements HumanDetectorInterface {
+public class HumanDetectorGaussian implements HumanDetectorVideoInterface {
 
-	BackgroundSubtractorMOG2 subtractor=null;
-	List<Rect> lastSeenBounds=null;
-	List<Rect> tempBounds=null;
-	int min_area;
-	Mat mask;
-	boolean humanPresent;
-	Mat processedFrame=null;
+	private BackgroundSubtractorMOG2 subtractor=null;
+	private List<Rect> lastSeenBounds=null;
+	private List<Rect> tempBounds=null;
+	private int min_area;
+	private Mat mask;
+	private boolean humanPresent;
+	private Mat processedFrame=null;
+	private VideoCapture camera=null;
+	private String filePath;
 	
-	public HumanDetectorGaussian(int history,double thresh)
+	public HumanDetectorGaussian(String filePath,int history,double thresh)
 	{
 		subtractor = Video.createBackgroundSubtractorMOG2(history,thresh,true);
 		mask=new Mat();
@@ -31,8 +35,14 @@ public class HumanDetectorGaussian implements HumanDetectorInterface {
 		humanPresent=false;
 		lastSeenBounds=new ArrayList<Rect>();
 		processedFrame= new Mat();
+		this.filePath=filePath;
 	}
-	
+	public void init()throws IOException
+	{
+		this.camera = new VideoCapture(filePath);
+    	if (!camera.isOpened())
+    		throw new IOException("Camera not working");
+	}
 	@Override
 	/*Algoritmo pesante, basato su metodo a gaussiane presente in opencv
 	  *1) Non ci saranno cambiamenti molto notevoli in luce e ombre, o grandi oggetti spostati 
@@ -41,8 +51,16 @@ public class HumanDetectorGaussian implements HumanDetectorInterface {
 	  *Prende come input il frame attuale.
 	  *Restituisce una matrice contenente la mask, ovvero una impronta delle figure in movimento
 	  */
-	public void processFrame(Mat frame)  
+	public void processFrame()  
 	{
+		Mat frame= new Mat();
+		camera.read(frame);
+		if(frame.empty())
+		{
+			processedFrame=frame;
+			camera.release();
+			return;
+		}
 		//un solo comando per creare una maschera che contiene i cambiamenti nel frame
 		subtractor.apply(frame, mask,0);
 		processedFrame= frame.clone();
@@ -72,6 +90,8 @@ public class HumanDetectorGaussian implements HumanDetectorInterface {
 
 	@Override
 	public BufferedImage getCurrentProcessedFrame() {
+		if(processedFrame.empty())
+			return null;
 		return MovementDetectionUtilities.Mat2bufferedImage(processedFrame);
 	}
 

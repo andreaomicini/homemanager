@@ -4,17 +4,18 @@ import org.opencv.core.Mat;
 
 public class HumanDetectorFactory {
 
-	public static HumanDetectorDifferential createDifferential(Mat firstFrame)
+	private final static String filePath="C:/Users/Ameli/Documents/homemanager/HomeManager/src/testvideo2b.mp4";
+	public static HumanDetectorDifferential createDifferential()
 	{
-		return new HumanDetectorDifferential(firstFrame,25);
+		return new HumanDetectorDifferential(filePath,25);
 	}
 	public static HumanDetectorGaussian createGaussian()
 	{
-		return new HumanDetectorGaussian(1000,190);
+		return new HumanDetectorGaussian(filePath,1000,190);
 	}
 	public static HumanDetectorPixelDensity createPixelDensity()
 	{
-		return new HumanDetectorPixelDensity(100,200);
+		return new HumanDetectorPixelDensity(filePath,100,200);
 	}
 	
 }

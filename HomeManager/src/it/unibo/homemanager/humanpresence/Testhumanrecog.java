@@ -55,7 +55,7 @@ public class Testhumanrecog {
 	    jframe2.setVisible(true);
 	    //parametri per segmentazione e eliminazione sfondo
 	    double thresh=20;
-	    int history=2000;
+	    int history=100;
 	    //parametro per human detection
 	    int min_area=250;
 	    
@@ -72,7 +72,7 @@ public class Testhumanrecog {
 	    	Mat frame= new Mat();
 	    	camera.read(firstFrame);
 	    	//HumanDetectorInterface humanDetector= HumanDetectorFactory.createDifferential(firstFrame);
-	    	HumanDetectorInterface humanDetector= HumanDetectorFactory.createPixelDensity();
+	    	HumanDetectorVideoInterface humanDetector= HumanDetectorFactory.createPixelDensity();
 	    	//HumanDetectorInterface humanDetector= HumanDetectorFactory.createGaussian();
 	    	long average=0;
 	    	long total=0;
@@ -85,7 +85,7 @@ public class Testhumanrecog {
 	    		camera.read(frame);
             	if (frame.empty())
             		break;
-            	humanDetector.processFrame(frame);
+            	humanDetector.processFrame();
             	vidpanel.setIcon(new ImageIcon(MovementDetectionUtilities.Mat2bufferedImage(humanDetector.getCurrentMask())));
             	vidpanel2.setIcon(new ImageIcon(humanDetector.getCurrentProcessedFrame()));
             	t2=new Date().getTime();

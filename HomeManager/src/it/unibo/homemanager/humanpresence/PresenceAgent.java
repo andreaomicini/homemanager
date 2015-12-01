@@ -2,7 +2,9 @@ package it.unibo.homemanager.humanpresence;
 
 import java.awt.image.BufferedImage;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import javax.swing.ImageIcon;
 import javax.swing.JPanel;
@@ -11,8 +13,10 @@ import org.opencv.core.Core;
 import org.opencv.core.Mat;
 import org.opencv.videoio.VideoCapture;
 
+import it.unibo.homemanager.ServiceFactory;
 import it.unibo.homemanager.dbmanagement.Database;
 import it.unibo.homemanager.meteo.TucsonAgentInterface;
+import it.unibo.homemanager.tablemap.Sensor;
 import it.unibo.homemanager.userinterfaces.TracePanel;
 import it.unibo.homemanager.userinterfaces.ViewManageAgentPanel;
 import alice.logictuple.LogicTuple;
@@ -21,6 +25,8 @@ import alice.logictuple.Var;
 import alice.tucson.api.AbstractTucsonAgent;
 import alice.tucson.api.EnhancedSynchACC;
 import alice.tucson.api.ITucsonOperation;
+import alice.tucson.api.TucsonAgentId;
+import alice.tucson.api.TucsonMetaACC;
 import alice.tucson.api.TucsonTupleCentreId;
 import alice.tucson.api.exceptions.TucsonInvalidAgentIdException;
 import alice.tucson.api.exceptions.TucsonOperationNotPossibleException;
@@ -33,24 +39,27 @@ import alice.tuplecentre.core.AbstractTupleCentreOperation;
  */
 public class PresenceAgent extends AbstractTucsonAgent implements TucsonAgentInterface {
 	private TucsonTupleCentreId myTid;
+	private TucsonTupleCentreId roomTupleCentreId;
     private TracePanel tp;
     private EnhancedSynchACC acc;
     private ViewPresenceAgentPanel panel;
     private Database db;
     
-    private String room;
-    private HumanDetectorInterface humanDetector;
+    private int idRoom;
+    private HumanDetectorVideoInterface humanDetector;
     private boolean humanPresent;
+    private List<Sensor> sensors;
     
-    public PresenceAgent(String id,TracePanel tp, TucsonTupleCentreId tuple, Database database,String room)
+    public PresenceAgent(String id,TracePanel tp, TucsonTupleCentreId tId, Database database,int idRoom)
     		throws TucsonInvalidAgentIdException
     {
     	super(id);
    		this.tp=tp;
-  		this.myTid=tuple;
+  		this.myTid=tId;
   		this.db=database;
-   		this.room=room;
+   		this.idRoom=idRoom;
    		this.humanPresent=false;
+   		this.sensors=new ArrayList<Sensor>();
     }
 
     public void setPanel(ViewManageAgentPanel maPanel)
@@ -84,42 +93,43 @@ public class PresenceAgent extends AbstractTucsonAgent implements TucsonAgentInt
 		return this.humanPresent;
 	}
 
+	private void init() throws Exception
+	{
+        System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
+        
+    	int NUM = ServiceFactory.TUCSON;
+        ServiceFactory sf = ServiceFactory.getServiceFactory(NUM);
+        Sensor cameraSensor = sf.getSensorServiceInterface().getSensor(db, "CAMERASTANZA1", 2);
+        if (cameraSensor==null)
+        	cameraSensor = sf.getSensorServiceInterface().insertSensor(db, "CAMERASTANZA1",2);
+		sensors.add(cameraSensor);
+		//test
+       	this.roomTupleCentreId= new TucsonTupleCentreId("camera_tc", "localhost", "20504");
+       	humanDetector = HumanDetectorFactory.createDifferential();
+       	humanDetector.init();
+   	}
 	@Override
 	protected void main() {
 		tp.appendText("-- PRESENCE AGENT STARTED.");
         this.acc = this.getContext();
-        System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
         
-    	Mat frame= new Mat();
     	BufferedImage result= null;
     	boolean updatePresent=false;
-    	LogicTuple t1;
-    	  
-    	Mat firstFrame=new Mat();
-      
+    	LogicTuple t1;     
         try{
         	reset();
         	Thread.sleep(5000);
-        	
-        	VideoCapture camera = new VideoCapture(
-    				"C:/Users/Ameli/Documents/homemanager/HomeManager/src/testvideo2b.mp4");
-        	if (!camera.isOpened())
-    			System.out.println("Error: camera not working");
-        	camera.read(firstFrame);
-        	humanDetector = HumanDetectorFactory.createDifferential(firstFrame);
-        	
-            while(camera.isOpened())
+        	init();
+            while(true)
             {
             	/*
             	 * Per gli obiettivi di questa tesi, l'implementazione attuale si basa su queste scelte ulteriori:
             	 * 1)L'agente aggiorna il feed nella view (che su un raspberryPi non sarebbe presente)
-            	 * 2)L'agente non considera la stanza vuota se l'ultimo rilevamento era nel lato destro della stanza
-            	 * 3)La view aggiorna una label tramite l'agente, non tucson
+            	 * 2)Il detector non considera la stanza vuota se l'ultimo rilevamento era nel lato destro della stanza
             	 */
-            	camera.read(frame);
-            	if (frame.empty())
+            	humanDetector.processFrame();
+            	if(humanDetector.getCurrentProcessedFrame()==null)
             		break;
-            	humanDetector.processFrame(frame);
             	result=MovementDetectionUtilities.resize(humanDetector.getCurrentProcessedFrame(), 480, 360);
             	updatePresent=humanDetector.isHumanPresent();
             	this.panel.setImage(result);
@@ -128,18 +138,30 @@ public class PresenceAgent extends AbstractTucsonAgent implements TucsonAgentInt
             		//devo aggiornare il valore nel tupleCenter
             		Date data=new Date();
                 	Timestamp t=new Timestamp(data.getTime());
-                	String roomState="NO";
+                	int roomState=0;
                 	if(updatePresent)
-                		roomState="YES";
-                	//tuple nel formato: (YES/NO human detected,stanza analizzata,timestamp dell'ultimo update)
-                	t1= new LogicTuple("presence",new Value(roomState),new Value(room),new Value(t.toString()));        	
+                		roomState=1;
+                	//tuple nel formato: (1 yes/0 no human detected,id stanza analizzata,id sensore,timestamp dell'ultimo update)
+                	t1= new LogicTuple("presence",new Value(roomState),new Value(idRoom),new Value(sensors.get(0).idSens),new Value(t.toString()));  
+                	//test 
+                	/*
+                	LogicTuple detection = new LogicTuple("detection",
+                            new Value("entry"),
+                            new Value(idSensor), // sensor
+                            new Value(-10), // person
+                            new Value(idRoom)// room
+                    );
+                	acc.out(this.roomTupleCentreId,detection,null);
+                	*/
+                	//end test
                 	acc.out(myTid, t1, null);
+                	
                 	tp.appendText("-- PRESENCE AGENT UPDATED.");
                 	humanPresent=updatePresent;
             	}
             	
              }
-            camera.release();
+            
             tp.appendText("--PRESENCE AGENT: STREAM ENDED.");
             this.panel.resetImage();
             

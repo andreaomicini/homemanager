@@ -13,16 +13,19 @@ import alice.tucson.api.AbstractTucsonAgent;
 import alice.tucson.api.TucsonTupleCentreId;
 import alice.tucson.api.exceptions.TucsonInvalidAgentIdException;
 import it.unibo.homemanager.ServiceFactory;
+import it.unibo.homemanager.TUCSONServiceFactory;
 import it.unibo.homemanager.dbmanagement.Database;
 import it.unibo.homemanager.dbmanagement.TucsonDatabase;
 import it.unibo.homemanager.humanpresence.PresenceAgent;
 import it.unibo.homemanager.social.TwitterAgent;
+import it.unibo.homemanager.tablemap.Sensor;
 import it.unibo.homemanager.userinterfaces.TracePanel;
 import it.unibo.homemanager.userinterfaces.ViewManageAgentPanel;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.StringTokenizer;
+import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -51,7 +54,7 @@ public class AgentManager {
             return istanza;
     }
     
-    public void inizializeComponent(ViewManageAgentPanel viewManageAgentPanel,ServiceFactory sf,TracePanel tp,List<TucsonTupleCentreId> tcs){
+    public void inizializeComponent(ViewManageAgentPanel viewManageAgentPanel,ServiceFactory sf, TracePanel tp,List<TucsonTupleCentreId> tcs){
     	this.viewManagerAgent=viewManageAgentPanel;
         try {
             this.database = sf.getDatabaseInterface();
@@ -84,13 +87,17 @@ public class AgentManager {
         	t=new TwitterAgent("twitterAgent", tp, tcs.get(1), database);
         	t.setPanel(viewManagerAgent);
         	
-        	p=new PresenceAgent("presenceAgent",tp,tcs.get(2),database,"Living Room");
+        	p=new PresenceAgent("presenceAgent",tp,tcs.get(2),database,2);
         	p.setPanel(viewManagerAgent);
         	
         } 
         catch (TucsonInvalidAgentIdException ex) 
         {
             Logger.getLogger(AgentManager.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        catch( Exception e)
+        {
+        	Logger.getLogger(AgentManager.class.getName()).log(Level.SEVERE, null, e);
         }
         
         listAgentInterface.add(m);

@@ -121,6 +121,8 @@ public class MainPanel extends JPanel {
 			{
 				l.add((TucsonTupleCentreId)tCenters.elementAt(i));
 			}
+			
+			
 		}
         butlerPanel=new ViewManageAgentPanel(this, l, tp, sf);
         AgentManager.getInstance().inizializeComponent(butlerPanel, sf, tp,l);
