@@ -1,8 +1,7 @@
 package it.unibo.homemanager.humanpresence;
 
-import java.awt.image.BufferedImage;
 import java.io.IOException;
-import java.sql.Timestamp;
+import java.net.URL;
 import java.util.Date;
 
 import javax.swing.ImageIcon;
@@ -18,8 +17,6 @@ import org.opencv.video.BackgroundSubtractorMOG2;
 import org.opencv.video.Video;
 import org.opencv.videoio.VideoCapture;
 
-import alice.logictuple.LogicTuple;
-import alice.logictuple.Value;
 /**
  * @author 0000628533
  *
@@ -33,11 +30,6 @@ public class Testhumanrecog {
 
 	public static void main (String args[])
 	{
-		VideoCapture camera = new VideoCapture(
-				"C:/Users/Ameli/Documents/homemanager/HomeManager/src/testvideo2b.mp4");
-		
-		if (!camera.isOpened())
-			System.out.println("Error: camera not working");
 		
 		//Testing human detection
 		JFrame jframe= new JFrame("Test Human Detection");
@@ -70,10 +62,11 @@ public class Testhumanrecog {
 	    	//test con elaborazione frame
 	    	Mat firstFrame=new Mat();
 	    	Mat frame= new Mat();
-	    	camera.read(firstFrame);
-	    	//HumanDetectorInterface humanDetector= HumanDetectorFactory.createDifferential(firstFrame);
-	    	HumanDetectorVideoInterface humanDetector= HumanDetectorFactory.createPixelDensity();
-	    	//HumanDetectorInterface humanDetector= HumanDetectorFactory.createGaussian();
+	    	//camera.read(firstFrame);
+	    	//HumanDetectorVideoInterface humanDetector= HumanDetectorFactory.createDifferential(firstFrame);
+	    	//HumanDetectorVideoInterface humanDetector= HumanDetectorFactory.createPixelDensity();
+	    	HumanDetectorVideoInterface humanDetector= HumanDetectorFactory.createGaussian();
+	    	humanDetector.init();
 	    	long average=0;
 	    	long total=0;
 	    	int i=1;
@@ -82,9 +75,6 @@ public class Testhumanrecog {
 	    		//Test prestazioni
             	long t1,t2;
             	t1=new Date().getTime();
-	    		camera.read(frame);
-            	if (frame.empty())
-            		break;
             	humanDetector.processFrame();
             	vidpanel.setIcon(new ImageIcon(MovementDetectionUtilities.Mat2bufferedImage(humanDetector.getCurrentMask())));
             	vidpanel2.setIcon(new ImageIcon(humanDetector.getCurrentProcessedFrame()));

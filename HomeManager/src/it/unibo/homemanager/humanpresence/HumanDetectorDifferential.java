@@ -40,8 +40,12 @@ public class HumanDetectorDifferential implements HumanDetectorVideoInterface {
 		processedFrame= new Mat();
 		this.filePath=filePath;
 	}
+	//Inizializza libreria openCV e primo frame
 	public void init()throws IOException
 	{
+
+        System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
+        
 		firstFrame=new Mat();
 		this.camera = new VideoCapture(filePath);
     	if (!camera.isOpened())

@@ -1,10 +1,12 @@
 package it.unibo.homemanager.humanpresence;
 
-import org.opencv.core.Mat;
+import java.net.URL;
+
 
 public class HumanDetectorFactory {
 
-	private final static String filePath="C:/Users/Ameli/Documents/homemanager/HomeManager/src/testvideo2b.mp4";
+	private final static URL resource= Testhumanrecog.class.getResource("/testvideo2b.mp4");
+	private final static String filePath=resource.getPath().substring(1);;
 	public static HumanDetectorDifferential createDifferential()
 	{
 		return new HumanDetectorDifferential(filePath,25);

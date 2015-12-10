@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.opencv.core.Core;
 import org.opencv.core.Mat;
 import org.opencv.core.Rect;
 import org.opencv.video.BackgroundSubtractorMOG2;
@@ -39,6 +40,9 @@ public class HumanDetectorGaussian implements HumanDetectorVideoInterface {
 	}
 	public void init()throws IOException
 	{
+
+        System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
+        
 		this.camera = new VideoCapture(filePath);
     	if (!camera.isOpened())
     		throw new IOException("Camera not working");

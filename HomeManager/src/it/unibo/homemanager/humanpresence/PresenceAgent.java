@@ -6,12 +6,9 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import javax.swing.ImageIcon;
 import javax.swing.JPanel;
 
 import org.opencv.core.Core;
-import org.opencv.core.Mat;
-import org.opencv.videoio.VideoCapture;
 
 import it.unibo.homemanager.ServiceFactory;
 import it.unibo.homemanager.dbmanagement.Database;
@@ -92,22 +89,28 @@ public class PresenceAgent extends AbstractTucsonAgent implements TucsonAgentInt
 	{
 		return this.humanPresent;
 	}
-
+	//Inizializza i sensori e gli humanDetector
 	private void init() throws Exception
 	{
-        System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
-        
     	int NUM = ServiceFactory.TUCSON;
         ServiceFactory sf = ServiceFactory.getServiceFactory(NUM);
         Sensor cameraSensor = sf.getSensorServiceInterface().getSensor(db, "CAMERASTANZA1", 2);
         if (cameraSensor==null)
         	cameraSensor = sf.getSensorServiceInterface().insertSensor(db, "CAMERASTANZA1",2);
 		sensors.add(cameraSensor);
+		humanDetector = HumanDetectorFactory.createDifferential();
+       	humanDetector.init();
 		//test
        	this.roomTupleCentreId= new TucsonTupleCentreId("camera_tc", "localhost", "20504");
-       	humanDetector = HumanDetectorFactory.createDifferential();
-       	humanDetector.init();
+       	
    	}
+	/*
+	 * In questa implementazione, l'agente si limita a:
+	 * 1) Processare frame tramite human detector
+	 * 2) Ottenere il frame processato per aggiornare la view
+	 * 3) Aggiornare una tupla in caso cambi lo stato della stanza
+	 * 
+	 */
 	@Override
 	protected void main() {
 		tp.appendText("-- PRESENCE AGENT STARTED.");
@@ -122,11 +125,6 @@ public class PresenceAgent extends AbstractTucsonAgent implements TucsonAgentInt
         	init();
             while(true)
             {
-            	/*
-            	 * Per gli obiettivi di questa tesi, l'implementazione attuale si basa su queste scelte ulteriori:
-            	 * 1)L'agente aggiorna il feed nella view (che su un raspberryPi non sarebbe presente)
-            	 * 2)Il detector non considera la stanza vuota se l'ultimo rilevamento era nel lato destro della stanza
-            	 */
             	humanDetector.processFrame();
             	if(humanDetector.getCurrentProcessedFrame()==null)
             		break;
@@ -141,8 +139,12 @@ public class PresenceAgent extends AbstractTucsonAgent implements TucsonAgentInt
                 	int roomState=0;
                 	if(updatePresent)
                 		roomState=1;
-                	//tuple nel formato: (1 yes/0 no human detected,id stanza analizzata,id sensore,timestamp dell'ultimo update)
-                	t1= new LogicTuple("presence",new Value(roomState),new Value(idRoom),new Value(sensors.get(0).idSens),new Value(t.toString()));  
+                	//tuple nel formato: 
+                	t1= new LogicTuple("presence",
+                			new Value(roomState), //intero, 1 se viene rilevato un umano, 0 altrimenti
+                			new Value(idRoom),	// id della stanza monitorata dall'agente
+                			new Value(sensors.get(0).idSens), //id del sensore che ha effettuato il rilevamento
+                			new Value(t.toString()));  //timestamp
                 	//test 
                 	/*
                 	LogicTuple detection = new LogicTuple("detection",
