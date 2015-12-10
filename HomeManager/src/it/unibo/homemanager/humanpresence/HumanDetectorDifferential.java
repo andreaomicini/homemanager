@@ -32,12 +32,12 @@ public class HumanDetectorDifferential implements HumanDetectorVideoInterface {
 	public HumanDetectorDifferential(String filePath,double thresh)
 	{
 		this.thresh=thresh;
-		mask=new Mat();
+
 		tempBounds=new ArrayList<Rect>();
 		min_area=250;
 		humanPresent=false;
 		lastSeenBounds=new ArrayList<Rect>();
-		processedFrame= new Mat();
+
 		this.filePath=filePath;
 	}
 	//Inizializza libreria openCV e primo frame
@@ -45,8 +45,9 @@ public class HumanDetectorDifferential implements HumanDetectorVideoInterface {
 	{
 
         System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
-        
+		mask=new Mat();
 		firstFrame=new Mat();
+		processedFrame= new Mat();
 		this.camera = new VideoCapture(filePath);
     	if (!camera.isOpened())
     		throw new IOException("Camera not working");

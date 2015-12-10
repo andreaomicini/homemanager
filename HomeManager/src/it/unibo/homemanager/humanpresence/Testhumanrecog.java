@@ -1,5 +1,7 @@
 package it.unibo.homemanager.humanpresence;
 
+import it.unibo.homemanager.ServiceFactory;
+
 import java.io.IOException;
 import java.net.URL;
 import java.util.Date;
@@ -78,6 +80,7 @@ public class Testhumanrecog {
             	humanDetector.processFrame();
             	vidpanel.setIcon(new ImageIcon(MovementDetectionUtilities.Mat2bufferedImage(humanDetector.getCurrentMask())));
             	vidpanel2.setIcon(new ImageIcon(humanDetector.getCurrentProcessedFrame()));
+            	
             	t2=new Date().getTime();
                 System.out.println("frame processed in "+(t2-t1)+" ms");
                 total=total+t2-t1;

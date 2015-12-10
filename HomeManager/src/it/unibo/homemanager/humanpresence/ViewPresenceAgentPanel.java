@@ -49,7 +49,7 @@ public class ViewPresenceAgentPanel extends javax.swing.JPanel  {
 		this.presenceAgent=presenceAgent;
 		this.tp=tp;
 
-        JLabel lblPresenceAgent = new JLabel("Presence Agent");
+        JLabel lblPresenceAgent = new JLabel(presenceAgent.getName());
         lblPresenceAgent.setBounds(20, 12, 150, 21);
         lblPresenceAgent.setFont(new Font("Courier New", Font.BOLD, 18));
 		

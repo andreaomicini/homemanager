@@ -47,6 +47,8 @@ public class PresenceAgent extends AbstractTucsonAgent implements TucsonAgentInt
     private boolean humanPresent;
     private List<Sensor> sensors;
     
+    private int sleepAmount=5000;
+    
     public PresenceAgent(String id,TracePanel tp, TucsonTupleCentreId tId, Database database,int idRoom)
     		throws TucsonInvalidAgentIdException
     {
@@ -82,7 +84,7 @@ public class PresenceAgent extends AbstractTucsonAgent implements TucsonAgentInt
 
 	@Override
 	public String getName() {
-		return "Presence Agent";
+		return "Presence Agent "+idRoom;
 	}
 	
 	public boolean isHumanPresent()
@@ -94,9 +96,12 @@ public class PresenceAgent extends AbstractTucsonAgent implements TucsonAgentInt
 	{
     	int NUM = ServiceFactory.TUCSON;
         ServiceFactory sf = ServiceFactory.getServiceFactory(NUM);
-        Sensor cameraSensor = sf.getSensorServiceInterface().getSensor(db, "CAMERASTANZA1", 2);
+        String RoomName= sf.getRoomServiceInterface().getRoomById(db, idRoom).name;
+        Sensor cameraSensor = sf.getSensorServiceInterface().getSensor(db, "CAMERA_"+RoomName+"_1", idRoom);
         if (cameraSensor==null)
-        	cameraSensor = sf.getSensorServiceInterface().insertSensor(db, "CAMERASTANZA1",2);
+        	cameraSensor = sf.getSensorServiceInterface().insertSensor(db, "CAMERA_"+RoomName+"_1",idRoom);
+        if (idRoom==3)
+        	sleepAmount+=60000;
 		sensors.add(cameraSensor);
 		humanDetector = HumanDetectorFactory.createDifferential();
        	humanDetector.init();
@@ -121,8 +126,9 @@ public class PresenceAgent extends AbstractTucsonAgent implements TucsonAgentInt
     	LogicTuple t1;     
         try{
         	reset();
-        	Thread.sleep(5000);
         	init();
+        	Thread.sleep(sleepAmount);
+        	
             while(true)
             {
             	humanDetector.processFrame();

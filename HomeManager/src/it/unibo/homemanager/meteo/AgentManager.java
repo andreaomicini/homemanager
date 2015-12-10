@@ -78,6 +78,7 @@ public class AgentManager {
         MeteoAgent m = null;
         TwitterAgent t = null;
         PresenceAgent p = null;
+        PresenceAgent p2 = null;
         try 
         {
            
@@ -87,8 +88,11 @@ public class AgentManager {
         	t=new TwitterAgent("twitterAgent", tp, tcs.get(1), database);
         	t.setPanel(viewManagerAgent);
         	
-        	p=new PresenceAgent("presenceAgent",tp,tcs.get(2),database,2);
+        	p=new PresenceAgent("presenceAgent",tp,tcs.get(2),database,1);
         	p.setPanel(viewManagerAgent);
+        	
+        	p2=new PresenceAgent("presenceAgent",tp,tcs.get(2),database,3);
+        	p2.setPanel(viewManagerAgent);
         	
         } 
         catch (TucsonInvalidAgentIdException ex) 
@@ -103,6 +107,7 @@ public class AgentManager {
         listAgentInterface.add(m);
         listAgentInterface.add(t);
         listAgentInterface.add(p);
+        listAgentInterface.add(p2);
     }
      
     
