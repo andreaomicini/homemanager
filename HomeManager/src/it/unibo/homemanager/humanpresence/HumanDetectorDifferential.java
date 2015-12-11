@@ -65,6 +65,14 @@ public class HumanDetectorDifferential implements HumanDetectorVideoInterface {
             
 	}
 	@Override
+	public void run()
+	{
+		processFrame();
+		while(getCurrentProcessedFrame()!=null)
+		{
+			processFrame();
+		}
+	}
 	/*Algoritmo leggero, basato su semplice differenza tra il primo frame e tutti i successivi.
 	  *Prendendo come ipotesi: 
 	  *1) Il primo frame non contiene persone, ma solo lo sfondo della stanza da monitorare
@@ -72,7 +80,7 @@ public class HumanDetectorDifferential implements HumanDetectorVideoInterface {
 	  *3) La posizione della telecamera non cambia
 	  *
 	  */
-	public void processFrame() 
+	private void processFrame() 
 	{
 		Mat greyFrame = new Mat();
 		Mat frameDelta = new Mat();

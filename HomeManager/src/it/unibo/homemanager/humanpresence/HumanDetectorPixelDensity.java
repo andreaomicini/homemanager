@@ -48,6 +48,14 @@ public class HumanDetectorPixelDensity implements HumanDetectorVideoInterface {
     		throw new IOException("Camera not working");
 	}
 	@Override
+	public void run()
+	{
+		processFrame();
+		while(getCurrentProcessedFrame()!=null)
+		{
+			processFrame();
+		}
+	}
 	/*Algoritmo pesante, basato su metodi bayesiani valutando ogni pixel
 	  *1) Non ci saranno cambiamenti molto notevoli in luce e ombre, o grandi oggetti spostati 
 	  *2) La posizione della telecamera non cambia
@@ -55,7 +63,7 @@ public class HumanDetectorPixelDensity implements HumanDetectorVideoInterface {
 	  *Prende come input il frame attuale.
 	  *Restituisce una matrice contenente la mask, ovvero una impronta delle figure in movimento
 	  */
-	public void processFrame() 
+	private void processFrame() 
 	{
 		Mat frame= new Mat();
 		camera.read(frame);

@@ -8,7 +8,6 @@ import java.util.List;
 
 import javax.swing.JPanel;
 
-import org.opencv.core.Core;
 
 import it.unibo.homemanager.ServiceFactory;
 import it.unibo.homemanager.dbmanagement.Database;
@@ -36,19 +35,20 @@ import alice.tuplecentre.core.AbstractTupleCentreOperation;
  */
 public class PresenceAgent extends AbstractTucsonAgent implements TucsonAgentInterface {
 	private TucsonTupleCentreId myTid;
-	private TucsonTupleCentreId roomTupleCentreId;
     private TracePanel tp;
     private EnhancedSynchACC acc;
     private ViewPresenceAgentPanel panel;
     private Database db;
-    
     private int idRoom;
+    
     private HumanDetectorVideoInterface humanDetector;
     private boolean humanPresent;
     private List<Sensor> sensors;
-    
     private int sleepAmount=5000;
     
+    //test
+	private TucsonTupleCentreId roomTupleCentreId;
+	
     public PresenceAgent(String id,TracePanel tp, TucsonTupleCentreId tId, Database database,int idRoom)
     		throws TucsonInvalidAgentIdException
     {
@@ -128,10 +128,12 @@ public class PresenceAgent extends AbstractTucsonAgent implements TucsonAgentInt
         	reset();
         	init();
         	Thread.sleep(sleepAmount);
-        	
+        	Thread hD=new Thread(humanDetector);
+        	hD.start();
+        	Thread.sleep(50);
             while(true)
             {
-            	humanDetector.processFrame();
+            	Thread.sleep(5);
             	if(humanDetector.getCurrentProcessedFrame()==null)
             		break;
             	result=MovementDetectionUtilities.resize(humanDetector.getCurrentProcessedFrame(), 480, 360);

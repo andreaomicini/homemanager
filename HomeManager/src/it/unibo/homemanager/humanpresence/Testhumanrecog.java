@@ -77,7 +77,6 @@ public class Testhumanrecog {
 	    		//Test prestazioni
             	long t1,t2;
             	t1=new Date().getTime();
-            	humanDetector.processFrame();
             	vidpanel.setIcon(new ImageIcon(MovementDetectionUtilities.Mat2bufferedImage(humanDetector.getCurrentMask())));
             	vidpanel2.setIcon(new ImageIcon(humanDetector.getCurrentProcessedFrame()));
             	
