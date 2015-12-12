@@ -21,8 +21,6 @@ import alice.logictuple.Var;
 import alice.tucson.api.AbstractTucsonAgent;
 import alice.tucson.api.EnhancedSynchACC;
 import alice.tucson.api.ITucsonOperation;
-import alice.tucson.api.TucsonAgentId;
-import alice.tucson.api.TucsonMetaACC;
 import alice.tucson.api.TucsonTupleCentreId;
 import alice.tucson.api.exceptions.TucsonInvalidAgentIdException;
 import alice.tucson.api.exceptions.TucsonOperationNotPossibleException;
@@ -45,10 +43,7 @@ public class PresenceAgent extends AbstractTucsonAgent implements TucsonAgentInt
     private boolean humanPresent;
     private List<Sensor> sensors;
     private int sleepAmount=5000;
-    
-    //test
-	private TucsonTupleCentreId roomTupleCentreId;
-	
+    	
     public PresenceAgent(String id,TracePanel tp, TucsonTupleCentreId tId, Database database,int idRoom)
     		throws TucsonInvalidAgentIdException
     {
@@ -101,47 +96,51 @@ public class PresenceAgent extends AbstractTucsonAgent implements TucsonAgentInt
         if (cameraSensor==null)
         	cameraSensor = sf.getSensorServiceInterface().insertSensor(db, "CAMERA_"+RoomName+"_1",idRoom);
         if (idRoom==3)
-        	sleepAmount+=60000;
+        	sleepAmount+=30000;
 		sensors.add(cameraSensor);
-		humanDetector = HumanDetectorFactory.createDifferential();
+		
+		humanDetector = HumanDetectorFactory.createGaussian();
        	humanDetector.init();
-		//test
-       	this.roomTupleCentreId= new TucsonTupleCentreId("camera_tc", "localhost", "20504");
-       	
    	}
 	/*
 	 * In questa implementazione, l'agente si limita a:
-	 * 1) Processare frame tramite human detector
-	 * 2) Ottenere il frame processato per aggiornare la view
-	 * 3) Aggiornare una tupla in caso cambi lo stato della stanza
-	 * 
+	 * 1) Ottenere il frame processato da humanDetector per aggiornare la view
+	 * 2) Aggiornare una tupla quando lo stato della stanza cambia
 	 */
 	@Override
 	protected void main() {
+		
 		tp.appendText("-- PRESENCE AGENT STARTED.");
         this.acc = this.getContext();
-        
-    	BufferedImage result= null;
+        BufferedImage result= null;
     	boolean updatePresent=false;
-    	LogicTuple t1;     
+    	LogicTuple t1;
+    	
         try{
         	reset();
         	init();
         	Thread.sleep(sleepAmount);
-        	Thread hD=new Thread(humanDetector);
-        	hD.start();
+      
+        	Thread humanDetectorThread=new Thread(humanDetector);
+        	humanDetectorThread.start();
         	Thread.sleep(50);
+        	
             while(true)
             {
             	Thread.sleep(5);
-            	if(humanDetector.getCurrentProcessedFrame()==null)
+            	BufferedImage processedFrame=humanDetector.getCurrentProcessedFrame();
+            	
+            	
+            	if(processedFrame==null)
             		break;
-            	result=MovementDetectionUtilities.resize(humanDetector.getCurrentProcessedFrame(), 480, 360);
-            	updatePresent=humanDetector.isHumanPresent();
+            	
+            	result=MovementDetectionUtilities.resize(processedFrame, 480, 360);
             	this.panel.setImage(result);
+            	
+            	updatePresent=humanDetector.isHumanPresent();
             	if (updatePresent != humanPresent)
             	{
-            		//devo aggiornare il valore nel tupleCenter
+            		//devo aggiornare il valore nel tupleCenter "presence_tc"
             		Date data=new Date();
                 	Timestamp t=new Timestamp(data.getTime());
                 	int roomState=0;
@@ -149,21 +148,11 @@ public class PresenceAgent extends AbstractTucsonAgent implements TucsonAgentInt
                 		roomState=1;
                 	//tuple nel formato: 
                 	t1= new LogicTuple("presence",
-                			new Value(roomState), //intero, 1 se viene rilevato un umano, 0 altrimenti
-                			new Value(idRoom),	// id della stanza monitorata dall'agente
-                			new Value(sensors.get(0).idSens), //id del sensore che ha effettuato il rilevamento
-                			new Value(t.toString()));  //timestamp
-                	//test 
-                	/*
-                	LogicTuple detection = new LogicTuple("detection",
-                            new Value("entry"),
-                            new Value(idSensor), // sensor
-                            new Value(-10), // person
-                            new Value(idRoom)// room
-                    );
-                	acc.out(this.roomTupleCentreId,detection,null);
-                	*/
-                	//end test
+                			new Value(roomState), 				//intero, 1 se viene rilevato un umano, 0 altrimenti
+                			new Value(idRoom),					// id della stanza monitorata dall'agente
+                			new Value(sensors.get(0).idSens), 	//id del sensore che ha effettuato il rilevamento
+                			new Value(t.toString())); 			//timestamp
+                	
                 	acc.out(myTid, t1, null);
                 	
                 	tp.appendText("-- PRESENCE AGENT UPDATED.");
@@ -197,7 +186,7 @@ public class PresenceAgent extends AbstractTucsonAgent implements TucsonAgentInt
 	private void reset()
 			throws OperationTimeOutException,UnreachableNodeException,TucsonOperationNotPossibleException
 	{
-		LogicTuple template=new LogicTuple("presence", new Var(), new Var(),new Var());
+		LogicTuple template=new LogicTuple("presence", new Var(), new Var(),new Var(),new Var());
     	acc.inAll(myTid, template, Long.MAX_VALUE);
 	}
 

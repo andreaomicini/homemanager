@@ -28,6 +28,7 @@ public class HumanDetectorDifferential implements HumanDetectorVideoInterface {
 	private Mat processedFrame=null;
 	private VideoCapture camera=null;
 	private String filePath;
+	private Size sz;
 	
 	public HumanDetectorDifferential(String filePath,double thresh)
 	{
@@ -43,17 +44,22 @@ public class HumanDetectorDifferential implements HumanDetectorVideoInterface {
 	//Inizializza libreria openCV e primo frame
 	public void init()throws IOException
 	{
-
+		//prima di utilizzare qualsiasi oggetto Mat o Videocapture, carico la libreria nativa
         System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
+        
 		mask=new Mat();
 		firstFrame=new Mat();
 		processedFrame= new Mat();
+		
+		//Qui viene aperto lo stream video
 		this.camera = new VideoCapture(filePath);
     	if (!camera.isOpened())
     		throw new IOException("Camera not working");
+    	
+    	//Algoritmo differenziale: ottengo il primo frame
     	camera.read(firstFrame);
-
-		Size sz = new Size(480, 360);
+    	
+    	sz = new Size(480, 360);
     	//imposto le dimensioni il frame catturato
         Imgproc.resize(firstFrame,firstFrame, sz); 
                 
@@ -64,7 +70,11 @@ public class HumanDetectorDifferential implements HumanDetectorVideoInterface {
         Imgproc.GaussianBlur(firstFrame, firstFrame, new Size(21,21), 0); 
             
 	}
+	
 	@Override
+	/*
+	 * Semplicemente, qui continua a processare frame fino alla chiusura dello stream (processedframe empty)
+	 */
 	public void run()
 	{
 		processFrame();
@@ -73,19 +83,18 @@ public class HumanDetectorDifferential implements HumanDetectorVideoInterface {
 			processFrame();
 		}
 	}
+	
 	/*Algoritmo leggero, basato su semplice differenza tra il primo frame e tutti i successivi.
 	  *Prendendo come ipotesi: 
 	  *1) Il primo frame non contiene persone, ma solo lo sfondo della stanza da monitorare
 	  *2) Non ci saranno cambiamenti notevoli in luce e ombre, o grandi oggetti spostati durante il monitoraggio
 	  *3) La posizione della telecamera non cambia
-	  *
 	  */
 	private void processFrame() 
 	{
 		Mat greyFrame = new Mat();
 		Mat frameDelta = new Mat();
 		Mat thresholded = new Mat();
-		Size sz = new Size(480, 360);
        
 		Mat frame= new Mat();
 		camera.read(frame);
@@ -136,19 +145,22 @@ public class HumanDetectorDifferential implements HumanDetectorVideoInterface {
 	}
 
 	@Override
-	public Mat getCurrentMask() {
+	public Mat getCurrentMask() 
+	{
 		return mask;
 	}
 
 	@Override
-	public BufferedImage getCurrentProcessedFrame() {
+	public BufferedImage getCurrentProcessedFrame() 
+	{
 		if(processedFrame.empty())
 			return null;
 		return MovementDetectionUtilities.Mat2bufferedImage(processedFrame);
 	}
 
 	@Override
-	public boolean isHumanPresent() {
+	public boolean isHumanPresent() 
+	{
 		return humanPresent;
 	}
 

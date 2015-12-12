@@ -29,7 +29,8 @@ public class HumanDetectorPixelDensity implements HumanDetectorVideoInterface {
 	
 	public HumanDetectorPixelDensity(String filePath,int history,double thresh)
 	{
-		subtractor = Video.createBackgroundSubtractorKNN(history,thresh,true);
+        System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
+        subtractor = Video.createBackgroundSubtractorKNN(history,thresh,true);
 		mask=new Mat();
 		tempBounds=new ArrayList<Rect>();
 		min_area=250;
@@ -40,14 +41,14 @@ public class HumanDetectorPixelDensity implements HumanDetectorVideoInterface {
 	}
 	public void init()throws IOException
 	{
-
-        System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
-        
 		this.camera = new VideoCapture(filePath);
     	if (!camera.isOpened())
     		throw new IOException("Camera not working");
 	}
 	@Override
+	/*
+	 * Semplicemente, qui continua a processare frame fino alla chiusura dello stream (processedframe empty)
+	 */
 	public void run()
 	{
 		processFrame();
@@ -56,12 +57,10 @@ public class HumanDetectorPixelDensity implements HumanDetectorVideoInterface {
 			processFrame();
 		}
 	}
+	
 	/*Algoritmo pesante, basato su metodi bayesiani valutando ogni pixel
 	  *1) Non ci saranno cambiamenti molto notevoli in luce e ombre, o grandi oggetti spostati 
 	  *2) La posizione della telecamera non cambia
-	  *
-	  *Prende come input il frame attuale.
-	  *Restituisce una matrice contenente la mask, ovvero una impronta delle figure in movimento
 	  */
 	private void processFrame() 
 	{
