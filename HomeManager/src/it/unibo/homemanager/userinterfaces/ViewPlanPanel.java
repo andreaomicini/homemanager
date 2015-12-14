@@ -197,8 +197,6 @@ public class ViewPlanPanel extends javax.swing.JPanel {
             
             int size = sensors.size();
            
-            
-          //TODO: sfruttare l'attuatore
             for(int i=0; i<size ;i++)
             {
             	Sensor sensor = (Sensor) sensors.get(i);

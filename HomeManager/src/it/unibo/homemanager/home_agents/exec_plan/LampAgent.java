@@ -126,46 +126,9 @@ public class LampAgent extends AbstractTucsonAgent {
             ex.printStackTrace();
             tp.appendText("LampAgent "+l.name+": error in lights activity.");
         }
-    	
-    
-    /*    @Override
-    protected void main() {
-        LogicTuple template_in = null;
-        try {
-            template_in = new LogicTuple("light_mode",new Value(l.sensId),new Var("X"));
-        } catch (InvalidVarNameException e) {
-            // cannot happen
-        }
-        tp.appendText("-- LAMP AGENT FOR "+l.name+" STARTED.");
-
-        try {
-            EnhancedSynchACC acc = this.getContext();
-            //while(true) {
-                // wait for command
-                ITucsonOperation op_in = acc.in(room_tc, template_in, Long.MAX_VALUE);
-                System.out.println("LAMPAGENT "+l.name+": " + op_in.getLogicTupleResult());
-                String reqState = op_in.getLogicTupleResult().getArg(1).toString();
-                if(state.compareTo(reqState) != 0) { // execute only if state is really changed
-                    // execute command
-                    this.state = reqState;
-                    LogicTuple template_out = new LogicTuple("upd_light_curr_st",new Value(l.sensId), new Value(state));
-                    // notify current state after command execution
-                    ITucsonOperation op_out = acc.out(room_tc, template_out, null);
-                    
-                    if(op_out.isResultSuccess())
-                        tp.appendText("LAMPAGENT "+l.name+": CURRENT STATE "+state);
-                    else
-                        this.say("FAIL: op_out ha fallito!");
-                }
-                else System.err.println("LampAgent "+l.name+": ALREADY "+state);
-            //}
-        }
-        catch(Exception ex) {
-            ex.printStackTrace();
-            tp.appendText("LampAgent "+l.name+": error in lights activity.");
-        }*/
     }
     
+    //Questa funzione realizza una outS uguale alla setS, che prende in ingresso una stringa anziché le singole tuple che costituiscono la reaction
     protected boolean outS(TucsonTupleCentreId tc, String s) {
     	
     	EnhancedSynchACC acc = this.getContext();
@@ -189,56 +152,8 @@ public class LampAgent extends AbstractTucsonAgent {
 			return false;
 		}
 		
-		return true;
-    	
-    	
-    	//acc.setS(room_tc, config, null);
-    	/*EnhancedSynchACC acc = this.getContext();
-    	
-    	String pattern1 = "reaction(";
-        String pattern2 = ").";
-        
-        Pattern p = Pattern.compile(Pattern.quote(pattern1) + "(.*?)" + Pattern.quote(pattern2), Pattern.DOTALL);
-        Matcher m = p.matcher(s);
-        while (m.find()) {
-        	
-        	try {
-        	String[] parts = m.group(1).split(Pattern.quote(",") + "\n");
-        	parts[0] = parts[0].replaceAll("\\s", "");
-        	parts[1] = parts[1].replaceAll("\\s", "");
-        	parts[2] = parts[2].replaceAll("\\s", "");
-        	 LogicTuple arg1 = new LogicTuple(TupleArgument.parse(parts[0]));
-        	 LogicTuple arg2 = new LogicTuple(TupleArgument.parse(parts[1]));
-        	 LogicTuple arg3 = new LogicTuple(parts[2]);
-        	//System.out.println("1 - " + m.group(1));
-        	 
-        	 
-				acc.outS(tc, arg1, arg2, arg3, null);
-			} catch (TucsonOperationNotPossibleException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-				return false;
-			} catch (UnreachableNodeException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-				return false;
-			} catch (OperationTimeOutException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-				return false;
-			} catch (InvalidTupleArgumentException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-				return false;
-			}
-        }
-        
-        
-        
-        return true;*/
-    	
+		return true;   	
 
-		
     }
     
 }

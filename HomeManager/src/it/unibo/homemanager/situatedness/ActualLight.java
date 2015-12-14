@@ -68,6 +68,8 @@ public class ActualLight implements ISimpleProbe{
 	@Override
 	public boolean readValue(String key) {
 		
+		
+		//Controlla l'associazione con il transducer
 		if (this.tid == null) {
             System.err.println("[" + this.pid
                     + "]: Non è stato ancora associato nessun traduttore a questo PID.");
@@ -83,21 +85,24 @@ public class ActualLight implements ISimpleProbe{
             }
         }
         
+        //La key deve essere costruita correttamente in questo modo
         final String correct_light_state = "light_state_"+this.lamp_id;
-        
         try {
         	if(key.equals(correct_light_state)) {
+        		//Leggo la tupla contenente lo stato
         		final LogicTuple template = LogicTuple.parse("light_curr_st(" + this.lamp_id + ",_)");
 	            final ITucsonOperation op = this.acc.rd(this.illumination_tc, template, null);
 	            if (op.isResultSuccess()) {
 	                final String stato = op.getLogicTupleResult().getArg(1).toString();
 	                System.out.println("[" + this.pid + "]: lo stato della luce è: " + stato);
+		        	//traduco lo stato "logico" in un int
 	                final int state;
 	                if (stato.equals("off")) {
 	                	state = 0;
 	                } else if (stato.equals("on")) {
 	                	state = 1;
 	                } else state = 3;
+	                //invio la notifica al transducer
 	                this.transducer.notifyEnvEvent(key, state, AbstractTransducer.GET_MODE);
 	            }
 	            return true;
@@ -126,6 +131,7 @@ public class ActualLight implements ISimpleProbe{
 	@Override
 	public boolean writeValue(String key, int state) {
 		
+		//Controlla l'associazione con il transducer
 		if (this.tid == null) {
             System.err.println("[" + this.pid
                     + "]: Non è stato ancora associato nessun traduttore a questo PID.");
@@ -141,10 +147,12 @@ public class ActualLight implements ISimpleProbe{
             }
         }
         
+        //La key deve essere costruita correttamente in questo modo
         final String correct_light_mode = "light_mode_"+this.lamp_id;
         
         try {
 	        if(key.equals(correct_light_mode)) {
+	        	//controllo stato e traduzione in stato "logico"
 	        	String stato;
 				if (state == 0) {
 		        	stato = "off";
@@ -155,9 +163,10 @@ public class ActualLight implements ISimpleProbe{
 		        	return false;
 		        }
 				System.out.println("[" + this.pid + "]: devo impostare il valore della luce a " + stato);
+				
+				//rimuovo la vecchia tupla e emetto la nuova
 				final LogicTuple template = LogicTuple.parse("light_curr_st(" + lamp_id + ",_)");
-	            final ITucsonOperation op = this.acc.inp(this.illumination_tc, template, null); //TODO: verificare se è meglio con la in
-	            //TODO: dovrebbe verificare se la luce è già accesa o meno
+	            final ITucsonOperation op = this.acc.inp(this.illumination_tc, template, null);
 	            if (op.isResultSuccess()) {
 	                final LogicTuple nuovaTupla = LogicTuple.parse("light_curr_st(" + lamp_id + "," + stato  + ")");
 	                this.acc.out(this.illumination_tc, nuovaTupla, null);
