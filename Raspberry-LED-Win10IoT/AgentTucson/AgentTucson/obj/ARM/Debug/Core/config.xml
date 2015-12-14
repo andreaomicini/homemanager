@@ -1,0 +1,35 @@
+<config>
+  <server-ip>192.168.1.103</server-ip>
+  <port>10252</port>
+  <tcname>default</tcname>
+	<netid>localhost</netid>
+	<netidport>20504</netidport>
+	<command>in</command>
+	<tuple>update_physical_device_light_curr_st(R, X, Y)</tuple>
+
+  <room>
+    <name>hall</name>
+    <pin>26</pin>
+  </room>
+
+  <room>
+    <name>dining_room</name>
+    <pin>19</pin>
+  </room>
+
+  <room>
+    <name>bedroom</name>
+    <pin>13</pin>
+  </room>
+
+  <room>
+    <name>bathroom</name>
+    <pin>22</pin>
+  </room>
+
+  <room>
+    <name>kitchen</name>
+    <pin>27</pin>
+  </room>
+  
+</config>
