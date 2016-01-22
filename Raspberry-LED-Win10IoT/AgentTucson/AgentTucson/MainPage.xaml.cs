@@ -124,13 +124,13 @@ namespace AgentTucson
 
                     foreach (LogicTuple l in tuples)
                     {
-                        if (l.Arguments.Count >= 2)
+                        if (l.Arguments.Count > 2)
                         {
                             foreach (Room c in rooms)
                             {
                                 if (l.Arguments[0].ToLower() == c.Name.ToLower())
                                 {
-                                    if (l.Arguments[1].ToLower() != l.Name.ToLower())
+                                    if (l.Arguments[1].ToLower() != l.Arguments[1].ToLower())
                                     {
                                         if (l.Arguments[1].ToLower() == "on")
                                         {
