@@ -42,10 +42,6 @@ import cli.System.AppDomainInitializer.Method;
  */
 public final class MiddleMain 
 {
-	static String tcName = "default";
-	static String netid = "localhost";
-	static String portno = "20504";
-	
 	static String middleHost = "localhost";
 	static int middlePort = 10252;
 	
@@ -58,10 +54,10 @@ public final class MiddleMain
         
     
     	/*
-    	 * MiddleMain aid, tcName, netid, portno, middleHost, middlePort
+    	 * MiddleMain aid, middleHost, middlePort
     	 */
     	
-        if (args.length == 6) 
+        if (args.length == 3) 
         {
         	// aid
             try 
@@ -74,48 +70,25 @@ public final class MiddleMain
 				e1.printStackTrace();
 			}
             
-            //tcName
-            tcName = args[1];
-            
-            //netid
-            netid = args[2];
-            
-            //Validity test for portno
-            try 
-			{
-            	 portno = args[3];
-            	 int portnotemp = Integer.parseInt(portno);
-				
-				if (portnotemp < 1024 || portnotemp > 65535) 
-				{
-				  System.out.println("Usage: middleServer [portnotemp>1024]");
-				  System.exit(1);
-				}
-			  } 
-			  catch (NumberFormatException e) 
-			  {
-				System.out.println("Usage: java  middleServer [portnotemp>1024]");
-				System.exit(1);
-			  }
-            
+            //middleHost            
             middleHost = args[4];
             
-          //Validity test for middlePort  
-          try 
-		  {
-            middlePort = Integer.parseInt(args[5]);
+            //Validity test for middlePort  
+            try 
+            {
+          	 middlePort = Integer.parseInt(args[5]);
 			
-			if (middlePort < 1024 || middlePort > 65535) 
-			{
-			  System.out.println("Usage: middleServer [middlePort>1024]");
-			  System.exit(1);
-			}
-		  } 
-		  catch (NumberFormatException e) 
-		  {
-			System.out.println("Usage: java  middleServer [middlePort>1024]");
-			System.exit(1);
-		  }
+          	 if (middlePort < 1024 || middlePort > 65535) 
+          	 {
+          		 System.out.println("Usage: middleServer [middlePort>1024]");
+          		 System.exit(1);
+          	 }
+            } 
+            catch (NumberFormatException e) 
+            {
+            	System.out.println("Usage: java  middleServer [middlePort>1024]");
+            	System.exit(1);
+            }
             
         } 
         
@@ -176,7 +149,7 @@ public final class MiddleMain
 			// New Thread to handle connection request
 			try 
 			{
-			  new middleServerThread(clientSocket, aid, tcName, netid, portno).start();
+			  new middleServerThread(clientSocket, aid).start();
 			}
 			catch (Exception e) 
 			{
@@ -210,7 +183,7 @@ class middleServerThread extends Thread
   private TucsonTupleCentreId tid;
   private TucsonAgentId aid;
   
-  public middleServerThread(Socket clientSocket, TucsonAgentId aid, String tcName, String netid, String portno) throws SocketException 
+  public middleServerThread(Socket clientSocket, TucsonAgentId aid) throws SocketException 
   {
     this.clientSocket = clientSocket;
     this.aid = aid;
