@@ -24,7 +24,8 @@ import javax.swing.JFrame;
  */
 public class Main {
     
-    public static void main(String[] args) {
+    @SuppressWarnings("unchecked")
+	public static void main(String[] args) {
         try {
             int NUM = ServiceFactory.TUCSON;
             ServiceFactory sf = ServiceFactory.getServiceFactory(NUM);

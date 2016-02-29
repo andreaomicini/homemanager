@@ -5,8 +5,8 @@ import java.net.URL;
 
 public class HumanDetectorFactory {
 
-	private final static URL resource= Testhumanrecog.class.getResource("/testvideo2b.mp4");
-	private final static URL resource2= Testhumanrecog.class.getResource("/testvideo2c.mp4");
+	private final static URL resource= HumanDetectorFactory.class.getResource("/testvideo2b.mp4");
+	private final static URL resource2= HumanDetectorFactory.class.getResource("/testvideo2c.mp4");
 	private static int callnum=1;
 	//Modifica: se viene chiamato una seconda volta, il path cambia.
 	private static String filePath()

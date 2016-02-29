@@ -78,7 +78,7 @@ public class HumanDetectorDifferential implements HumanDetectorVideoInterface {
 	public void run()
 	{
 		processFrame();
-		while(getCurrentProcessedFrame()!=null)
+		while(getCurrentProcessedFrame()!=null && camera.isOpened())
 		{
 			processFrame();
 		}
@@ -113,10 +113,10 @@ public class HumanDetectorDifferential implements HumanDetectorVideoInterface {
         //uso Gaussian blur per "sfumarlo" eliminando rumori dell'immagine
         Imgproc.GaussianBlur(greyFrame, greyFrame, new Size(21,21), 0); 
             
-         //differenza assoluta tra il primo frame e il frame attuale, per evidenziare movimenti
+         //differenza assoluta tra il primo frame e il frame attuale
          Core.absdiff(firstFrame,greyFrame,frameDelta); 
                 
-         //sogliatura, cioè segmentazione dell'immagine 
+         //sogliatura dell'immagine 
          Imgproc.threshold(frameDelta, thresholded, thresh, 255, Imgproc.THRESH_BINARY); 
                 
          // dilatazione matematica
