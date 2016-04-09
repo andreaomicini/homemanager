@@ -451,7 +451,7 @@ public class ViewPrologFridgePanel extends javax.swing.JPanel{
     	int mandaordine;
     	switch(result){
     	case 1:
-    		JOptionPane.showMessageDialog(null,"Richiesta inviata con successso","", JOptionPane.INFORMATION_MESSAGE);
+    		JOptionPane.showMessageDialog(null,"Richiesta inviata con successo","", JOptionPane.INFORMATION_MESSAGE);
     		break;
     	
     	case 0:
