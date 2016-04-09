@@ -31,7 +31,7 @@ import alice.tuplecentre.core.AbstractTupleCentreOperation;
 
 public class PrologFridgeAgent extends AbstractTucsonAgent implements TucsonAgentInterface {
 	
-	//private ViewFridgePanel viewFridge;
+	
 	
 	
     private User user;
@@ -45,7 +45,6 @@ public class PrologFridgeAgent extends AbstractTucsonAgent implements TucsonAgen
     private int indexbuy=0;
     private int indexrecipe=0;
     private Recipe recipe1, recipe2;//ricette test
-   // private Recipe recipe;//ricetta letta da tc_fridge
     private ViewManageDevicesPanel mdPanel;
     
 	public PrologFridgeAgent(String id, String name, ViewManageDevicesPanel mdPanel,  TucsonTupleCentreId fridge_tc, TucsonTupleCentreId ovenfridge_tc, TracePanel tp) throws TucsonInvalidAgentIdException {
@@ -65,6 +64,7 @@ public class PrologFridgeAgent extends AbstractTucsonAgent implements TucsonAgen
     }
 	
 	protected void main() {
+		//esecuzione fridge agent
 		 this.acc = this.getContext();		 
 	     tp.appendText("--" + this.getName().toUpperCase() + " AGENT" + "  STARTED.\n");
 	     
@@ -164,52 +164,11 @@ public class PrologFridgeAgent extends AbstractTucsonAgent implements TucsonAgen
 		//rimane in esecuzione	
 	     */
 	    	 
-	    	 //esecuzione fridge agent
-	   // int count;
+	    	
+	 
 	   
 	    while(true){
-			/*
-			if(this.isThereRecipeToCook()){
-				this.recipe=this.getRecipeToCook();
-				this.fridge_content=this.getContent();
-				if(this.recipe.checkRecipe(this.fridge_content)){
-				if(this.sendCookingOrder(this.recipe)){
-					tp.appendText("Frigo:ordine cottura inviato");
-					count=0;
-					while((!this.getConfirm(this.recipe))&&count<20){
-					try {
-						Thread.sleep(1000);
-					} catch (InterruptedException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-					count++;
-		    		}
-					if(count!=20){
-						tp.appendText("Frigo:conferma ricevuta dal Forno");
-						if(this.deleteRecipeToCook(this.recipe))
-							tp.appendText("Frigo:ordine di cottura eliminato ");
-						if(this.deleteRecipeIngredientsFromFridge(this.recipe))
-							tp.appendText("Frigo:ingredienti ricetta eliminati da fridge_tc ");
-						
-						
-					}
-					else{
-						tp.appendText("Frigo:conferma non ricevuta dal Forno a scadenza timeout");	
-					}					
-				}
-				else{
-					tp.appendText("Frigo:errore comunicazione con fridge_tc");
-				}
-				}
-				else{
-					tp.appendText("Frigo:ricetta non cucinabile al momento per mancanza ingredienti");
-					//mando un ordine allo shopper agent 
-					this.insertOrder(this.recipe.getMissingIngredients(this.fridge_content));
-				}
 			}
-			
-		*/}
 	     
 	}
 	
@@ -501,152 +460,7 @@ private boolean insertOrderTuple(String list) {
     return false;
 }
 
-/*private int getNumCookRecipe(){
-	 List l = null;
-	    String name_template = "cook_recipe";
-	    LogicTuple template;
-	    try {
-	        template = new LogicTuple(name_template,new Var("H"), new Var("X"), new Var("Y"), new Var("J"), new Var("K"), new Var("W"));
-	        ITucsonOperation op_rdAll = this.acc.rdAll(fridge_tc, template, Long.MAX_VALUE);
-	        if (op_rdAll.isResultSuccess()) {
-	            l = op_rdAll.getLogicTupleListResult();
-	            return l.size();
-	        } else {
-	            return 0;
-	        }
-	    } catch (Exception ex) {
-	        return 0;
-	    }
-	
-	
-}
-*/
-/*
-private int getNumOrder() {
-    List l = null;
-    String name_template = "order_buy";
-    LogicTuple template;
-    try {
-        template = new LogicTuple(name_template, new Var("X"), new Var("Y"), new Var("J"));
-        ITucsonOperation op_rdAll = this.acc.rdAll(fridge_tc, template, Long.MAX_VALUE);
-        if (op_rdAll.isResultSuccess()) {
-            l = op_rdAll.getLogicTupleListResult();
-            return l.size();
-        } else {
-            return 0;
-        }
-    } catch (Exception ex) {
-        return 0;
-    }
-}
-*/
-/*
-public boolean isThereRecipeToCook(){
-	String name_template="cook_recipe";
-	LogicTuple template;
-	try {
-    
-	template = new LogicTuple(name_template, new Value(this.getName()),new Var("X"), new Var("Y"), new Var("J"), new Var("K"), new Var("W"));	
-	ITucsonOperation op_rdp;
-	
-		op_rdp = this.acc.rdp(fridge_tc, template, Long.MAX_VALUE);
-		if(op_rdp.isResultSuccess()){
-			return true;
-			}
-			else
-			{
-				return false;
-			}
-	} catch (TucsonOperationNotPossibleException e) {
-		// TODO Auto-generated catch block
-		e.printStackTrace();
-	} catch (UnreachableNodeException e) {
-		// TODO Auto-generated catch block
-		e.printStackTrace();
-	} catch (OperationTimeOutException e) {
-		// TODO Auto-generated catch block
-		e.printStackTrace();
-	}catch (InvalidVarNameException e1) {
-		// TODO Auto-generated catch block
-		e1.printStackTrace();
-	}
-	return false;
-}
-*/
 
-/*public boolean deleteRecipeToCook(Recipe tmp){
-	LogicTuple template;
-	String name_template="cook_recipe";
-	
-	String ing="";
-	for(Ingredient temp:tmp.getIngredients())
-		ing=ing+temp.getName()+"-"+temp.getQuantity()+";";
-	ing=ing.substring(0, ing.length()-1);
-	
-	
-	template = new LogicTuple(name_template, new Value(this.getName()),new Value(tmp.getId()), new Value(tmp.getName()), new Value(tmp.getCookingtime()), new Value(tmp.getTemperature()), new Value(ing));
-	try {
-		ITucsonOperation op_inp = this.acc.inp(fridge_tc, template, Long.MAX_VALUE);
-		if(op_inp.isResultSuccess())
-		{return true;}
-	} catch (TucsonOperationNotPossibleException e) {
-		// TODO Auto-generated catch block
-		e.printStackTrace();
-	} catch (UnreachableNodeException e) {
-		// TODO Auto-generated catch block
-		e.printStackTrace();
-	} catch (OperationTimeOutException e) {
-		// TODO Auto-generated catch block
-		e.printStackTrace();
-	}
-	return false;
-}
-*/
-/*
-public Recipe getRecipeToCook(){
-	 try { Recipe tmp;
-	     	String name_template="cook_recipe";
-	     	String fridge_name;
-				LogicTuple template = new LogicTuple(name_template,new Value(this.getName()) ,new Var("X"), new Var("Y"), new Var("J"), new Var("K"), new Var("W"));
-				ITucsonOperation op_rdp = this.acc.rdp(fridge_tc, template, Long.MAX_VALUE);
-				if(op_rdp.isResultSuccess()){
-					tmp=new Recipe();
-					String result=op_rdp.getTupleResult().toString();
-					String s1 = result.substring(result.indexOf("(") + 1, result.length() - 1);
-				        StringTokenizer t = new StringTokenizer(s1, ",");
-				        if (t.countTokens() == 6){
-				        	fridge_name=t.nextToken().trim();
-				        	tmp.setId(Integer.parseInt(t.nextToken().trim()));
-				        	tmp.setName(t.nextToken().trim());
-				        	tmp.setCookingtime(Integer.parseInt(t.nextToken().trim()));
-				        	tmp.setTemperature(Integer.parseInt(t.nextToken().trim()));
-				        	String ing=t.nextToken().trim();
-				        	StringTokenizer t2=new StringTokenizer(ing, ";");
-							int n=t2.countTokens();
-							for(int i=0;i<n;i++){
-								tmp.addIngredient(createIngredientByString(t2.nextToken().trim()));
-							}
-	      
-							return tmp;
-				        }       	
-				}
-			} catch (InvalidVarNameException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (TucsonOperationNotPossibleException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (UnreachableNodeException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (OperationTimeOutException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			return null;
-	
-}
-*/
 private Ingredient createIngredientByString(String ing){
 	Ingredient tmp=new Ingredient();
 	StringTokenizer st=new StringTokenizer(ing,"-");
@@ -659,45 +473,7 @@ private Ingredient createIngredientByString(String ing){
 }
 
 
-/*public boolean insertRecipeToCook(Recipe recipe){
-	    int id_cook_order = this.index;
-	    if(this.index>10000)
-	    	this.index=0;
-	    else
-	    	this.index++;
-	    Value idcookorder = new Value(id_cook_order);
-	    Value name_recipe=new Value(recipe.getName());
-	    Value cooking_time=new Value(recipe.getCookingtime());
-	    Value temperature=new Value(recipe.getTemperature());
-	   
-	    String list="";
-		for(Ingredient temp:recipe.getIngredients())
-			list=list+temp.getName()+"-"+temp.getQuantity()+";";
-		list=list.substring(0, list.length()-1);
-	    
-				
-	    Value ingreds  = new Value(list);
-	    
-	    
-	    LogicTuple template = new LogicTuple("cook_recipe",new Value(this.getName()),idcookorder, name_recipe, cooking_time, temperature, ingreds);
-	    try {
-	        ITucsonOperation op_out = this.acc.out(fridge_tc, template, Long.MAX_VALUE);
-	        if(op_out.isResultSuccess()){
-	            this.tp.appendText("Frigo, tupla cook_recipe inserita:"+op_out.toString());
-	        	return true;
-	        			}
-	    } catch (TucsonOperationNotPossibleException ex) {
-	        Logger.getLogger(TucsonShopperAgent.class.getName()).log(Level.SEVERE, null, ex);
-	    } catch (UnreachableNodeException ex) {
-	        Logger.getLogger(TucsonShopperAgent.class.getName()).log(Level.SEVERE, null, ex);
-	    } catch (OperationTimeOutException ex) {
-	        Logger.getLogger(TucsonShopperAgent.class.getName()).log(Level.SEVERE, null, ex);
-	    }
-	
-	
-	
-	return true;}
-*/
+
 public List<Recipe> readAllRecipes(){
 	    List<Recipe> recipes=new ArrayList<Recipe>();
 	    List<LogicTuple> l = null;

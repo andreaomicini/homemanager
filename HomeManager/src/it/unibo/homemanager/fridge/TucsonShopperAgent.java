@@ -172,7 +172,7 @@ public class TucsonShopperAgent extends AbstractTucsonAgent implements TucsonAge
 
         String host ="smtp.gmail.com";
         String us = "harmanymancini@gmail.com";
-        String pass = "0873914511";
+        String pass = "";
 
         String mitt = "harmanymancini@gmail.com";
         String[] toAddr = new String[2];/*new String[3];*/
