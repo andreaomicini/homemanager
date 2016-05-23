@@ -15,6 +15,7 @@ import alice.tucson.api.exceptions.TucsonInvalidAgentIdException;
 import it.unibo.homemanager.ServiceFactory;
 import it.unibo.homemanager.dbmanagement.Database;
 import it.unibo.homemanager.dbmanagement.TucsonDatabase;
+import it.unibo.homemanager.scheduler.SchedulerAgent;
 import it.unibo.homemanager.social.TwitterAgent;
 import it.unibo.homemanager.userinterfaces.TracePanel;
 import it.unibo.homemanager.userinterfaces.ViewManageAgentPanel;
@@ -73,6 +74,7 @@ public class AgentManager {
         listAgentInterface=new ArrayList<TucsonAgentInterface>();
         MeteoAgent m = null;
         TwitterAgent t = null;
+        SchedulerAgent s = null;
         try 
         {
            

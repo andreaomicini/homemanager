@@ -64,6 +64,8 @@ public class Main {
             TucsonTupleCentreId rbac_tc = new TucsonTupleCentreId("rbac", "localhost", "20504");
             TucsonTupleCentreId casa_tc = new TucsonTupleCentreId("casa_tc", "localhost", "20504");
             
+            TucsonTupleCentreId scheduler_tc = new TucsonTupleCentreId("scheduler_tc", "localhost", "20504");
+            
             System.out.println("TCenters created.. 5 sec to connect the Inspector..");
             Thread.sleep(5000);
             
@@ -83,6 +85,8 @@ public class Main {
             tupleCenters.add(11, meteo_tc); 
             //subamitted by Sara Bevilacqua
             tupleCenters.add(12,twitter_tc);
+            
+            tupleCenters.add(13, scheduler_tc);
             
             JFrame.setDefaultLookAndFeelDecorated(true);
             GeneralFrame gf = new GeneralFrame("HOME MANAGER", tupleCenters, 3, 5, casa_tc, rbac_tc, sf);

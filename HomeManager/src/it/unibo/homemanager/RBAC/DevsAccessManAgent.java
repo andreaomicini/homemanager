@@ -116,6 +116,7 @@ public class DevsAccessManAgent extends AbstractTucsonAgent {
                         LogicTuple rule;
                         boolean rule_respected = false;
                         int devUsage = -1;
+                        
                         for(int i=0; i<l.size();i++){
                             rule = l.get(i);
                             System.err.println("Rule: " + rule);

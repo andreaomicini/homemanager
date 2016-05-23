@@ -142,7 +142,8 @@ public class Utilities {
     }
 
     public static String[] getDevCmds(String param) {
-        param = param.substring(1, param.length()-1);
+    	param = param.substring(1, param.length()-1);
+        
     	return param.split(";");
     }
 

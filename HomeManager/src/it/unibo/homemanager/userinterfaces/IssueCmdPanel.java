@@ -8,8 +8,10 @@ package it.unibo.homemanager.userinterfaces;
 
 import alice.logictuple.*;
 import alice.tucson.api.*;
+import alice.tuplecentre.api.TupleCentreId;
 import it.unibo.homemanager.ServiceFactory;
 import it.unibo.homemanager.dbmanagement.Database;
+import it.unibo.homemanager.scheduler.SchedulerAgent;
 import it.unibo.homemanager.tablemap.*;
 import it.unibo.homemanager.tablemap.ServicesInterfaces.DeviceServiceInterface;
 import it.unibo.homemanager.tablemap.ServicesInterfaces.RoomServiceInterface;
@@ -36,6 +38,7 @@ public class IssueCmdPanel extends javax.swing.JPanel {
     private ArrayList<Device> devs;
     
     private MainPanel mp;
+    private SchedulerAgent sa;
     
     //private TupleCentreId tid;
     
@@ -46,20 +49,31 @@ public class IssueCmdPanel extends javax.swing.JPanel {
         initComponents();
         this.mp = mp;
         tid = t;
-	this.sf = sf;
-	try {
-	    this.database = sf.getDatabaseInterface();
-	} catch (Exception ex) {
-	    Logger.getLogger(IssueCmdPanel.class.getName()).log(Level.SEVERE, null, ex);
-	}
+
+        this.sf = sf;
+        try {
+        	this.database = sf.getDatabaseInterface();
+        	sa=new SchedulerAgent("schedulerAgent", tid, sf, database, tCmd);
+        	sa.go();
+        	
+        } catch (Exception ex) {
+        	Logger.getLogger(IssueCmdPanel.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
     
     protected void init(User u) {
         usr = u;
+        sa.setUser(u); 
         init();
     }
     
     protected void init() {
+        btGroup.add(this.rbManual);
+        btGroup.add(this.rbAuto);
+
+        this.rbManual.setSelected(true);
+        this.rbAuto.setSelected(false);
+    	
         this.btCancelCmd.setEnabled(false); // cannot cancel command
         this.btIssue.setEnabled(false);
         tCmd.setText(""); // empty cmd text-field
@@ -103,6 +117,11 @@ public class IssueCmdPanel extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        btGroup = new javax.swing.ButtonGroup();
+        rbManual = new javax.swing.JRadioButton();
+        rbAuto = new javax.swing.JRadioButton();
+        selectModePanel = new javax.swing.JPanel();
+    	
         btIssue = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
         cbDevice = new javax.swing.JComboBox();
@@ -121,7 +140,58 @@ public class IssueCmdPanel extends javax.swing.JPanel {
         setMaximumSize(new java.awt.Dimension(538, 343));
         setMinimumSize(new java.awt.Dimension(538, 343));
         setPreferredSize(new java.awt.Dimension(538, 343));
+        
+        selectModePanel.setBackground(new java.awt.Color(153, 153, 255));
+        selectModePanel.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createEtchedBorder(null, new java.awt.Color(0, 51, 153)), "Select Mode", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Courier New", 1, 12), new java.awt.Color(0, 0, 51))); // NOI18N
+        
+        rbManual.setBackground(new java.awt.Color(153, 153, 255));
+        rbManual.setFont(new java.awt.Font("Courier New", 0, 13)); // NOI18N
+        rbManual.setForeground(new java.awt.Color(0, 0, 102));
+        rbManual.setText("Manual");
+        rbManual.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
+        rbManual.setMargin(new java.awt.Insets(0, 0, 0, 0));
+        
+        rbManual.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                rbSelectionActionPerformed(evt);
+            }
+        });
 
+        rbAuto.setBackground(new java.awt.Color(153, 153, 255));
+        rbAuto.setFont(new java.awt.Font("Courier New", 0, 13)); // NOI18N
+        rbAuto.setForeground(new java.awt.Color(0, 0, 102));
+        rbAuto.setText("Auto");
+        rbAuto.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
+        rbAuto.setMargin(new java.awt.Insets(0, 0, 0, 0));
+        
+        rbAuto.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                rbSelectionActionPerformed(evt);
+            }
+        });
+
+        org.jdesktop.layout.GroupLayout selectModePanelLayout = new org.jdesktop.layout.GroupLayout(selectModePanel);
+        selectModePanel.setLayout(selectModePanelLayout);
+        selectModePanelLayout.setHorizontalGroup(
+        		//selectModePanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                //.addContainerGap()
+                //.add(selectModePanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+        		selectModePanelLayout.createSequentialGroup()
+                .add(rbManual)
+                .addContainerGap(28, Short.MAX_VALUE)
+                .add(rbAuto)
+                
+        );
+        selectModePanelLayout.setVerticalGroup(
+        		selectModePanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+            //.add(selectModePanelLayout.createSequentialGroup()
+                .add(rbManual)
+                //.addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                .add(rbAuto)
+                //.addContainerGap(28, Short.MAX_VALUE))
+        );
+        
+        
         btIssue.setFont(new java.awt.Font("Courier New", 1, 14)); // NOI18N
         btIssue.setForeground(new java.awt.Color(102, 0, 102));
         btIssue.setText("ISSUE COMMAND");
@@ -236,14 +306,15 @@ public class IssueCmdPanel extends javax.swing.JPanel {
                         .add(19, 19, 19)
                         .add(btLogOut))
                     .add(org.jdesktop.layout.GroupLayout.LEADING, layout.createParallelGroup(org.jdesktop.layout.GroupLayout.TRAILING, false)
-                        .add(org.jdesktop.layout.GroupLayout.LEADING, jLabel3, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .add(layout.createSequentialGroup()
+                    	.add(org.jdesktop.layout.GroupLayout.LEADING, jLabel3, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    	.add(layout.createSequentialGroup()
                             .add(btSeeCmd, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 178, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                             .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .add(btCancelCmd, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 178, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
                         .add(org.jdesktop.layout.GroupLayout.LEADING, cbCmd, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 488, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                         .add(org.jdesktop.layout.GroupLayout.LEADING, tCmd, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 489, Short.MAX_VALUE)
                         .add(org.jdesktop.layout.GroupLayout.LEADING, jLabel4, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .add(selectModePanel, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 489, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                         .add(org.jdesktop.layout.GroupLayout.LEADING, cbDevice, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 488, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
                     .add(org.jdesktop.layout.GroupLayout.LEADING, jLabel2, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 489, Short.MAX_VALUE))
                 .add(39, 39, 39))
@@ -251,6 +322,8 @@ public class IssueCmdPanel extends javax.swing.JPanel {
         layout.setVerticalGroup(
             layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
             .add(layout.createSequentialGroup()
+            	.add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                    .add(selectModePanel, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap()
                 .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
                     .add(jLabel1)
@@ -398,7 +471,35 @@ public class IssueCmdPanel extends javax.swing.JPanel {
         }
     }
     
+    private void rbSelectionActionPerformed(java.awt.event.ActionEvent evt)
+    {
+    	if (rbAuto.isSelected())
+    	{	
+    		System.err.println("********** NOTIFY *********");
+    		
+    		sa.paused = false;
+    		synchronized(sa.lock)
+    		{
+    			sa.lock.notifyAll();
+    		}
+    	}	
+		else
+		{	
+			System.err.println("********** WAIT *********");
+			
+			sa.paused = true;
+			synchronized(sa.lock)
+    		{
+    			sa.lock.notifyAll();
+    		}
+		}
+    }
+    
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.ButtonGroup btGroup;
+    private javax.swing.JRadioButton rbManual;
+    private javax.swing.JRadioButton rbAuto;
+    private javax.swing.JPanel selectModePanel;
     private javax.swing.JButton btCancelCmd;
     private javax.swing.JButton btIssue;
     private javax.swing.JButton btLogOut;
