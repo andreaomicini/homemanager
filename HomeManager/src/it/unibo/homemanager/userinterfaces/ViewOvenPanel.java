@@ -89,13 +89,13 @@ public class ViewOvenPanel extends javax.swing.JPanel {
 	        });
 	        
 	        jLabel1.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
-	        jLabel1.setText("Agente Forno");
+	        jLabel1.setText("Oven Agent");
 
-	        jLabel2.setText("Nome");
+	        jLabel2.setText("Recipe Name");
 
-	        jLabel3.setText("Tempo Cottura");
+	        jLabel3.setText("Cooking Time");
 
-	        jLabel4.setText("Temperatura");
+	        jLabel4.setText("Temperature");
 
 	        jTextField1.setName("nametext"); // NOI18N
 	       
@@ -103,15 +103,15 @@ public class ViewOvenPanel extends javax.swing.JPanel {
 
 	        jTextField3.setName("temperaturetext"); // NOI18N
 
-	        jLabel5.setText("Ingrediente");
+	        jLabel5.setText("Ingredient");
 
 	        jTextField4.setName("ingredienttext"); // NOI18N
 
-	        jLabel6.setText("Quantità");
+	        jLabel6.setText("Quantity");
 
 	        jTextField5.setName("quantitytext"); // NOI18N
 
-	        jButton1.setText("Aggiungi Ingrediente");
+	        jButton1.setText("Add Ingredient");
 	        jButton1.setName("addingredientbutton"); // NOI18N
 	        jButton1.addActionListener(new java.awt.event.ActionListener() {
 	            public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -125,7 +125,7 @@ public class ViewOvenPanel extends javax.swing.JPanel {
 	        jList1.setName("ingredientlist"); // NOI18N
 	        jScrollPane1.setViewportView(jList1);
 
-	        jButton2.setText("Memorizza");
+	        jButton2.setText("Save Recipe");
 	        jButton2.setName("memorizebutton"); // NOI18N
 	        jButton2.addActionListener(new java.awt.event.ActionListener() {
 	            public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -133,15 +133,15 @@ public class ViewOvenPanel extends javax.swing.JPanel {
 	            }
 	        });
 
-	        jButton3.setText("Cuoci");
-	        jButton3.setName("cookbutton"); // NOI18N
+	        jButton3.setText("Cook Without Saving");
+	        jButton3.setName("cookwithoutsavingbutton"); // NOI18N
 	        jButton3.addActionListener(new java.awt.event.ActionListener() {
 	            public void actionPerformed(java.awt.event.ActionEvent evt) {
 	                jButton3ActionPerformed(evt);
 	            }
 	        });
 
-	        jLabel7.setText("Ricette Memorizzate");
+	        jLabel7.setText("Saved Recipes");
 
 	        
 	        this.listModel2=new DefaultListModel<Recipe>();
@@ -150,7 +150,7 @@ public class ViewOvenPanel extends javax.swing.JPanel {
 	        jList2.setName("recipelist"); // NOI18N
 	        jScrollPane2.setViewportView(jList2);
 
-	        jButton4.setText("Cuoci");
+	        jButton4.setText("Cook Recipe");
 	        jButton4.setName("cook2button"); // NOI18N
 	        jButton4.addActionListener(new java.awt.event.ActionListener() {
 	            public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -158,7 +158,7 @@ public class ViewOvenPanel extends javax.swing.JPanel {
 	            }
 	        });
 
-	        jButton5.setText("elimina");
+	        jButton5.setText("Delete Ingredient");
 	        jButton5.setName("eliminaingbutton"); // NOI18N
 	        jButton5.addActionListener(new java.awt.event.ActionListener() {
 	            public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -180,26 +180,26 @@ public class ViewOvenPanel extends javax.swing.JPanel {
 	            }
 	        });
 
-	        jButton8.setText("Cancella");
+	        jButton8.setText("Delete Recipe");
 	        jButton8.addActionListener(new java.awt.event.ActionListener() {
 	            public void actionPerformed(java.awt.event.ActionEvent evt) {
 	                jButton8ActionPerformed(evt);
 	            }
 	        });
 
-	        jLabel8.setText("Stato:");
+	        jLabel8.setText("Status:");
 
-	        jLabel9.setText("Temperatura:");
+	        jLabel9.setText("Temperature:");
 
-	        jLabel10.setText("Spento");
+	        jLabel10.setText("Off");
 
 	        jLabel11.setText("0");
 
 	        jLabel12.setText("0");
 
-	        jLabel13.setText("gradi");
+	        jLabel13.setText("degrees");
 
-	        jButton9.setText("Accendi");
+	        jButton9.setText("Turn On");
 	        jButton9.addActionListener(new java.awt.event.ActionListener() {
 	            public void actionPerformed(java.awt.event.ActionEvent evt) {
 	                jButton9ActionPerformed(evt);
@@ -211,67 +211,52 @@ public class ViewOvenPanel extends javax.swing.JPanel {
 	        layout.setHorizontalGroup(
 	            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
 	            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+	                .addContainerGap()
 	                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
 	                    .addGroup(layout.createSequentialGroup()
-	                        .addContainerGap()
-	                        .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
-	                        .addGap(18, 18, 18)
-	                        .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE)
-	                        .addGap(18, 18, 18)
-	                        .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE)
-	                        .addGap(0, 0, Short.MAX_VALUE))
-	                    .addGroup(layout.createSequentialGroup()
 	                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+	                            .addComponent(jLabel7)
 	                            .addGroup(layout.createSequentialGroup()
-	                                .addContainerGap()
+	                                .addComponent(jButton1)
+	                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+	                                .addComponent(jButton5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+	                            .addGroup(layout.createSequentialGroup()
 	                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-	                                    .addComponent(jLabel7)
-	                                    .addGroup(layout.createSequentialGroup()
-	                                        .addComponent(jButton1)
-	                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-	                                        .addComponent(jButton5))
-	                                    .addGroup(layout.createSequentialGroup()
-	                                        .addComponent(jTextField4, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
-	                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-	                                        .addComponent(jTextField5, javax.swing.GroupLayout.PREFERRED_SIZE, 103, javax.swing.GroupLayout.PREFERRED_SIZE)))
-	                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-	                            .addGroup(layout.createSequentialGroup()
-	                                .addGap(23, 23, 23)
-	                                .addComponent(jLabel5)
-	                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-	                                .addComponent(jLabel6)
-	                                .addGap(38, 38, 38)))
+	                                    .addComponent(jTextField4, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+	                                    .addComponent(jLabel5))
+	                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+	                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+	                                    .addComponent(jLabel6)
+	                                    .addComponent(jTextField5, javax.swing.GroupLayout.PREFERRED_SIZE, 103, javax.swing.GroupLayout.PREFERRED_SIZE))))
+	                        .addGap(10, 10, 10)
 	                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 163, javax.swing.GroupLayout.PREFERRED_SIZE)
-	                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+	                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
 	                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-	                            .addComponent(jButton2)
-	                            .addComponent(jButton3))))
-	                .addGap(32, 32, 32))
+	                            .addComponent(jButton3)
+	                            .addComponent(jButton2))
+	                        .addContainerGap())
+	                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+	                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+	                            .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+	                            .addComponent(jLabel2))
+	                        .addGap(18, 18, 18)
+	                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+	                            .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE)
+	                            .addComponent(jLabel3))
+	                        .addGap(18, 18, 18)
+	                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+	                            .addComponent(jLabel4)
+	                            .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE))
+	                        .addGap(0, 0, Short.MAX_VALUE))))
 	            .addGroup(layout.createSequentialGroup()
+	                .addGap(101, 101, 101)
+	                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+	                    .addComponent(jLabel8)
+	                    .addComponent(jLabel9))
+	                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
 	                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-	                    .addGroup(layout.createSequentialGroup()
-	                        .addGap(42, 42, 42)
-	                        .addComponent(jLabel2)
-	                        .addGap(77, 77, 77)
-	                        .addComponent(jLabel3)
-	                        .addGap(57, 57, 57)
-	                        .addComponent(jLabel4))
-	                    .addGroup(layout.createSequentialGroup()
-	                        .addContainerGap()
-	                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 230, javax.swing.GroupLayout.PREFERRED_SIZE)
-	                        .addGap(47, 47, 47)
-	                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-	                            .addComponent(jButton8)
-	                            .addComponent(jButton4)))
-	                    .addGroup(layout.createSequentialGroup()
-	                        .addGap(101, 101, 101)
-	                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-	                            .addComponent(jLabel8)
-	                            .addComponent(jLabel9))
-	                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-	                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-	                            .addComponent(jLabel10)
-	                            .addComponent(jLabel11))))
+	                    .addComponent(jLabel10)
+	                    .addComponent(jLabel11))
 	                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
 	                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
 	                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
@@ -288,10 +273,17 @@ public class ViewOvenPanel extends javax.swing.JPanel {
 	                .addComponent(jButton7)
 	                .addGap(18, 18, 18)
 	                .addComponent(jLabel1)
-	                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+	                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 142, Short.MAX_VALUE)
 	                .addComponent(jSlider1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
 	                .addGap(23, 23, 23))
 	            .addComponent(jSeparator1)
+	            .addGroup(layout.createSequentialGroup()
+	                .addContainerGap()
+	                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 230, javax.swing.GroupLayout.PREFERRED_SIZE)
+	                .addGap(18, 18, 18)
+	                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+	                    .addComponent(jButton8)
+	                    .addComponent(jButton4)))
 	        );
 	        layout.setVerticalGroup(
 	            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -334,14 +326,20 @@ public class ViewOvenPanel extends javax.swing.JPanel {
 	                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
 	                    .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
 	                    .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-	                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
 	                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-	                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-	                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-	                            .addComponent(jLabel5)
-	                            .addComponent(jLabel6))
+	                    .addGroup(layout.createSequentialGroup()
+	                        .addGap(32, 32, 32)
+	                        .addComponent(jButton2)
+	                        .addGap(18, 18, 18)
+	                        .addComponent(jButton3))
+	                    .addGroup(layout.createSequentialGroup()
+	                        .addGap(17, 17, 17)
 	                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+	                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE)
 	                            .addGroup(layout.createSequentialGroup()
+	                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+	                                    .addComponent(jLabel5)
+	                                    .addComponent(jLabel6))
 	                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
 	                                    .addComponent(jTextField4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
 	                                    .addComponent(jTextField5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -349,27 +347,20 @@ public class ViewOvenPanel extends javax.swing.JPanel {
 	                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
 	                                    .addComponent(jButton1)
 	                                    .addComponent(jButton5))
-	                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-	                                .addComponent(jLabel7))
-	                            .addGroup(layout.createSequentialGroup()
-	                                .addGap(8, 8, 8)
-	                                .addComponent(jButton2)
-	                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-	                                .addComponent(jButton3))))
-	                    .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE))
-	                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+	                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+	                                .addComponent(jLabel7)))))
 	                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-	                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-	                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 109, javax.swing.GroupLayout.PREFERRED_SIZE)
-	                        .addContainerGap())
-	                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+	                    .addGroup(layout.createSequentialGroup()
+	                        .addGap(18, 18, 18)
 	                        .addComponent(jButton4)
 	                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-	                        .addComponent(jButton8)
-	                        .addGap(36, 36, 36))))
+	                        .addComponent(jButton8))
+	                    .addGroup(layout.createSequentialGroup()
+	                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+	                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 109, javax.swing.GroupLayout.PREFERRED_SIZE)))
+	                .addGap(22, 22, 22))
 	        );
-	    }// </editor-fold>  
-	 
+	    }// </editor-fold> 
 	 
 	 
 	 
@@ -384,17 +375,17 @@ public class ViewOvenPanel extends javax.swing.JPanel {
 	 private void jButton9ActionPerformed(java.awt.event.ActionEvent evt) {                                         
 	        // TODO add your handling code here:
 	    	 	
-	    	if(this.jButton9.getText().equals("Accendi")){
+	    	if(this.jButton9.getText().equals("Turn On")){
 	    		if(this.jSlider1.getValue()!=0){
 	    		this.tcsonAgent.turnOn(this.jSlider1.getValue());
-	    		this.jButton9.setText("Spegni");
+	    		this.jButton9.setText("Turn Off");
 	    	   
 	    	    if(this.tcsonAgent.getState()==true){
-		         	this.jLabel10.setText("Acceso");
+		         	this.jLabel10.setText("On");
 		         	this.jLabel11.setText(""+this.tcsonAgent.getTemperature());
 		         }
 		         else{
-		         	this.jLabel10.setText("Spento");
+		         	this.jLabel10.setText("Off");
 		         	this.jLabel11.setText(""+this.tcsonAgent.getTemperature());
 		             }
 	    	}
@@ -402,14 +393,14 @@ public class ViewOvenPanel extends javax.swing.JPanel {
 	    	//if(this.jButton1.getText().equals("Spegni"))
 	    	else{
 	    		this.tcsonAgent.turnOff();
-	    	    this.jButton9.setText("Accendi");
+	    	    this.jButton9.setText("Turn On");
 	    	    
 	    	    if(this.tcsonAgent.getState()==true){
-		         	this.jLabel10.setText("Acceso");
+		         	this.jLabel10.setText("On");
 		         	this.jLabel11.setText(""+this.tcsonAgent.getTemperature());
 		         }
 		         else{
-		         	this.jLabel10.setText("Spento");
+		         	this.jLabel10.setText("Off");
 		         	this.jLabel11.setText(""+this.tcsonAgent.getTemperature());
 		             }
 	    	}
@@ -622,11 +613,11 @@ public class ViewOvenPanel extends javax.swing.JPanel {
         this.recipes=this.tcsonAgent.readAllRecipes();
         this.populateRecipeList();
         if(this.tcsonAgent.getState()==true){
-        	this.jLabel10.setText("Acceso");
+        	this.jLabel10.setText("On");
         	this.jLabel11.setText(""+this.tcsonAgent.getTemperature());
         }
         else{
-        	this.jLabel10.setText("Spento");
+        	this.jLabel10.setText("Off");
         	this.jLabel11.setText(""+this.tcsonAgent.getTemperature());
             }
         if (!isVisible()) {
