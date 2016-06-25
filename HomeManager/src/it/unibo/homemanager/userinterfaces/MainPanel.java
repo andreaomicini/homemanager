@@ -117,6 +117,15 @@ public class MainPanel extends JPanel {
 			{
 				l.add((TucsonTupleCentreId)tCenters.elementAt(i));
 			}
+			else if(((TucsonTupleCentreId)tCenters.elementAt(i)).getName().equals("fridge_tc"))
+			{
+				l.add((TucsonTupleCentreId)tCenters.elementAt(i));
+			}
+			else if(((TucsonTupleCentreId)tCenters.elementAt(i)).getName().equals("ovenfridge_tc"))
+			{
+				l.add((TucsonTupleCentreId)tCenters.elementAt(i));
+			}
+			
 		}
         butlerPanel=new ViewManageAgentPanel(this, l, tp, sf);
         AgentManager.getInstance().inizializeComponet(butlerPanel, sf, tp,l);

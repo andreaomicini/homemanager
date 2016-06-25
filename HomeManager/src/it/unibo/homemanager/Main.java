@@ -59,6 +59,10 @@ public class Main {
             TucsonTupleCentreId twitter_tc = new TucsonTupleCentreId("twitter_tc", "localhost", "20504");
             //submitted by Alessandro Celi
             TucsonTupleCentreId meteo_tc = new TucsonTupleCentreId("meteo_tc", "localhost", "20504");
+            //submitted by Armando Mancini
+            TucsonTupleCentreId fridge_tc=new TucsonTupleCentreId("fridge_tc", "localhost", "20504");
+            TucsonTupleCentreId ovenfridge_tc = new TucsonTupleCentreId("ovenfridge_tc","localhost","20504");
+            
             //RC replaced rbac_tc with rbac
             System.out.println("Creo rbac");
             TucsonTupleCentreId rbac_tc = new TucsonTupleCentreId("rbac", "localhost", "20504");
@@ -83,11 +87,15 @@ public class Main {
             tupleCenters.add(11, meteo_tc); 
             //subamitted by Sara Bevilacqua
             tupleCenters.add(12,twitter_tc);
+            //subamitted by Armando Mancini
+            tupleCenters.add(13,fridge_tc);
+            tupleCenters.add(14,ovenfridge_tc);
+            
             
             JFrame.setDefaultLookAndFeelDecorated(true);
             GeneralFrame gf = new GeneralFrame("HOME MANAGER", tupleCenters, 3, 5, casa_tc, rbac_tc, sf);
             gf.setVisible(true);
-            
+           
             gf.getTracePanel().appendText("Initializing agents and data...");
             
             //Initializer init = new Initializer();

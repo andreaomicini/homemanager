@@ -8,7 +8,7 @@ import java.util.logging.Logger;
 import it.unibo.homemanager.fridge.Ingredient;
 import it.unibo.homemanager.fridge.PrologFridgeAgent;
 import it.unibo.homemanager.fridge.Recipe;
-import it.unibo.homemanager.fridge.TucsonFridgeAgent;
+import it.unibo.homemanager.meteo.MeteoAgent;
 import it.unibo.homemanager.tablemap.User;
 
 import javax.swing.DefaultListModel;
@@ -21,22 +21,27 @@ import alice.logictuple.exceptions.InvalidVarNameException;
 import alice.tucson.api.TucsonTupleCentreId;
 
 public class ViewPrologFridgePanel extends javax.swing.JPanel{
-	 private User user;
+	 
 	    private PrologFridgeAgent tcsonAgent = null;
 	    private TracePanel tp;
-	    private ViewManageDevicesPanel mdPanel;
+	    private ViewManageAgentPanel maPanel;
 	    private TucsonTupleCentreId fridge_tc;
 
-	    public ViewPrologFridgePanel(ViewManageDevicesPanel mdPanel, PrologFridgeAgent tucsonFridgeAgent,TucsonTupleCentreId fridge_tc,TucsonTupleCentreId ovenfridge_tc, TracePanel tp) {
+	    /*
+	     
+	private MeteoAgent meteoAgent;
+	private TracePanel tp;
+	     */
+	    
+	    public ViewPrologFridgePanel(ViewManageAgentPanel maPanel, PrologFridgeAgent tucsonFridgeAgent, TracePanel tp) {
 	        this.fridge_tc = fridge_tc;
 	        this.tcsonAgent = tucsonFridgeAgent;
-	        this.mdPanel = mdPanel;
+	        this.maPanel = maPanel;
 	        this.tp = tp;
 	        initComponents();
 	    }
 
-	    public void init(User usr) {
-	        user = usr;
+	    public void init() {
 	        fillList();
 	        if (!isVisible()) {
 	            setVisible(true);
@@ -303,12 +308,12 @@ public class ViewPrologFridgePanel extends javax.swing.JPanel{
 
 	    private void btBackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btBackActionPerformed
 	        this.hidePanel();
-	        this.mdPanel.menu();
+	        this.maPanel.menu();
 	    }//GEN-LAST:event_btBackActionPerformed
 
 	    private void btMenuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btMenuActionPerformed
 	        this.hidePanel();
-	        mdPanel.showPanel(this.user);
+	        maPanel.showPanel();
 	    }//GEN-LAST:event_btMenuActionPerformed
 
 	    private void btAddToListButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btAddToListButtonActionPerformed
@@ -431,7 +436,7 @@ public class ViewPrologFridgePanel extends javax.swing.JPanel{
 	        try {
 	            product_list = tcsonAgent.getContent();
 	        } catch (Exception ex) {
-	            Logger.getLogger(ViewFridgePanel.class.getName()).log(Level.SEVERE, null, ex);
+	            Logger.getLogger(ViewPrologFridgePanel.class.getName()).log(Level.SEVERE, null, ex);
 	        }
 	        for (Ingredient s : product_list) {
 	            this.listModel1.addElement(s);

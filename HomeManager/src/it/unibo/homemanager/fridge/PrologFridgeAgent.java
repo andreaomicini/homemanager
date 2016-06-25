@@ -10,10 +10,13 @@ import java.util.logging.Logger;
 
 import javax.swing.JPanel;
 
+import it.unibo.homemanager.dbmanagement.Database;
+import it.unibo.homemanager.meteo.MeteoAgent;
+import it.unibo.homemanager.meteo.TucsonAgentInterface;
 import it.unibo.homemanager.tablemap.User;
 import it.unibo.homemanager.userinterfaces.TracePanel;
-import it.unibo.homemanager.userinterfaces.ViewFridgePanel;
-import it.unibo.homemanager.userinterfaces.ViewManageDevicesPanel;
+import it.unibo.homemanager.userinterfaces.ViewManageAgentPanel;
+import it.unibo.homemanager.userinterfaces.ViewMeteoAgentPanel;
 import it.unibo.homemanager.userinterfaces.ViewPrologFridgePanel;
 import alice.logictuple.LogicTuple;
 import alice.logictuple.Value;
@@ -31,35 +34,40 @@ import alice.tuplecentre.core.AbstractTupleCentreOperation;
 
 public class PrologFridgeAgent extends AbstractTucsonAgent implements TucsonAgentInterface {
 	
-	//private ViewFridgePanel viewFridge;
 	
 	
-    private User user;
+	
+    
     private String name;
-    private List<Ingredient> fridge_content;
     private EnhancedSynchACC acc;
     private TucsonTupleCentreId fridge_tc;
     private TucsonTupleCentreId ovenfridge_tc;
     private ViewPrologFridgePanel viewFridge;
     private TracePanel tp;
+    private Database db;
+    private List<Ingredient> fridge_content;
+        
+	
     private int indexbuy=0;
     private int indexrecipe=0;
     private Recipe recipe1, recipe2;//ricette test
    // private Recipe recipe;//ricetta letta da tc_fridge
-    private ViewManageDevicesPanel mdPanel;
     
-	public PrologFridgeAgent(String id, String name, ViewManageDevicesPanel mdPanel,  TucsonTupleCentreId fridge_tc, TucsonTupleCentreId ovenfridge_tc, TracePanel tp) throws TucsonInvalidAgentIdException {
+  	public PrologFridgeAgent(String id, TracePanel tp, TucsonTupleCentreId fridge_tc, TucsonTupleCentreId ovenfridge_tc, Database database) throws TucsonInvalidAgentIdException {
         super(id);
-        this.name = name;
-        this.mdPanel = mdPanel;
+        this.name = id;
         this.tp = tp;
         this.fridge_tc = fridge_tc;
-        this.ovenfridge_tc=fridge_tc;
-        viewFridge = new ViewPrologFridgePanel(this.mdPanel, this, fridge_tc, ovenfridge_tc, tp);
-        
-		
+        this.ovenfridge_tc=ovenfridge_tc;
+        this.db=database;
+        		
     }
 	
+	 public void setPanel(ViewManageAgentPanel maPanel)
+	    {
+	    	this.viewFridge=new ViewPrologFridgePanel(maPanel, this, tp);
+	    }
+	 
 	public String getName() {
         return this.name;
     }
@@ -70,99 +78,7 @@ public class PrologFridgeAgent extends AbstractTucsonAgent implements TucsonAgen
 	     
 	    
 	    	 this.fridge_content=this.getContent();
-	        
-				
-			
-	 	/*
-	 		     
-	     //creazione ricette
-	     //ricetta 1
-	     recipe1=new Recipe(0,"Ciambellone");
-	     recipe1.addIngredient(new Ingredient("farina",5));
-	     recipe1.addIngredient(new Ingredient("zucchero",5));
-	     recipe1.addIngredient(new Ingredient("uova",5));
-	     recipe1.addIngredient(new Ingredient("acqua",3));
-	     recipe1.addIngredient(new Ingredient("olio",3));
-	     recipe1.addIngredient(new Ingredient("lievito",1));
-	     recipe1.addIngredient(new Ingredient("buccialimone",1));
-	     recipe1.addIngredient(new Ingredient("vanillina",1));
-	     recipe1.addIngredient(new Ingredient("cacao",1));
-	     //fine ricetta1
-	     
-	     //ricetta 2
-	     recipe2=new Recipe(1,"Cantucci");
-	     recipe2.addIngredient(new Ingredient("farina",10));
-	     recipe2.addIngredient(new Ingredient("zucchero",6));
-	     recipe2.addIngredient(new Ingredient("uova",3));
-	     recipe2.addIngredient(new Ingredient("latte",3));
-	     recipe2.addIngredient(new Ingredient("olio",2));
-	     recipe2.addIngredient(new Ingredient("lievito",1));
-	     recipe2.addIngredient(new Ingredient("buccialimone",1));
-	     recipe2.addIngredient(new Ingredient("mandorle",6));
-	     recipe2.addIngredient(new Ingredient("succolimone",1));
-	     //fine ricetta 2
-	      
-	     try {
-			Thread.sleep(10000);
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	    
-	     //controllo ricetta 1
-	     
-	     if(recipe1.checkRecipe(this.fridge_content)){
-	    	 tp.appendText("ricetta 1 ok");
-	    	if(this.sendCookingOrder(recipe1)){
-	    		
-	    		while(!this.getConfirm(recipe1)){	    			
-	    		}
-				    if(this.deleteRecipeIngredientsFromFridge(recipe1))
-					tp.appendText("ingredienti ricetta 1 eliminati");
-	    	}
-				     
-	      
-	    }
-	     
-	    	 
-	     
-	     //fine controllo ricetta 1
-	     
-	     try {
-				this.fridge_content=this.getContent();
-			} catch (Exception e) {
-				    e.printStackTrace();
-			}
-	     
-	     if(recipe2.checkRecipe(this.fridge_content)){
-	    	 tp.appendText("ricetta 2 ok");
-	    	 if(this.sendCookingOrder(recipe2)){
-	    		  while(!this.getConfirm(recipe2)){	
-	    			  tp.appendText("frigo:conferma non trovata");
-	    			 try {
-						Thread.sleep(2000);
-					} catch (InterruptedException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-	    		 }
-	    		   	if(this.deleteRecipeIngredientsFromFridge(recipe2))
-						tp.appendText("ingredienti ricetta 2 eliminati");
-	    		   	else
-	    		   		tp.appendText("ordine non confermato");
-	    	 }
-	     }
-	     //fine controllo ricetta 2
-	     
-	     
-		try {
-			this.fridge_content=this.getContent();
-		} catch (Exception e) {
-			    e.printStackTrace();
-		}
-		
-		//rimane in esecuzione	
-	     */
+	         
 	    	 
 	    	 //esecuzione fridge agent
 	   // int count;
@@ -303,19 +219,19 @@ public class PrologFridgeAgent extends AbstractTucsonAgent implements TucsonAgen
 	     	String name_template="ok";
 	     	String fridge_name;
 				LogicTuple template = new LogicTuple(name_template,new Value(this.name), new Var("X"), new Var("Y"));
-				ITucsonOperation op_rdp = this.acc.rdp(fridge_tc, template, Long.MAX_VALUE);
+				ITucsonOperation op_rdp = this.acc.rdp(this.ovenfridge_tc, template, Long.MAX_VALUE);
 				if(op_rdp.isResultSuccess()){
 					String result=op_rdp.getTupleResult().toString();
 					String s1 = result.substring(result.indexOf("(") + 1, result.length() - 1);
 				        StringTokenizer t = new StringTokenizer(s1, ",");
 				        if (t.countTokens() == 3){
 				        	fridge_name=t.nextToken().trim();
-				        	fridge_name=fridge_name.substring(1,fridge_name.length()-1);
+				        	fridge_name=fridge_name.substring(0,fridge_name.length());
 				        	int id=Integer.parseInt(t.nextToken().trim());
 				        	String ans=t.nextToken().trim();
 				        	System.out.println(ans);			        	   	
 				        	template = new LogicTuple(name_template,new Value(fridge_name),new Value(id), new Value(ans));
-							ITucsonOperation op_inp = this.acc.inp(fridge_tc, template, Long.MAX_VALUE);
+							ITucsonOperation op_inp = this.acc.inp(this.ovenfridge_tc, template, Long.MAX_VALUE);
 							Recipe recipe;
 							if(id>=10000)
 		                    recipe=this.readRecipe(id, 1);
@@ -509,19 +425,19 @@ public int getConfirm(Recipe recipe){
      	String name_template="ok";
      	String fridge_name;
 			LogicTuple template = new LogicTuple(name_template,new Value(this.name), new Var("X"), new Var("Y"));
-			ITucsonOperation op_rdp = this.acc.rdp(fridge_tc, template, Long.MAX_VALUE);
+			ITucsonOperation op_rdp = this.acc.rdp(this.ovenfridge_tc, template, Long.MAX_VALUE);
 			if(op_rdp.isResultSuccess()){
 				String result=op_rdp.getTupleResult().toString();
 				String s1 = result.substring(result.indexOf("(") + 1, result.length() - 1);
 			        StringTokenizer t = new StringTokenizer(s1, ",");
 			        if (t.countTokens() == 3){
 			        	fridge_name=t.nextToken().trim();
-			        	fridge_name=fridge_name.substring(1,fridge_name.length()-1);
+			        	fridge_name=fridge_name.substring(0,fridge_name.length());
 			        	int id=Integer.parseInt(t.nextToken().trim());
 			        	String ans=t.nextToken().trim();
 			        	System.out.println(ans);			        	   	
 			        	template = new LogicTuple(name_template,new Value(fridge_name),new Value(id), new Value(ans));
-						ITucsonOperation op_inp = this.acc.inp(fridge_tc, template, Long.MAX_VALUE);
+						ITucsonOperation op_inp = this.acc.inp(this.ovenfridge_tc, template, Long.MAX_VALUE);
 						/*controllo risposta forno*/
       
 			        	if((recipe.getId()==id)){
@@ -839,8 +755,8 @@ public boolean deleteRecipe(Recipe recipe){
 	return false;	
 }
 
-public void show(User user) {
-	this.viewFridge.init(user);
+public void show() {
+	this.viewFridge.init();
 	
 }
 

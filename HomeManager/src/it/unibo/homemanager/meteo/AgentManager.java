@@ -15,6 +15,9 @@ import alice.tucson.api.exceptions.TucsonInvalidAgentIdException;
 import it.unibo.homemanager.ServiceFactory;
 import it.unibo.homemanager.dbmanagement.Database;
 import it.unibo.homemanager.dbmanagement.TucsonDatabase;
+import it.unibo.homemanager.fridge.PrologFridgeAgent;
+import it.unibo.homemanager.fridge.TucsonShopperAgent;
+import it.unibo.homemanager.oven.PrologOvenAgent;
 import it.unibo.homemanager.social.TwitterAgent;
 import it.unibo.homemanager.userinterfaces.TracePanel;
 import it.unibo.homemanager.userinterfaces.ViewManageAgentPanel;
@@ -73,6 +76,9 @@ public class AgentManager {
         listAgentInterface=new ArrayList<TucsonAgentInterface>();
         MeteoAgent m = null;
         TwitterAgent t = null;
+        PrologFridgeAgent f =null;
+        PrologOvenAgent o =null;
+        TucsonShopperAgent s=null;
         try 
         {
            
@@ -82,6 +88,15 @@ public class AgentManager {
         	t=new TwitterAgent("twitterAgent", tp, tcs.get(1), database);
         	t.setPanel(viewManagerAgent);
         	
+        	f=new PrologFridgeAgent("fridgeAgent", tp, tcs.get(2), tcs.get(3),database);
+        	f.setPanel(viewManagerAgent);
+        	
+        	o=new PrologOvenAgent("ovenAgent", tp, tcs.get(3),database);
+        	o.setPanel(viewManagerAgent);
+        	
+        	s=new TucsonShopperAgent("shopperAgent", tp, tcs.get(2),database);
+        	s.setPanel(viewManagerAgent);
+        	
         } 
         catch (TucsonInvalidAgentIdException ex) 
         {
@@ -90,6 +105,9 @@ public class AgentManager {
         
         listAgentInterface.add(m);
         listAgentInterface.add(t);
+        listAgentInterface.add(f);
+        listAgentInterface.add(o);
+        listAgentInterface.add(s);
     }
      
     

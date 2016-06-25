@@ -1,13 +1,15 @@
 package it.unibo.homemanager.oven;
 
+import it.unibo.homemanager.dbmanagement.Database;
 import it.unibo.homemanager.fridge.Ingredient;
 import it.unibo.homemanager.fridge.PrologFridgeAgent;
 import it.unibo.homemanager.fridge.Recipe;
-import it.unibo.homemanager.fridge.TucsonAgentInterface;
 import it.unibo.homemanager.fridge.TucsonShopperAgent;
+import it.unibo.homemanager.meteo.TucsonAgentInterface;
 import it.unibo.homemanager.tablemap.User;
 import it.unibo.homemanager.userinterfaces.TracePanel;
-import it.unibo.homemanager.userinterfaces.ViewManageDevicesPanel;
+import it.unibo.homemanager.userinterfaces.ViewManageAgentPanel;
+import it.unibo.homemanager.userinterfaces.ViewMeteoAgentPanel;
 import it.unibo.homemanager.userinterfaces.ViewOvenPanel;
 import it.unibo.homemanager.userinterfaces.ViewPrologFridgePanel;
 
@@ -36,7 +38,7 @@ import alice.tuplecentre.core.AbstractTupleCentreOperation;
 
 public class PrologOvenAgent extends AbstractTucsonAgent implements TucsonAgentInterface {
 
-	 private User user;
+	 
 	    private String name;
 	    private boolean state;/*true=on;false=off*/
 	    private int temperature;
@@ -44,18 +46,20 @@ public class PrologOvenAgent extends AbstractTucsonAgent implements TucsonAgentI
 	    public TucsonTupleCentreId ovenfridge_tc;
 	    private ViewOvenPanel viewOven;
 	    private TracePanel tp;
-		private ViewManageDevicesPanel mdPanel;
-	    private String fridge_name;//default fridge for operations
-	    public PrologOvenAgent(String id, String name, ViewManageDevicesPanel mdPanel, TucsonTupleCentreId ovenfridge_tc, TracePanel tp) throws TucsonInvalidAgentIdException {
+		private String fridge_name;//default fridge for operations
+	    public PrologOvenAgent(String id,TracePanel tp, TucsonTupleCentreId ovenfridge_tc, Database database) throws TucsonInvalidAgentIdException {
 	        super(id);
-	        this.name = name;
+	        this.name = id;
 	        this.state=false;
 	        this.temperature=0;
-	        this.mdPanel = mdPanel;
 	        this.tp = tp;
 	        this.ovenfridge_tc=ovenfridge_tc;
-	        viewOven = new ViewOvenPanel(mdPanel, this, ovenfridge_tc, tp);
 	        
+	    }
+	    
+	    public void setPanel(ViewManageAgentPanel maPanel)
+	    {
+	    	this.viewOven=new ViewOvenPanel(maPanel, this, tp);
 	    }
 		
 		public String getName() {
@@ -126,7 +130,7 @@ public class PrologOvenAgent extends AbstractTucsonAgent implements TucsonAgentI
 					if(t.countTokens()==5){
 				            tp.appendText("lettura effettuata:"+s1);
 				            fridge_name=t.nextToken().trim();
-				            fridge_name=fridge_name.substring(1,fridge_name.length()-1);
+				            fridge_name=fridge_name.substring(0,fridge_name.length());
 				        	recipe_id=Integer.parseInt(t.nextToken().trim());
 				        	cooking_time=Integer.parseInt(t.nextToken().trim());
 				        	r_temperature=Integer.parseInt(t.nextToken().trim());      	
@@ -611,8 +615,8 @@ public class PrologOvenAgent extends AbstractTucsonAgent implements TucsonAgentI
 			this.temperature=0;
 		}
 
-		public void show(User user) {
-			this.viewOven.init(user);
+		public void show() {
+			this.viewOven.init();
 			
 		}
 

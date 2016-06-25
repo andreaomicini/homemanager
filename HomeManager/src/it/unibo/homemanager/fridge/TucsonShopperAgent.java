@@ -18,9 +18,12 @@ import alice.tucson.api.exceptions.TucsonOperationNotPossibleException;
 import alice.tucson.api.exceptions.UnreachableNodeException;
 import alice.tuplecentre.api.exceptions.OperationTimeOutException;
 import alice.tuplecentre.core.AbstractTupleCentreOperation;
+import it.unibo.homemanager.dbmanagement.Database;
+import it.unibo.homemanager.meteo.TucsonAgentInterface;
 import it.unibo.homemanager.tablemap.User;
 import it.unibo.homemanager.userinterfaces.TracePanel;
 import it.unibo.homemanager.userinterfaces.ViewManageAgentPanel;
+import it.unibo.homemanager.userinterfaces.ViewMeteoAgentPanel;
 import it.unibo.homemanager.userinterfaces.ViewShopperAgentPanel;
 import it.unibo.homemanager.util.MailUtility;
 import java.text.SimpleDateFormat;
@@ -39,44 +42,42 @@ import javax.swing.JPanel;
  */
 public class TucsonShopperAgent extends AbstractTucsonAgent implements TucsonAgentInterface {
 
-    private User user;
+	private String name; 
     private ViewShopperAgentPanel viewshopperPanel;
-    private ViewManageAgentPanel vmaP;
     private TucsonTupleCentreId fridge_tc;
     private TracePanel tp;
     private EnhancedSynchACC acc;
     private ArrayList<String> listProduct;
     private boolean there_are_buy = false;
-    private String name = "";
+   
     
 
     
-    public TucsonShopperAgent(String id, String name, ViewManageAgentPanel maPanel, TucsonTupleCentreId fridge_tc, TracePanel tp) throws TucsonInvalidAgentIdException {
+    public TucsonShopperAgent(String id,TracePanel tp, TucsonTupleCentreId fridge_tc, Database database) throws TucsonInvalidAgentIdException {
         super(id);
-        this.name = name;
-        this.vmaP = maPanel;
+        this.name = id;
         this.tp = tp;
         this.fridge_tc = fridge_tc;
-        viewshopperPanel = new ViewShopperAgentPanel(maPanel, this, tp);
-
+        
     }
 
-    @Override
-    public void show(User user) {
-        viewshopperPanel.init(user);
+    public void setPanel(ViewManageAgentPanel maPanel)
+    {
+    	this.viewshopperPanel=new ViewShopperAgentPanel(maPanel, this, tp);
+    }
+    
+    public void show() {
+        viewshopperPanel.init();
     }
 
-    @Override
     public void hide() {
         this.viewshopperPanel.hidePanel();
     }
 
-    @Override
     public JPanel getInterface() {
         return this.viewshopperPanel;
     }
 
-    @Override
     public String getName() {
         return this.name;
     }
@@ -187,9 +188,9 @@ public class TucsonShopperAgent extends AbstractTucsonAgent implements TucsonAge
         }
     }
 
-    public void insert(int threshold, User u) {
+    public void insert(int threshold) {
         Value value_threshold = new Value(threshold);
-        Value id_user = new Value(u.idUser);
+        Value id_user = new Value(0);
         LogicTuple template = new LogicTuple("threshold", id_user, value_threshold);
         try {
             LogicTuple old_template=new LogicTuple("threshold",id_user,new Var("X"));
@@ -207,12 +208,12 @@ public class TucsonShopperAgent extends AbstractTucsonAgent implements TucsonAge
         }
     }
 
-    public int getThreshold(User u) {
+    public int getThreshold() {
         String name_template = "threshold";
         LogicTuple template;
         int threshold = 0;
         try {
-            template = new LogicTuple(name_template, new Value(u.idUser), new Var("Y"));
+            template = new LogicTuple(name_template, new Value(0), new Var("Y"));
             ITucsonOperation op_rd = this.acc.rd(fridge_tc, template, Long.MAX_VALUE);
             if (op_rd.isResultSuccess()) {
                 LogicTuple l = op_rd.getLogicTupleResult();

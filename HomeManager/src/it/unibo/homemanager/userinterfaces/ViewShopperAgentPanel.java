@@ -21,7 +21,7 @@ import javax.swing.JOptionPane;
  */
 public class ViewShopperAgentPanel extends javax.swing.JPanel {
 
-    private User user;
+    
     private ViewManageAgentPanel butlerPanel;
     private TracePanel tp;
     private TucsonShopperAgent shopperAgent;
@@ -45,8 +45,7 @@ public class ViewShopperAgentPanel extends javax.swing.JPanel {
             setVisible(false);
     }
      
-    public void init(User usr) {
-        user = usr;
+    public void init() {
         fillList();
         loadThreshold();
         if(!isVisible())
@@ -237,7 +236,7 @@ public class ViewShopperAgentPanel extends javax.swing.JPanel {
                 "INSERT THRESHOLD CHECK", JOptionPane.OK_CANCEL_OPTION);
         if (choice == JOptionPane.OK_OPTION) {
             int threshold=Integer.parseInt(this.thresholdTextField.getText());
-            this.shopperAgent.insert(threshold,user);
+            this.shopperAgent.insert(threshold);
             return;
         } else {
             JOptionPane.showMessageDialog(null,
@@ -300,7 +299,7 @@ public class ViewShopperAgentPanel extends javax.swing.JPanel {
         try {
             product_list=shopperAgent.getListProduct();
         } catch (Exception ex) {
-            Logger.getLogger(ViewFridgePanel.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ViewShopperAgentPanel.class.getName()).log(Level.SEVERE, null, ex);
         }
         for(String s :product_list){
             listScarcity.add(s);
@@ -308,7 +307,7 @@ public class ViewShopperAgentPanel extends javax.swing.JPanel {
     }
 
     private void loadThreshold() {
-        threshold=shopperAgent.getThreshold(user);
+        threshold=shopperAgent.getThreshold();
         this.thresholdTextField.setText(String.valueOf(threshold));
     }
 }
