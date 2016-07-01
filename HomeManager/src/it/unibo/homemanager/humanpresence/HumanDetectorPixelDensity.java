@@ -25,9 +25,8 @@ public class HumanDetectorPixelDensity implements HumanDetectorVideoInterface {
 	private boolean humanPresent;
 	private Mat processedFrame=null;
 	private VideoCapture camera=null;
-	private String filePath;
-	
-	public HumanDetectorPixelDensity(String filePath,int history,double thresh)
+
+	public HumanDetectorPixelDensity(int history,double thresh)
 	{
         System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
         subtractor = Video.createBackgroundSubtractorKNN(history,thresh,true);
@@ -37,11 +36,11 @@ public class HumanDetectorPixelDensity implements HumanDetectorVideoInterface {
 		humanPresent=false;
 		lastSeenBounds=new ArrayList<Rect>();
 		processedFrame= new Mat();
-		this.filePath=filePath;
 	}
+	
 	public void init()throws IOException
 	{
-		this.camera = new VideoCapture(filePath);
+		this.camera = new VideoCapture(0);
     	if (!camera.isOpened())
     		throw new IOException("Camera not working");
 	}

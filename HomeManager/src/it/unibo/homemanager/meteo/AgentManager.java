@@ -17,6 +17,7 @@ import it.unibo.homemanager.TUCSONServiceFactory;
 import it.unibo.homemanager.dbmanagement.Database;
 import it.unibo.homemanager.dbmanagement.TucsonDatabase;
 import it.unibo.homemanager.humanpresence.PresenceAgent;
+import it.unibo.homemanager.humanpresence.SmartLampAgent;
 import it.unibo.homemanager.social.TwitterAgent;
 import it.unibo.homemanager.tablemap.Sensor;
 import it.unibo.homemanager.userinterfaces.TracePanel;
@@ -78,7 +79,7 @@ public class AgentManager {
         MeteoAgent m = null;
         TwitterAgent t = null;
         PresenceAgent p = null;
-        PresenceAgent p2 = null;
+        SmartLampAgent lm = null;
         try 
         {
            
@@ -91,9 +92,8 @@ public class AgentManager {
         	p=new PresenceAgent("presenceAgent",tp,tcs.get(2),database,1);
         	p.setPanel(viewManagerAgent);
         	
-        	p2=new PresenceAgent("presenceAgent",tp,tcs.get(2),database,3);
-        	p2.setPanel(viewManagerAgent);
-        	
+        	lm=new SmartLampAgent("lampManager",tp,tcs.get(2),database);
+        	lm.setPanel(viewManagerAgent);        	
         } 
         catch (TucsonInvalidAgentIdException ex) 
         {
@@ -107,7 +107,7 @@ public class AgentManager {
         listAgentInterface.add(m);
         listAgentInterface.add(t);
         listAgentInterface.add(p);
-        listAgentInterface.add(p2);
+        listAgentInterface.add(lm);
     }
      
     
