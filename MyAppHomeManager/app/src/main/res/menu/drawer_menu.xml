@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <group android:id="@+id/group_basic"
+        android:checkableBehavior="single">
+        <item
+            android:id="@+id/home_id"
+            android:title="Home"
+            android:icon="@drawable/ic_home"
+            ></item>
+        <item
+            android:id="@+id/settings_id"
+            android:title="Settings"
+            android:icon="@drawable/ic_settings"
+            ></item>
+    </group>
+
+    <group android:id="@+id/group_manage"
+        android:checkableBehavior="single">
+            <item
+                android:id="@+id/riscaldamento_id"
+                android:title="Heating"
+                android:icon="@drawable/ic_riscaldamento"
+                ></item>
+            <item
+                android:id="@+id/forno_id"
+                android:title="Oven"
+                android:icon="@drawable/ic_forno"
+                ></item>
+            <item
+                android:id="@+id/condizionatore_id"
+                android:title="Air Conditioner"
+                android:icon="@drawable/ic_condizionatore"
+                ></item>
+            <item
+                android:id="@+id/geoloc_id"
+                android:title="Geolocation"
+                android:icon="@drawable/ic_geo"
+                ></item>
+    </group>
+    <group android:id="@+id/group_logout"
+        android:checkableBehavior="single">
+        <item
+            android:id="@+id/log_out"
+            android:title="Logout"
+            android:icon="@drawable/ic_logout"
+        ></item>
+    </group>
+</menu>
