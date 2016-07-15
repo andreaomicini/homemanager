@@ -1,0 +1,82 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="#424242"
+    >
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:padding="20dp">
+
+            <TextView
+                android:id="@+id/where"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="15sp"
+                android:textColor="#FFFFFF"
+                android:text="Posizione attuale"
+                />
+
+            <TextView
+                android:id="@+id/posizioneAttuale"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="15sp"
+                android:textColor="#FFFFFF"
+                android:text="Posizione attuale"
+                />
+
+
+
+            <TextView
+                android:id="@+id/latitude"
+                android:text="LATITUDINE"
+                android:textSize="15sp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="#FFFFFF"
+                android:layout_marginTop="20dp"
+                />
+
+
+            <TextView
+                android:textSize="15sp"
+                android:id="@+id/longitude"
+                android:text="LONGITUDINE"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="#FFFFFF"
+                 />
+
+
+            <com.google.android.gms.maps.MapView android:id="@+id/mapview"
+                android:layout_width="match_parent"
+                android:layout_height="300dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="20dp"/>
+
+
+            <TextView
+                android:id="@+id/lista"
+                android:text="Lista servizi trovati"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="18sp"
+                android:textColor="#FFFFFF"
+                 />
+
+            <ListView
+                android:id="@+id/preferitiListView"
+                android:layout_width="match_parent"
+                android:layout_height="500dp"
+                android:fastScrollEnabled="false"
+                />
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>

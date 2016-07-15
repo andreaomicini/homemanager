@@ -1,0 +1,197 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="#424242"
+    >
+
+    <GridLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="20dp"
+        android:rowCount="2"
+        android:columnCount="2"
+        >
+
+        <TextView
+            android:id="@+id/textViewStato"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="20sp"
+            android:text="State"
+            android:layout_marginTop="10dp"
+            android:layout_gravity="center_vertical|left"
+            android:textColor="#FFFFFF"/>
+        <ToggleButton
+            android:id="@+id/toggleButton"
+            android:layout_width="51dp"
+            android:layout_height="31dp"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/toggle_selector"
+            android:checked="false"
+            android:text=""
+            android:textOff=""
+            android:textOn=""
+            android:layout_gravity="center_vertical"
+            />
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="20sp"
+            android:text="Temperature (°C)"
+            android:layout_gravity="center_vertical|left"
+            android:layout_marginTop="10dp"
+            android:textColor="#FFFFFF"/>
+        <TextView
+            android:id="@+id/textViewTemepratura"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="20sp"
+            android:text="0"
+            android:layout_gravity="center_vertical|center"
+            android:layout_marginTop="10dp"
+            android:textColor="#FFFFFF"/>
+
+
+    </GridLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+        <!--android:background="#616161"-->
+
+
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:orientation="horizontal"
+            >
+        <SeekBar
+            android:id="@+id/seekBarTempBarTemp"
+            android:thumb="@drawable/thumb_seekbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:maxHeight="10dp"
+            android:minHeight="10dp"
+            android:progress="10"
+            android:progressDrawable="@drawable/progress_bar"
+            />
+
+            <TextView
+                android:id="@+id/tvLabel1"
+                android:layout_below="@id/seekBarTempBarTemp"
+                android:layout_alignStart="@id/seekBarTempBarTemp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0"
+                android:textSize="16sp"
+                android:textColor="#FFFFFF"/>
+
+            <TextView
+                android:id="@+id/tvLabel2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/seekBarTempBarTemp"
+                android:layout_alignEnd="@id/seekBarTempBarTemp"
+                android:text="90"
+                android:textSize="16sp"
+                android:textColor="#FFFFFF"/>
+        </RelativeLayout>
+        <TextView
+            android:id="@+id/textViewMex"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="12sp"
+            android:text="Switch on the device to select the temperature"
+            android:layout_gravity="center"
+            android:layout_margin="25dp"
+            android:textColor="#FFFFFF"/>
+        <Button
+            android:id="@+id/buttonSalva"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:textSize="18sp"
+
+            android:text="SAVE"
+            android:background="#8BC34A"
+            android:textColor="#FFFFFF"/>
+
+
+
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="40dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="40dp"
+        >
+
+        <TextView
+            android:id="@+id/textViewMoreInfo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="More Info"
+            android:textSize="18sp"
+            android:clickable="true"
+            android:textColor="#FFFFFF"/>
+        <ImageView
+            android:id="@+id/imageViewMoreInfo"
+            android:layout_width="18sp"
+            android:layout_height="18sp"
+            android:clickable="true"
+            android:layout_marginLeft="2dp"
+            android:src="@drawable/ic_arrow_down"
+            android:layout_gravity="center_vertical"
+            />
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="40dp"
+        android:orientation="vertical"
+        >
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/tvAlias"
+            android:text="Alias"
+            android:textColor="#FFFFFF"
+            android:visibility="invisible"/>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/tvEnergy"
+            android:text="Energy"
+            android:textColor="#FFFFFF"
+            android:visibility="invisible"/>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/tvType"
+            android:text="Type"
+            android:textColor="#FFFFFF"
+            android:visibility="invisible"/>
+
+    </LinearLayout>
+
+
+
+
+</LinearLayout>

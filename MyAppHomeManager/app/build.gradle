@@ -1,0 +1,30 @@
+apply plugin: 'com.android.application'
+
+android {
+    compileSdkVersion 'Google Inc.:Google APIs:23'
+    buildToolsVersion "23.0.2"
+
+    defaultConfig {
+        applicationId "com.example.myapphomemanager"
+        minSdkVersion 17
+        targetSdkVersion 21
+        multiDexEnabled true
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
+        }
+    }
+}
+
+dependencies {
+    compile 'com.android.support:appcompat-v7:23.2.1'
+    compile 'com.android.support:design:23.2.1'
+    //compile 'com.android.support:support-v4:23.2.1'
+    compile 'com.google.android.gms:play-services:+'
+    compile files('libs/2p.jar')
+    //compile files('libs/google-play-services.jar')
+    compile files('libs/tucson.jar')
+}

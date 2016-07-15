@@ -1,0 +1,229 @@
+<?xml version="1.0" encoding="utf-8"?>
+<items version="2" >
+
+    <item
+        jar="C:\Users\Alessio\AndroidStudioProjects\MyAppHomeManager\app\build\intermediates\exploded-aar\com.google.android.gms\play-services-wearable\8.4.0\jars\classes.jar"
+        jumboMode="false"
+        revision="23.0.2"
+        sha1="e167a34eaca0b31704212f43f9576ea84e05046f">
+        <dex dex="C:\Users\Alessio\AndroidStudioProjects\MyAppHomeManager\app\build\intermediates\pre-dexed\debug\com.google.android.gms-play-services-wearable-8.4.0_b23380929d83bfe19481bcfab5e89bdc4eedb654.jar" />
+    </item>
+    <item
+        jar="C:\Users\Alessio\AndroidStudioProjects\MyAppHomeManager\app\build\intermediates\exploded-aar\com.google.android.gms\play-services-identity\8.4.0\jars\classes.jar"
+        jumboMode="false"
+        revision="23.0.2"
+        sha1="b82b8e847173c28efffcd291b2a0b1ae9ad17fa4">
+        <dex dex="C:\Users\Alessio\AndroidStudioProjects\MyAppHomeManager\app\build\intermediates\pre-dexed\debug\com.google.android.gms-play-services-identity-8.4.0_52c70c9c2c2cc571549a9807b4e485a39cf48b52.jar" />
+    </item>
+    <item
+        jar="C:\Users\Alessio\AndroidStudioProjects\MyAppHomeManager\app\build\intermediates\exploded-aar\com.android.support\mediarouter-v7\23.0.0\jars\classes.jar"
+        jumboMode="false"
+        revision="23.0.2"
+        sha1="d358b3dd49a7c67844622dcbc9cf4339e13952ce">
+        <dex dex="C:\Users\Alessio\AndroidStudioProjects\MyAppHomeManager\app\build\intermediates\pre-dexed\debug\com.android.support-mediarouter-v7-23.0.0_22b97bdc8dec58c5180b7a8345cdfafb5731e141.jar" />
+    </item>
+    <item
+        jar="C:\Users\Alessio\AndroidStudioProjects\MyAppHomeManager\app\build\intermediates\exploded-aar\com.google.android.gms\play-services-ads\8.4.0\jars\classes.jar"
+        jumboMode="false"
+        revision="23.0.2"
+        sha1="b5e7892fb0708e792e0e933c4c0a0ca0ac7831fb">
+        <dex dex="C:\Users\Alessio\AndroidStudioProjects\MyAppHomeManager\app\build\intermediates\pre-dexed\debug\com.google.android.gms-play-services-ads-8.4.0_0278f1a75d9a09ce69e933d76c945ee2eb90f8ec.jar" />
+    </item>
+    <item
+        jar="C:\Users\Alessio\AndroidStudioProjects\MyAppHomeManager\app\build\intermediates\exploded-aar\com.google.android.gms\play-services-cast\8.4.0\jars\classes.jar"
+        jumboMode="false"
+        revision="23.0.2"
+        sha1="551e78f21acf69ebfb489c0e79647824c838013e">
+        <dex dex="C:\Users\Alessio\AndroidStudioProjects\MyAppHomeManager\app\build\intermediates\pre-dexed\debug\com.google.android.gms-play-services-cast-8.4.0_a28af7227dd2ace1d795a735e198233f54641ffb.jar" />
+    </item>
+    <item
+        jar="C:\Users\Alessio\AndroidStudioProjects\MyAppHomeManager\app\build\intermediates\exploded-aar\com.google.android.gms\play-services-base\8.4.0\jars\classes.jar"
+        jumboMode="false"
+        revision="23.0.2"
+        sha1="fef2b3e4b6b1b0e5fe7b69fa137a5fa55a3182ab">
+        <dex dex="C:\Users\Alessio\AndroidStudioProjects\MyAppHomeManager\app\build\intermediates\pre-dexed\debug\com.google.android.gms-play-services-base-8.4.0_f99a921ac81d4acbf6d97ba15d0441845580ad9e.jar" />
+    </item>
+    <item
+        jar="C:\Users\Alessio\AndroidStudioProjects\MyAppHomeManager\app\build\intermediates\exploded-aar\com.google.android.gms\play-services-games\8.4.0\jars\classes.jar"
+        jumboMode="false"
+        revision="23.0.2"
+        sha1="3a364cc6b698d1b3b2d284f64618daaa7fe77ddf">
+        <dex dex="C:\Users\Alessio\AndroidStudioProjects\MyAppHomeManager\app\build\intermediates\pre-dexed\debug\com.google.android.gms-play-services-games-8.4.0_83783fdbf4c455ae822cea4281385573b2228439.jar" />
+    </item>
+    <item
+        jar="C:\Users\Alessio\AndroidStudioProjects\MyAppHomeManager\app\build\intermediates\exploded-aar\com.google.android.gms\play-services-appinvite\8.4.0\jars\classes.jar"
+        jumboMode="false"
+        revision="23.0.2"
+        sha1="9fe026fb4c7fce21bc5142f6e1bdf844f28061ac">
+        <dex dex="C:\Users\Alessio\AndroidStudioProjects\MyAppHomeManager\app\build\intermediates\pre-dexed\debug\com.google.android.gms-play-services-appinvite-8.4.0_57ae8269d08f9184d35a4e18801c0f9913df9b2a.jar" />
+    </item>
+    <item
+        jar="C:\Users\Alessio\AndroidStudioProjects\MyAppHomeManager\app\build\intermediates\exploded-aar\com.google.android.gms\play-services-nearby\8.4.0\jars\classes.jar"
+        jumboMode="false"
+        revision="23.0.2"
+        sha1="9cad249cf62751a323d9af568caf12284b7d6062">
+        <dex dex="C:\Users\Alessio\AndroidStudioProjects\MyAppHomeManager\app\build\intermediates\pre-dexed\debug\com.google.android.gms-play-services-nearby-8.4.0_af065b97a636f56e8b6f5a3f02a20e9a8ff06188.jar" />
+    </item>
+    <item
+        jar="C:\Users\Alessio\AndroidStudioProjects\MyAppHomeManager\app\build\intermediates\exploded-aar\com.google.android.gms\play-services-location\8.4.0\jars\classes.jar"
+        jumboMode="false"
+        revision="23.0.2"
+        sha1="a8412b654dab86d57bf90683367488211c8a81f1">
+        <dex dex="C:\Users\Alessio\AndroidStudioProjects\MyAppHomeManager\app\build\intermediates\pre-dexed\debug\com.google.android.gms-play-services-location-8.4.0_10bcde49b4baa3a6a9dd6853e089bbce70d23e49.jar" />
+    </item>
+    <item
+        jar="C:\Users\Alessio\AndroidStudioProjects\MyAppHomeManager\app\build\intermediates\exploded-aar\com.google.android.gms\play-services-maps\8.4.0\jars\classes.jar"
+        jumboMode="false"
+        revision="23.0.2"
+        sha1="04de44f90606c77f3b28cf44861f306290505aac">
+        <dex dex="C:\Users\Alessio\AndroidStudioProjects\MyAppHomeManager\app\build\intermediates\pre-dexed\debug\com.google.android.gms-play-services-maps-8.4.0_859d7473326dc724338fd9b5e2089fe1747e027a.jar" />
+    </item>
+    <item
+        jar="C:\Users\Alessio\AndroidStudioProjects\MyAppHomeManager\app\build\intermediates\exploded-aar\com.google.android.gms\play-services-plus\8.4.0\jars\classes.jar"
+        jumboMode="false"
+        revision="23.0.2"
+        sha1="1a78298e7724d5440d210bcb946b3493250d354d">
+        <dex dex="C:\Users\Alessio\AndroidStudioProjects\MyAppHomeManager\app\build\intermediates\pre-dexed\debug\com.google.android.gms-play-services-plus-8.4.0_de91db4eaaa5a50fdcd6495cb94576464e4e86f0.jar" />
+    </item>
+    <item
+        jar="C:\Users\Alessio\AndroidStudioProjects\MyAppHomeManager\app\build\intermediates\exploded-aar\com.android.support\support-v4\23.2.1\jars\libs\internal_impl-23.2.1.jar"
+        jumboMode="false"
+        revision="23.0.2"
+        sha1="607a3d0b8013b4ccbfeb0b7cb293351994e021fb">
+        <dex dex="C:\Users\Alessio\AndroidStudioProjects\MyAppHomeManager\app\build\intermediates\pre-dexed\debug\internal_impl-23.2.1_d5489dc98c50433f9449f2b822039fa92bf8aa0b.jar" />
+    </item>
+    <item
+        jar="C:\Users\Alessio\AndroidStudioProjects\MyAppHomeManager\app\build\intermediates\exploded-aar\com.google.android.gms\play-services-safetynet\8.4.0\jars\classes.jar"
+        jumboMode="false"
+        revision="23.0.2"
+        sha1="0194a7409c40de94fb539d4ad9928ec5d47afeb7">
+        <dex dex="C:\Users\Alessio\AndroidStudioProjects\MyAppHomeManager\app\build\intermediates\pre-dexed\debug\com.google.android.gms-play-services-safetynet-8.4.0_b134f6f75f7c00079349cc07844b62e09fd815fe.jar" />
+    </item>
+    <item
+        jar="C:\Users\Alessio\AndroidStudioProjects\MyAppHomeManager\app\libs\2p.jar"
+        jumboMode="false"
+        revision="23.0.2"
+        sha1="475a69cee472f148e5b39392d164d851b5b78a5d">
+        <dex dex="C:\Users\Alessio\AndroidStudioProjects\MyAppHomeManager\app\build\intermediates\pre-dexed\debug\2p_4f7c649dd716048c5d257aadd68ed42dda8d66c0.jar" />
+    </item>
+    <item
+        jar="C:\Users\Alessio\AndroidStudioProjects\MyAppHomeManager\app\build\intermediates\exploded-aar\com.google.android.gms\play-services-fitness\8.4.0\jars\classes.jar"
+        jumboMode="false"
+        revision="23.0.2"
+        sha1="c54246475c1bb64ac6857d1320364bfbfeda2c46">
+        <dex dex="C:\Users\Alessio\AndroidStudioProjects\MyAppHomeManager\app\build\intermediates\pre-dexed\debug\com.google.android.gms-play-services-fitness-8.4.0_b7fec64dac78d10da2f6f5f6fb6bd8b34a64c5b6.jar" />
+    </item>
+    <item
+        jar="C:\Users\Alessio\AndroidStudioProjects\MyAppHomeManager\app\build\intermediates\exploded-aar\com.google.android.gms\play-services-measurement\8.4.0\jars\classes.jar"
+        jumboMode="false"
+        revision="23.0.2"
+        sha1="613298b7aa012f121ce542881c0a599ebd8078f2">
+        <dex dex="C:\Users\Alessio\AndroidStudioProjects\MyAppHomeManager\app\build\intermediates\pre-dexed\debug\com.google.android.gms-play-services-measurement-8.4.0_3e4f74fec3bb3506999c6c9f597c9aa79338e2aa.jar" />
+    </item>
+    <item
+        jar="C:\Users\Alessio\AndroidStudioProjects\MyAppHomeManager\app\build\intermediates\exploded-aar\com.google.android.gms\play-services-basement\8.4.0\jars\classes.jar"
+        jumboMode="false"
+        revision="23.0.2"
+        sha1="8e673cdfadd8f2d98fdb2fda2285c30f6e449782">
+        <dex dex="C:\Users\Alessio\AndroidStudioProjects\MyAppHomeManager\app\build\intermediates\pre-dexed\debug\com.google.android.gms-play-services-basement-8.4.0_2d73b1829db589d53537b5fee03ac04086b663fa.jar" />
+    </item>
+    <item
+        jar="C:\Users\Alessio\AndroidStudioProjects\MyAppHomeManager\app\libs\google-play-services.jar"
+        jumboMode="false"
+        revision="23.0.2"
+        sha1="bb934dbae57cc6cb9fa09aa0c049f6b500ba660c">
+        <dex dex="C:\Users\Alessio\AndroidStudioProjects\MyAppHomeManager\app\build\intermediates\pre-dexed\debug\google-play-services_c285ce81ba87b6c9257dc96057ca4c3e7ef86e94.jar" />
+    </item>
+    <item
+        jar="C:\Users\Alessio\AndroidStudioProjects\MyAppHomeManager\app\build\intermediates\exploded-aar\com.android.support\appcompat-v7\23.0.0\jars\classes.jar"
+        jumboMode="false"
+        revision="23.0.2"
+        sha1="4fcf0b1879f8caf497c073e1432d398e9e2988c1">
+        <dex dex="C:\Users\Alessio\AndroidStudioProjects\MyAppHomeManager\app\build\intermediates\pre-dexed\debug\com.android.support-appcompat-v7-23.0.0_a49ab142804f10832d3e0b513cecbbd075a6ffcc.jar" />
+    </item>
+    <item
+        jar="C:\Users\Alessio\AndroidStudioProjects\MyAppHomeManager\app\libs\tucson.jar"
+        jumboMode="false"
+        revision="23.0.2"
+        sha1="c524b4b66567bb38a94ced5a0648881bb155048b">
+        <dex dex="C:\Users\Alessio\AndroidStudioProjects\MyAppHomeManager\app\build\intermediates\pre-dexed\debug\tucson_a658f1dac0a60b0a588b45c07f5099396a66d8a1.jar" />
+    </item>
+    <item
+        jar="C:\Users\Alessio\AndroidStudioProjects\MyAppHomeManager\app\build\intermediates\exploded-aar\com.google.android.gms\play-services-auth\8.4.0\jars\classes.jar"
+        jumboMode="false"
+        revision="23.0.2"
+        sha1="966e5771a5a2ebfb31bf00d7cd6cd2546d245517">
+        <dex dex="C:\Users\Alessio\AndroidStudioProjects\MyAppHomeManager\app\build\intermediates\pre-dexed\debug\com.google.android.gms-play-services-auth-8.4.0_b6ca4f279ea335695e611522af7e0f77de52c752.jar" />
+    </item>
+    <item
+        jar="C:\Users\Alessio\AndroidStudioProjects\MyAppHomeManager\app\build\intermediates\exploded-aar\com.android.support\mediarouter-v7\23.0.0\jars\libs\internal_impl-23.0.0.jar"
+        jumboMode="false"
+        revision="23.0.2"
+        sha1="03d38bb042efe3e5ce27ba66b729a9523c36d8fe">
+        <dex dex="C:\Users\Alessio\AndroidStudioProjects\MyAppHomeManager\app\build\intermediates\pre-dexed\debug\internal_impl-23.0.0_deeadda91510d6003bd5e6f378ee3ddd95586eec.jar" />
+    </item>
+    <item
+        jar="C:\Users\Alessio\AppData\Local\Android\sdk\extras\android\m2repository\com\android\support\support-annotations\23.2.1\support-annotations-23.2.1.jar"
+        jumboMode="false"
+        revision="23.0.2"
+        sha1="ccb693bc0774fcb637246f7360de25b4af7df318">
+        <dex dex="C:\Users\Alessio\AndroidStudioProjects\MyAppHomeManager\app\build\intermediates\pre-dexed\debug\support-annotations-23.2.1_bbfb295d2f1ecc8d142cca62de5d99075feefd83.jar" />
+    </item>
+    <item
+        jar="C:\Users\Alessio\AndroidStudioProjects\MyAppHomeManager\app\build\intermediates\exploded-aar\com.google.android.gms\play-services-appindexing\8.4.0\jars\classes.jar"
+        jumboMode="false"
+        revision="23.0.2"
+        sha1="65d086ee9daaf87b5af62ad24471edafa433354c">
+        <dex dex="C:\Users\Alessio\AndroidStudioProjects\MyAppHomeManager\app\build\intermediates\pre-dexed\debug\com.google.android.gms-play-services-appindexing-8.4.0_62fb43f8c3f672c096cb0f3d030475feb6c0df38.jar" />
+    </item>
+    <item
+        jar="C:\Users\Alessio\AndroidStudioProjects\MyAppHomeManager\app\build\intermediates\exploded-aar\com.google.android.gms\play-services-panorama\8.4.0\jars\classes.jar"
+        jumboMode="false"
+        revision="23.0.2"
+        sha1="08d34b2d135c1cc96ab506fd8bf6916d1e2f391a">
+        <dex dex="C:\Users\Alessio\AndroidStudioProjects\MyAppHomeManager\app\build\intermediates\pre-dexed\debug\com.google.android.gms-play-services-panorama-8.4.0_417a56310bb04b7f6360df7b7fc6538e364d5f3f.jar" />
+    </item>
+    <item
+        jar="C:\Users\Alessio\AndroidStudioProjects\MyAppHomeManager\app\build\intermediates\exploded-aar\com.google.android.gms\play-services-gcm\8.4.0\jars\classes.jar"
+        jumboMode="false"
+        revision="23.0.2"
+        sha1="2d7fe76982677315c4dc4edfb459c8ca718a9d4c">
+        <dex dex="C:\Users\Alessio\AndroidStudioProjects\MyAppHomeManager\app\build\intermediates\pre-dexed\debug\com.google.android.gms-play-services-gcm-8.4.0_aafe1327fd9d1bdccb2da28d8603f68ba0da6f1b.jar" />
+    </item>
+    <item
+        jar="C:\Users\Alessio\AndroidStudioProjects\MyAppHomeManager\app\build\intermediates\exploded-aar\com.google.android.gms\play-services-drive\8.4.0\jars\classes.jar"
+        jumboMode="false"
+        revision="23.0.2"
+        sha1="b36f30ac5ee5d5214f4b1e2ac49f11889d58e71a">
+        <dex dex="C:\Users\Alessio\AndroidStudioProjects\MyAppHomeManager\app\build\intermediates\pre-dexed\debug\com.google.android.gms-play-services-drive-8.4.0_4f5561e6853f0844a9d36eba158a552087064fe8.jar" />
+    </item>
+    <item
+        jar="C:\Users\Alessio\AndroidStudioProjects\MyAppHomeManager\app\build\intermediates\exploded-aar\com.google.android.gms\play-services-wallet\8.4.0\jars\classes.jar"
+        jumboMode="false"
+        revision="23.0.2"
+        sha1="f2df436a8f02ce7e4d7d209671fc45f97c470f0e">
+        <dex dex="C:\Users\Alessio\AndroidStudioProjects\MyAppHomeManager\app\build\intermediates\pre-dexed\debug\com.google.android.gms-play-services-wallet-8.4.0_9d61d9d1260da4c7fc4a760a17fdd1c0d7ae532d.jar" />
+    </item>
+    <item
+        jar="C:\Users\Alessio\AndroidStudioProjects\MyAppHomeManager\app\build\intermediates\exploded-aar\com.google.android.gms\play-services-vision\8.4.0\jars\classes.jar"
+        jumboMode="false"
+        revision="23.0.2"
+        sha1="dfecc4d835cdabcdecf7e95f0d20a3ef1e9d8ef4">
+        <dex dex="C:\Users\Alessio\AndroidStudioProjects\MyAppHomeManager\app\build\intermediates\pre-dexed\debug\com.google.android.gms-play-services-vision-8.4.0_2a0f478aef21015989ca6a26e001be08955ba51e.jar" />
+    </item>
+    <item
+        jar="C:\Users\Alessio\AndroidStudioProjects\MyAppHomeManager\app\build\intermediates\exploded-aar\com.google.android.gms\play-services-analytics\8.4.0\jars\classes.jar"
+        jumboMode="false"
+        revision="23.0.2"
+        sha1="1c9f35e952b212c843f7bd2c7eec8e82ad95602e">
+        <dex dex="C:\Users\Alessio\AndroidStudioProjects\MyAppHomeManager\app\build\intermediates\pre-dexed\debug\com.google.android.gms-play-services-analytics-8.4.0_6ded368f089538b71ac531c41d236ec82e59bc2c.jar" />
+    </item>
+    <item
+        jar="C:\Users\Alessio\AndroidStudioProjects\MyAppHomeManager\app\build\intermediates\exploded-aar\com.android.support\support-v4\23.2.1\jars\classes.jar"
+        jumboMode="false"
+        revision="23.0.2"
+        sha1="3be474b1b21b31cf2fa93fe6bd641ae108d96452">
+        <dex dex="C:\Users\Alessio\AndroidStudioProjects\MyAppHomeManager\app\build\intermediates\pre-dexed\debug\com.android.support-support-v4-23.2.1_4b98ab53146ad20c2512817323f39e1ab1a3dd89.jar" />
+    </item>
+
+</items>
