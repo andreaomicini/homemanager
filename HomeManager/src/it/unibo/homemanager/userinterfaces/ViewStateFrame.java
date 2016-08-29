@@ -1,0 +1,67 @@
+package it.unibo.homemanager.userinterfaces;
+
+import java.awt.BorderLayout;
+import java.awt.EventQueue;
+import java.awt.TextArea;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.util.Vector;
+
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.border.EmptyBorder;
+
+import it.unibo.homemanager.ServiceFactory;
+import it.unibo.homemanager.scheduler.RefreshThread;
+
+import javax.swing.JLabel;
+import javax.swing.JTextArea;
+
+public class ViewStateFrame extends JFrame {
+
+	private JPanel contentPane;
+	private JScrollPane sp;
+	public JTextArea textArea;
+	
+	private RefreshThread refreshView;
+	private int refreshTime = 10000; //tempo (in ms) che intercorre tra due refresh
+									 //per caricare tutti i dispositivi, Tucson impiega circa 5s
+									 //non usare un refresh sotto i 5 secondi!!!
+
+	/**
+	 * Create the frame.
+	 */
+	public ViewStateFrame(Vector t, ServiceFactory sf) {
+		setTitle("View");
+		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);//prima di chiudersi, deve terminare il thread
+		addWindowListener(new WindowAdapter() { //azioni da fare durante la chiusura della form
+	        @Override
+	        public void windowClosing(WindowEvent event) {
+	        	refreshView.interrupt();//termina il thread
+	            dispose();//chiudi frame
+	        }
+	    });
+		setBounds(100, 100, 450, 300);
+		contentPane = new JPanel();
+		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
+		contentPane.setLayout(new BorderLayout(0, 0));
+		setContentPane(contentPane);
+		
+		JLabel lblViewDevices = new JLabel("List of devices and their current state (updated every "+refreshTime/1000+" seconds)");
+		contentPane.add(lblViewDevices, BorderLayout.NORTH);
+		
+		textArea = new JTextArea();
+		textArea.setToolTipText("");
+		textArea.setRows(10);
+		textArea.setEditable(false);
+		
+		sp = new JScrollPane();
+		sp.setViewportView(textArea);
+		contentPane.add(sp, BorderLayout.CENTER);
+		
+		refreshView = new RefreshThread(this, t, sf, refreshTime); //thread che si occupa del refresh della textArea
+		refreshView.start();
+	}
+
+}
