@@ -1,0 +1,770 @@
+/*
+ * IssueCmdPanel.java
+ *
+ * Created on 15 ottobre 2006, 11.58
+ */
+
+package it.unibo.homemanager.userinterfaces;
+
+import alice.logictuple.*;
+import alice.logictuple.exceptions.InvalidLogicTupleException;
+import alice.tucson.api.*;
+import alice.tuplecentre.api.TupleCentreId;
+import it.unibo.homemanager.ServiceFactory;
+import it.unibo.homemanager.dbmanagement.Database;
+import it.unibo.homemanager.scheduler.RandomScheduler;
+import it.unibo.homemanager.scheduler.RapidScheduler;
+import it.unibo.homemanager.scheduler.ScheduleInterface;
+import it.unibo.homemanager.scheduler.ScheduledDevice;
+import it.unibo.homemanager.scheduler.SchedulerAgent;
+import it.unibo.homemanager.tablemap.*;
+import it.unibo.homemanager.tablemap.ServicesInterfaces.DeviceServiceInterface;
+import it.unibo.homemanager.tablemap.ServicesInterfaces.RoomServiceInterface;
+import it.unibo.homemanager.util.Utilities;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Vector;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+/**
+ *
+ * @author  admin
+ */
+public class IssueCmdPanel extends javax.swing.JPanel {
+    
+    private ServiceFactory sf;
+    private RoomServiceInterface rs;
+    private DeviceServiceInterface ds;
+    private Database database;
+    
+    private Room r;
+    private Device d;
+    private Vector rooms,tid;//,devs;
+    private ArrayList<Device> devs;
+    private ArrayList<Device> allDevs;//usata per schDevs
+    
+    private ArrayList<ScheduledDevice> schDevs;
+    //vettore che tiene memorizzato lo stato di schedulazione di ogni dispositivo
+    
+    
+    private MainPanel mp;
+    private SchedulerAgent sa;
+    private ArrayList<ScheduleInterface> schedulersList;
+    
+    //private TupleCentreId tid;
+    
+    private User usr;
+    
+    /** Creates new form IssueCmdPanel */
+    public IssueCmdPanel(MainPanel mp, Vector t, ServiceFactory sf) {
+        initComponents();
+        this.mp = mp;
+        tid = t;
+
+        this.sf = sf;
+        try {
+        	this.database = sf.getDatabaseInterface();
+        	ds = sf.getDeviceServiceInterface();
+        	sa = new SchedulerAgent("schedulerAgent");
+        	sa.go();
+        	
+        	//inserisco gli algoritmi di schedulazione
+        	schedulersList = new ArrayList<ScheduleInterface>();
+        	schedulersList.add(new RandomScheduler(sf, database, tCmd, tid));
+        	schedulersList.add(new RapidScheduler(sf, database, tCmd, tid));
+        	
+        	//popolo schDevs con tutti i dispositivi di HomeManager e imposto lo stato NOT SCHEDULED
+    		schDevs = new ArrayList<ScheduledDevice>();
+            allDevs = ds.getDevices(database);
+    			
+    		for (int i=0; i<allDevs.size(); i++)
+    			schDevs.add(new ScheduledDevice(allDevs.get(i)));
+    		
+        } catch (Exception ex) {
+        	Logger.getLogger(IssueCmdPanel.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    protected void init(User u) {
+        usr = u;       
+        //imposto l'utente su tutti gli scheduler
+        for(int i=0; i<schedulersList.size(); i++)
+        	schedulersList.get(i).setUser(usr);
+        
+        sa.setSchedule(schedulersList.get(0));
+        init();
+    }
+    
+    protected void init() {
+        btGroup.add(this.rbManual);
+        btGroup.add(this.rbAuto);
+
+        this.rbManual.setSelected(true);
+        this.rbAuto.setSelected(false);
+    	
+        this.btCancelCmd.setEnabled(false); // cannot cancel command
+        this.btIssue.setEnabled(false);
+        this.btSchCmd.setEnabled(false);
+        this.btView.setEnabled(true);
+        tCmd.setText(""); // empty cmd text-field
+        
+        // fill combo-box with rooms
+        rs = sf.getRoomServiceInterface();
+        try {
+            rooms = rs.getRooms(database.getDatabase());
+        }
+        catch(Exception ex) {
+            ex.printStackTrace();
+        }
+        // room selection
+        cbRoom.removeAllItems();
+        for(int i=0;i<rooms.size();i++) {
+            Room room = (Room)rooms.elementAt(i);
+            if(room.name.compareTo("hall")!=0)
+                cbRoom.addItem(room.name);
+        }
+        cbRoom.setSelectedItem(null);
+        
+        cbScheduler.removeAllItems();
+        for(int i=0; i<schedulersList.size(); i++)
+        	cbScheduler.addItem(schedulersList.get(i).getName());
+        cbScheduler.setSelectedIndex(0);
+        cbScheduler.setEnabled(true);
+        
+        this.cbRoom.setEnabled(true);
+        d = null;
+        devs = null;
+        this.cbDevice.setEnabled(false);
+        cbDevice.removeAllItems();
+        this.cbCmd.setEnabled(false);
+        cbCmd.removeAllItems();
+        if(!isVisible()) setVisible(true);
+    }
+    
+    protected void hidePanel() {
+        if(isVisible()) setVisible(false);
+    }
+    
+    /** This method is called from within the constructor to
+     * initialize the form.
+     * WARNING: Do NOT modify this code. The content of this method is
+     * always regenerated by the Form Editor.
+     */
+    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
+    private void initComponents() {
+
+        btGroup = new javax.swing.ButtonGroup();
+        rbManual = new javax.swing.JRadioButton();
+        rbAuto = new javax.swing.JRadioButton();
+        selectModePanel = new javax.swing.JPanel();
+        cbScheduler = new javax.swing.JComboBox();
+    	
+        btIssue = new javax.swing.JButton();
+        btSchCmd = new javax.swing.JButton();
+        btView = new javax.swing.JButton();
+        jLabel1 = new javax.swing.JLabel();
+        cbDevice = new javax.swing.JComboBox();
+        jLabel2 = new javax.swing.JLabel();
+        btSeeCmd = new javax.swing.JButton();
+        jLabel3 = new javax.swing.JLabel();
+        cbRoom = new javax.swing.JComboBox();
+        cbCmd = new javax.swing.JComboBox();
+        jLabel4 = new javax.swing.JLabel();
+        btCancelCmd = new javax.swing.JButton();
+        tCmd = new javax.swing.JTextField();
+        btLogOut = new javax.swing.JButton();
+        btMenu = new javax.swing.JButton();
+
+        setBackground(new java.awt.Color(204, 204, 255));
+        setMaximumSize(new java.awt.Dimension(538, 343));
+        setMinimumSize(new java.awt.Dimension(538, 343));
+        setPreferredSize(new java.awt.Dimension(538, 343));
+        
+        selectModePanel.setBackground(new java.awt.Color(153, 153, 255));
+        selectModePanel.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createEtchedBorder(null, new java.awt.Color(0, 51, 153)), "Select Mode", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Courier New", 1, 12), new java.awt.Color(0, 0, 51))); // NOI18N
+        
+        rbManual.setBackground(new java.awt.Color(153, 153, 255));
+        rbManual.setFont(new java.awt.Font("Courier New", 0, 13)); // NOI18N
+        rbManual.setForeground(new java.awt.Color(0, 0, 102));
+        rbManual.setText("Manual");
+        rbManual.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
+        rbManual.setMargin(new java.awt.Insets(0, 0, 0, 0));
+        
+        rbManual.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                rbSelectionActionPerformed(evt);
+            }
+        });
+
+        rbAuto.setBackground(new java.awt.Color(153, 153, 255));
+        rbAuto.setFont(new java.awt.Font("Courier New", 0, 13)); // NOI18N
+        rbAuto.setForeground(new java.awt.Color(0, 0, 102));
+        rbAuto.setText("Auto");
+        rbAuto.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 0));
+        rbAuto.setMargin(new java.awt.Insets(0, 0, 0, 0));
+        
+        rbAuto.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                rbSelectionActionPerformed(evt);
+            }
+        });
+
+        org.jdesktop.layout.GroupLayout selectModePanelLayout = new org.jdesktop.layout.GroupLayout(selectModePanel);
+        selectModePanel.setLayout(selectModePanelLayout);
+        selectModePanelLayout.setHorizontalGroup(
+        		selectModePanelLayout.createSequentialGroup()
+                .add(rbManual)
+                .addContainerGap(28, Short.MAX_VALUE)
+                .add(rbAuto)
+                
+        );
+        selectModePanelLayout.setVerticalGroup(
+        		selectModePanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)       
+                .add(rbManual)
+                .add(rbAuto)
+        );
+        
+        
+        btIssue.setFont(new java.awt.Font("Courier New", 1, 14)); // NOI18N
+        btIssue.setForeground(new java.awt.Color(102, 0, 102));
+        btIssue.setText("ISSUE COMMAND");
+        btIssue.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btIssueActionPerformed(evt);
+            }
+        });
+        
+        btSchCmd.setFont(new java.awt.Font("Courier New", 1, 14)); // NOI18N
+        btSchCmd.setForeground(new java.awt.Color(102, 0, 102));
+        btSchCmd.setText("SCHEDULE COMMAND");
+        btSchCmd.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+            	btSchCmdActionPerformed(evt);
+            }
+        });
+        
+        btView.setFont(new java.awt.Font("Courier New", 1, 14)); // NOI18N
+        btView.setForeground(new java.awt.Color(102, 0, 102));
+        btView.setText("VIEW");
+        btView.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btViewActionPerformed(evt);
+            }
+        });
+
+        jLabel1.setFont(new java.awt.Font("Courier New", 1, 15)); // NOI18N
+        jLabel1.setForeground(new java.awt.Color(102, 0, 102));
+        jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        jLabel1.setText("Compose your command below:");
+
+        cbDevice.setFont(new java.awt.Font("Courier New", 0, 13)); // NOI18N
+        cbDevice.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cbDeviceActionPerformed(evt);
+            }
+        });
+        cbDevice.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                cbDeviceFocusGained(evt);
+            }
+        });
+
+        jLabel2.setFont(new java.awt.Font("Courier New", 1, 12)); // NOI18N
+        jLabel2.setForeground(new java.awt.Color(102, 0, 102));
+        jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel2.setText("Room:");
+
+        btSeeCmd.setFont(new java.awt.Font("Courier New", 1, 14)); // NOI18N
+        btSeeCmd.setForeground(new java.awt.Color(102, 0, 102));
+        btSeeCmd.setText("SAVE COMMAND");
+        btSeeCmd.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btSeeCmdActionPerformed(evt);
+            }
+        });
+
+        jLabel3.setFont(new java.awt.Font("Courier New", 1, 12)); // NOI18N
+        jLabel3.setForeground(new java.awt.Color(102, 0, 102));
+        jLabel3.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel3.setText("Command:");
+
+        cbRoom.setFont(new java.awt.Font("Courier New", 0, 13)); // NOI18N
+        cbRoom.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cbRoomActionPerformed(evt);
+            }
+        });
+        
+        cbScheduler.setFont(new java.awt.Font("Courier New", 0, 13)); // NOI18N
+        cbScheduler.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cbSchedulerActionPerformed(evt);
+            }
+        });
+
+        cbCmd.setFont(new java.awt.Font("Courier New", 0, 13)); // NOI18N
+        cbCmd.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                cbCmdFocusGained(evt);
+            }
+        });
+
+        jLabel4.setFont(new java.awt.Font("Courier New", 1, 12)); // NOI18N
+        jLabel4.setForeground(new java.awt.Color(102, 0, 102));
+        jLabel4.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel4.setText("Device:");
+
+        btCancelCmd.setFont(new java.awt.Font("Courier New", 1, 14)); // NOI18N
+        btCancelCmd.setForeground(new java.awt.Color(102, 0, 102));
+        btCancelCmd.setText("CANCEL COMMAND");
+        btCancelCmd.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btCancelCmdActionPerformed(evt);
+            }
+        });
+
+        tCmd.setEditable(false);
+        tCmd.setFont(new java.awt.Font("Courier New", 0, 12)); // NOI18N
+        tCmd.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 51, 153)));
+
+        btLogOut.setFont(new java.awt.Font("Courier New", 1, 14)); // NOI18N
+        btLogOut.setForeground(new java.awt.Color(102, 0, 102));
+        btLogOut.setText("LOG OUT");
+        btLogOut.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btLogOutActionPerformed(evt);
+            }
+        });
+
+        btMenu.setFont(new java.awt.Font("Courier New", 1, 14)); // NOI18N
+        btMenu.setForeground(new java.awt.Color(102, 0, 102));
+        btMenu.setText("MENU");
+        btMenu.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                backToMenu(evt);
+            }
+        });
+
+        org.jdesktop.layout.GroupLayout layout = new org.jdesktop.layout.GroupLayout(this);
+        this.setLayout(layout);
+        layout.setHorizontalGroup(
+            layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+            .add(layout.createSequentialGroup()
+                .add(12, 12, 12)
+                .add(layout.createSequentialGroup()
+                        .add(btIssue)
+                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .add(btSchCmd)
+                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .add(btView, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 178, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(188, Short.MAX_VALUE))
+            .add(layout.createSequentialGroup()
+                .addContainerGap()
+                .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.TRAILING)
+                    .add(org.jdesktop.layout.GroupLayout.LEADING, cbRoom, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 489, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                    .add(layout.createSequentialGroup()
+                        .add(jLabel1)
+                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED, 69, Short.MAX_VALUE)
+                        .add(btMenu)
+                        .add(19, 19, 19)
+                        .add(btLogOut))
+                    .add(org.jdesktop.layout.GroupLayout.LEADING, layout.createParallelGroup(org.jdesktop.layout.GroupLayout.TRAILING, false)
+                    	.add(org.jdesktop.layout.GroupLayout.LEADING, jLabel3, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    	.add(layout.createSequentialGroup()
+                            .add(btSeeCmd, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 178, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                            .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .add(btCancelCmd, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 178, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
+                        .add(org.jdesktop.layout.GroupLayout.LEADING, cbCmd, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 488, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                        .add(org.jdesktop.layout.GroupLayout.LEADING, tCmd, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 489, Short.MAX_VALUE)
+                        .add(org.jdesktop.layout.GroupLayout.LEADING, jLabel4, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .add(layout.createSequentialGroup()
+                        	.add(selectModePanel)
+                        	.addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        	.add(cbScheduler))
+                        .add(org.jdesktop.layout.GroupLayout.LEADING, cbDevice, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 488, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
+                    .add(org.jdesktop.layout.GroupLayout.LEADING, jLabel2, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 489, Short.MAX_VALUE))
+                .add(39, 39, 39))
+        );
+        layout.setVerticalGroup(
+            layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+            .add(layout.createSequentialGroup()
+            	.add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                    .add(selectModePanel)
+            		.add(cbScheduler))
+            	.add(9, 9, 9)
+                .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                    .add(jLabel1)
+                    .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
+                        .add(btMenu)
+                        .add(btLogOut)))
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                .add(jLabel2)
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                .add(cbRoom, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                .add(jLabel4, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 14, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                .add(cbDevice, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                .add(11, 11, 11)
+                .add(jLabel3)
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                .add(cbCmd, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                .add(9, 9, 9)
+                .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
+                    .add(btCancelCmd, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .add(btSeeCmd))
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                .add(tCmd, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 26, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
+                		.add(btIssue, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                		.add(btSchCmd)
+                		.add(btView))
+                .add(54, 54, 54))
+        );
+    }// </editor-fold>//GEN-END:initComponents
+
+    private void backToMenu(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_backToMenu
+        mp.loadInitRolePanel(usr);
+    }//GEN-LAST:event_backToMenu
+
+    private void btIssueActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btIssueActionPerformed
+        sendCmd();
+    }//GEN-LAST:event_btIssueActionPerformed
+    
+    private void btSchCmdActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btIssueActionPerformed
+    	Device dev;
+    	ScheduledDevice sd;
+    	boolean devFinded=false;
+    	String runningProg="";					//stato attuale del dispositivo
+    	
+    	String previousSchState="";				//scheduling precedente
+    	String previousSchProg="";
+    	
+    	String nextSch="SCHEDULED";				//scheduling da applicare
+    	String nextProg=cbCmd.getSelectedItem().toString();
+    	
+    	for(int i=0; i<schDevs.size(); i++) //cerco il dispositivo nell'array
+        {   
+    		sd  = schDevs.get(i);
+    		dev = sd.getDevice();
+    		
+    		if(dev.toString().equals(d.toString()))  //dispositivo trovato
+        	{
+    			devFinded = true;
+    			//salvataggio dello scheduling precedente
+    			previousSchState = sd.getScheduleState();
+    			previousSchProg  = sd.getProgram();
+    			
+    			//salvataggio dello stato del dispositivo
+    			runningProg=getDevStateByID(dev.idDev);
+
+    			//inizio casistiche
+    	    	switch (previousSchState)
+    	    	{
+    	    		case "NOT SCHEDULED":
+    	    			if(runningProg.equals("off"))//tutto ok!
+    	    			{
+    	    				sd.setScheduleState(nextSch);
+    	    				sd.setProgram(nextProg);
+    	    				System.err.println("SCH SENT: "+this.tCmd.getText());
+    	    			}
+    	    			else
+    	    				System.err.println("It's not possible to set the schedule for the device "+dev.name
+    	    								  +". The device is already running a program ("+runningProg+").");
+    	    			
+    	    			return;
+    	    		case "SCHEDULED":
+    	    			if(nextProg.equals("off"))//disattivo la precedente schedulazione
+    	    			{
+    	    				sd.setScheduleState("NOT SCHEDULED");
+    	    				sd.setProgram("off");
+    	    				System.err.println("The schedule "+previousSchProg+" for the device "+dev.name+" has been deleted.");
+    	    			}
+    	    			else
+    	    				System.err.println("It's not possible to set the schedule for the device "+dev.name
+    								  +". The device already have a schedule for the program ("+previousSchProg+").");
+    	    			
+    	    			return;
+    	    		case "RUNNING":
+    	    			System.err.println("It's not possible to set the schedule."+
+    	    								" The device is now running a scheduled program.");
+    	    			return;
+    	    		default: //stato di scheduling errato
+    	    			System.err.println("Error. The device "+dev.name+" have an incorrect schedule: "+previousSchState+".");
+    	    			return;
+    	    	}
+        	}
+        }
+    	
+    	if(!devFinded)//dispositivo non trovato
+    		System.err.println("Device "+d.toString()+" not found.");
+    	
+    	return;
+    	
+    	
+    	
+	
+    	
+    	/*//applico senza fare nessun controllo
+    	for(int i=0; i<schDevs.size(); i++)
+        {
+        	Device tempDev = schDevs.get(i).getDevice();
+        	if(tempDev.toString().equals(d.toString()))
+        	{
+        		schDevs.get(i).setScheduleState("SCHEDULED");
+        		schDevs.get(i).setProgram(cbCmd.getSelectedItem().toString());
+        		break;//non serve proseguire il ciclo
+        	}
+        }
+        
+        System.err.println("SCH SENT: "+this.tCmd.getText());*/
+    }
+    
+    //codice di prova
+    
+    private String getDevStateByID(int id)
+    {
+    	String devState="";
+    	try {
+    		TucsonAgentId agent = new TucsonAgentId("provaAgent");
+    		EnhancedSynchACC acc = TucsonMetaACC.getContext(agent);
+    		LogicTuple devCurrStatusTemplate = new LogicTuple("dev_curr_st", new Value(id),new Var("X"));
+        
+    		for(int i=0; i<tid.size();i++){
+    			ITucsonOperation op_rdp = acc.rdp((TucsonTupleCentreId)tid.elementAt(i), devCurrStatusTemplate, null);
+        
+    			if(op_rdp.isResultSuccess()){
+    				LogicTuple state = op_rdp.getLogicTupleResult();
+    				devState=state.getArg(1).toString();
+    			}
+    		}
+    		acc.exit();
+    	}
+    	catch(Exception ex) {
+    		ex.printStackTrace();
+    	}
+    	return devState;
+    }
+    /* FUNZIONA
+    private void readDevicesStatusProva(int id) throws InvalidLogicTupleException
+    {
+    	String temp="";
+        List<LogicTuple> l = getDevStatesProva(id);
+        for(int i=0;i<l.size();i++) {
+            for(int j=0;j<((List)l.get(i)).size();j++) {
+            	LogicTuple lt = LogicTuple.parse(((List)l.get(i)).get(j).toString());
+            	temp = temp +getDevString(lt)+(i==l.size()-1?"":"\n");
+            }
+        }
+        System.err.println(temp);
+    }
+    
+    private Vector getDevStatesProva(int id) {
+    	List<LogicTuple> l = null;
+        Vector dev = new Vector();
+        try {
+        	TucsonAgentId agent = new TucsonAgentId("provaAgent");
+        	
+            EnhancedSynchACC acc = TucsonMetaACC.getContext(agent);
+            for(int i=0; i<tid.size();i++)
+            {
+                ITucsonOperation op_rdAll = acc.rdAll((TucsonTupleCentreId)tid.elementAt(i),
+                        new LogicTuple("dev_curr_st",
+                                new Value(id), //Y
+                                new Var("Z")),
+                        null);
+                l = op_rdAll.getLogicTupleListResult();
+                dev.add(l);
+            }
+            acc.exit();
+        }
+        catch(Exception ex) {
+            ex.printStackTrace();
+        }
+        return dev;
+    }   
+        
+    private String getDevString(LogicTuple lt) {
+        String str = "";
+        try {
+            Device d = ds.getDeviceById(database.getDatabase(),lt.getArg(0).intValue());
+            str += d.name+" \t currently "+lt.getArg(1).toString();
+        }
+        catch(Exception ex) {
+            ex.printStackTrace();
+        }
+        return str;
+    }
+    */
+    private void btViewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btIssueActionPerformed
+    	ViewStateFrame vs = new ViewStateFrame(tid, sf, schDevs);
+        vs.setVisible(true);
+    }
+
+    private void btLogOutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btLogOutActionPerformed
+        mp.logOut(evt);
+    }//GEN-LAST:event_btLogOutActionPerformed
+
+    private void btCancelCmdActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btCancelCmdActionPerformed
+        tCmd.setText("");
+        r = null;
+        d = null;
+        devs = null;
+        cbRoom.setEnabled(true);
+        cbRoom.setSelectedItem(null);
+        cbDevice.setEnabled(false);
+        cbDevice.removeAllItems();
+        cbDevice.setSelectedItem(null);
+        cbCmd.setEnabled(false);
+        cbCmd.removeAllItems();
+        cbCmd.setSelectedItem(null);
+        btCancelCmd.setEnabled(false);
+        btIssue.setEnabled(false);
+        btSchCmd.setEnabled(false);
+    }//GEN-LAST:event_btCancelCmdActionPerformed
+
+    private void cbCmdFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_cbCmdFocusGained
+        cbDevice.setEnabled(false);
+        try {
+            d = Utilities.findDeviceByName(devs,
+                    cbDevice.getSelectedItem().toString());
+        } catch(Exception ex) {
+            ex.printStackTrace();
+        }
+        // cmd selection
+        String[] cmds = Utilities.getDevCmds(d.param);
+        cbCmd.removeAllItems();
+        for(int i=0;i<cmds.length;i++)
+            cbCmd.addItem(cmds[i]);
+        cbCmd.setSelectedItem(null);
+    }//GEN-LAST:event_cbCmdFocusGained
+
+    private void cbRoomActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbRoomActionPerformed
+        if(cbRoom.getSelectedItem() != null)
+            cbDevice.setEnabled(true);
+    }//GEN-LAST:event_cbRoomActionPerformed
+    
+    private void cbSchedulerActionPerformed(java.awt.event.ActionEvent evt) {
+        if(cbScheduler.getSelectedItem() != null)
+        	sa.setSchedule(schedulersList.get(cbScheduler.getSelectedIndex()));
+    }
+
+    private void btSeeCmdActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btSeeCmdActionPerformed
+        if(cbRoom.getSelectedItem() == null ||
+                cbDevice.getSelectedItem() == null ||
+                cbCmd.getSelectedItem() == null) {
+            javax.swing.JOptionPane.showMessageDialog(null,
+                    "Please choose room, device and command.",
+                    "MISSING SELECTION",javax.swing.JOptionPane.ERROR_MESSAGE);
+            btCancelCmd.setEnabled(false); // cannot cancel
+            btIssue.setEnabled(false); // cannot issue command
+            btSchCmd.setEnabled(false);
+            cbRoom.setEnabled(true);
+            cbDevice.setEnabled(false);
+            d = null;
+            cbDevice.removeAllItems(); // empty device combo-box
+            devs = null;
+            cbCmd.setEnabled(false);
+            cbCmd.removeAllItems(); // empty cmd combo-box
+            return;
+        }
+        this.tCmd.setText("send_cmd("+r.name+","+d.name+","+
+                cbCmd.getSelectedItem().toString()+")");
+        this.btCancelCmd.setEnabled(true);
+        this.btIssue.setEnabled(true);
+        this.btSchCmd.setEnabled(true);
+    }//GEN-LAST:event_btSeeCmdActionPerformed
+
+    private void cbDeviceFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_cbDeviceFocusGained
+        cbRoom.setEnabled(false);
+        ds = sf.getDeviceServiceInterface();
+        try { // find devices in selected room
+            String rm = cbRoom.getSelectedItem().toString();
+            r = Utilities.findRoomByName(rooms,rm);
+            devs = ds.getDevicesInRoom(database.getDatabase(),r.idRoom);
+        } catch(Exception ex) {
+            ex.printStackTrace();
+        }
+        // device selection
+        cbDevice.removeAllItems();
+        for(int i=0;i<devs.size();i++)
+	    cbDevice.addItem(devs.get(i).name);
+            //cbDevice.addItem(((Device)devs.elementAt(i)).name);
+        cbDevice.setSelectedItem(null);
+    }//GEN-LAST:event_cbDeviceFocusGained
+
+    private void cbDeviceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbDeviceActionPerformed
+        if(cbDevice.getSelectedItem() != null)
+            cbCmd.setEnabled(true);
+    }//GEN-LAST:event_cbDeviceActionPerformed
+   
+    private void sendCmd() {
+        try {
+            //TucsonContext ctx = Tucson.enterDefaultContext();
+            TucsonAgentId agent = new TucsonAgentId("sendCmdAgent");
+            EnhancedSynchACC acc = TucsonMetaACC.getContext(agent);
+            
+            LogicTuple cmd = new LogicTuple("send_cmd",new Value(usr.idUser),new Value(r.idRoom),
+                new Value(d.idDev),new Value(cbCmd.getSelectedItem().toString()));
+            
+            acc.out((TucsonTupleCentreId)tid.elementAt(r.idRoom-1), cmd, null);
+           // ctx.out((TupleCentreId)tid.elementAt(r.idRoom-1),cmd);
+            Utilities.insertTupleInto((TucsonTupleCentreId)tid.elementAt(r.idRoom-1), cmd);
+            System.err.println("CMD SENT: "+this.tCmd.getText()+" / "+cmd);
+            acc.exit();
+        }
+        catch(Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+    
+    private void rbSelectionActionPerformed(java.awt.event.ActionEvent evt)
+    {
+    	if (rbAuto.isSelected())
+    	{	
+    		System.err.println("********** NOTIFY *********");
+    		
+    		sa.paused = false;
+    		synchronized(sa.lock)
+    		{
+    			sa.lock.notifyAll();
+    		}
+    	}	
+		else
+		{	
+			System.err.println("********** WAIT *********");
+			
+			sa.paused = true;
+			synchronized(sa.lock)
+    		{
+    			sa.lock.notifyAll();
+    		}
+		}
+    }
+    
+    // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.ButtonGroup btGroup;
+    private javax.swing.JRadioButton rbManual;
+    private javax.swing.JRadioButton rbAuto;
+    private javax.swing.JPanel selectModePanel;
+    private javax.swing.JButton btCancelCmd;
+    private javax.swing.JButton btIssue;
+    private javax.swing.JButton btSchCmd;
+    private javax.swing.JButton btView;
+    private javax.swing.JButton btLogOut;
+    private javax.swing.JButton btMenu;
+    private javax.swing.JButton btSeeCmd;
+    private javax.swing.JComboBox cbCmd;
+    private javax.swing.JComboBox cbDevice;
+    private javax.swing.JComboBox cbRoom;
+    private javax.swing.JComboBox cbScheduler;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
+    private javax.swing.JTextField tCmd;
+    // End of variables declaration//GEN-END:variables
+    
+}

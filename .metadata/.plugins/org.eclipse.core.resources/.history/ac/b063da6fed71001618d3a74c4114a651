@@ -1,0 +1,9 @@
+package it.unibo.homemanager.scheduler;
+
+public class ScheduledDevice {
+
+	public ScheduledDevice() {
+		// TODO Auto-generated constructor stub
+	}
+
+}

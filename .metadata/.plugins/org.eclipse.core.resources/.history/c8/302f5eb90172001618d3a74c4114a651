@@ -1,0 +1,155 @@
+package it.unibo.homemanager.scheduler;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Vector;
+
+import javax.swing.JTextArea;
+
+import alice.logictuple.LogicTuple;
+import alice.logictuple.Var;
+import alice.logictuple.exceptions.InvalidLogicTupleException;
+import alice.tucson.api.EnhancedSynchACC;
+import alice.tucson.api.ITucsonOperation;
+import alice.tucson.api.TucsonAgentId;
+import alice.tucson.api.TucsonMetaACC;
+import alice.tucson.api.TucsonTupleCentreId;
+import alice.tucson.api.exceptions.TucsonInvalidAgentIdException;
+import it.unibo.homemanager.ServiceFactory;
+import it.unibo.homemanager.dbmanagement.Database;
+import it.unibo.homemanager.tablemap.Device;
+import it.unibo.homemanager.tablemap.ServicesInterfaces.DeviceServiceInterface;
+
+public class RefreshThread extends Thread {
+	private ArrayList<ScheduledDevice> schDevs;
+	private JTextArea taDev;
+	private JTextArea taSch;
+	private int refreshTime;
+	
+	private TucsonAgentId agent;
+	private Vector tid;
+	private DeviceServiceInterface deviceService;
+	private Database database;
+	
+	public RefreshThread(Vector t, ServiceFactory sf, ArrayList<ScheduledDevice> schDevs, int refreshTime, JTextArea taDev, JTextArea taSch) {
+		this.schDevs = schDevs;
+		this.taDev = taDev;
+		this.taSch = taSch;
+		this.refreshTime = refreshTime;
+		try {
+			agent = new TucsonAgentId("refreshThreadAgent");
+			this.database = sf.getDatabaseInterface();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		tid = t;
+		this.deviceService = sf.getDeviceServiceInterface();
+		
+	}
+
+	public void run() {
+		try {
+			while(true) {
+				readDevsAndSchedule();				//azione: lettura + scrittura su TextArea
+				RefreshThread.sleep(refreshTime);   //tempo di refresh
+			}
+		}
+		catch (Exception e) {//se sono qui, qualcuno ha chiuso ViewStateFrame
+							 //ignoro l'eccezzione?? boh
+			e.printStackTrace();
+		}
+	}
+	
+	private void readDevsAndSchedule() throws InvalidLogicTupleException
+	{
+		readDevicesStatus();
+		readScheduledDevices();
+	}
+	
+	private void readScheduledDevices()
+	{
+		String name;
+		String schedule;
+		String program;
+		
+		String format;//serve per tabulare il testo correttamente
+		String riga;
+		
+		taSch.setText("");//elimino gli schedule vecchi dalla TextArea
+		
+		for(int i=0; i<schDevs.size(); i++)
+		{   
+			name = schDevs.get(i).getDevice().name;
+			schedule = schDevs.get(i).getScheduleState();
+			program = schDevs.get(i).getProgram();
+			
+			if(schedule.equals("NOT SCHEDULED"))
+			{
+				format = "%1$-20s %2$-15s";
+				//taSch.append(name+"\t"+schedule+"\n");
+				riga = String.format(format, name, schedule);
+			}
+			else
+			{
+				format = "%1$-20s %2$-15s %3$-10s";
+				//taSch.append(name+"\t"+schedule+" "+program+"\n");
+				riga = String.format(format, name, schedule, program);
+			}
+			
+			taSch.append(riga+"\n");
+		}
+	}
+	
+	private void readDevicesStatus() throws InvalidLogicTupleException
+	{
+		taDev.setText("");//elimino gli stati vecchi dalla TextArea
+        
+        List<LogicTuple> l = getDevStates();
+        for(int i=0;i<l.size();i++) {
+            for(int j=0;j<((List)l.get(i)).size();j++) {
+            LogicTuple lt = LogicTuple.parse(((List)l.get(i)).get(j).toString());
+            //taDev.setText(taDev.getText()+getDevString(lt)+
+            //        (i==l.size()-1?"":"\n"));
+            taDev.append(getDevString(lt)+(i==l.size()-1?"":"\n"));
+            }
+        }
+	}
+	
+	private Vector getDevStates() {
+        List<LogicTuple> l = null;
+        Vector dev = new Vector();
+        try {
+            EnhancedSynchACC acc = TucsonMetaACC.getContext(agent);
+            for(int i=0; i<tid.size();i++)
+            {
+                ITucsonOperation op_rdAll = acc.rdAll((TucsonTupleCentreId)tid.elementAt(i),
+                        new LogicTuple("dev_curr_st",
+                                new Var("Y"),
+                                new Var("Z")),
+                        null);
+                l = op_rdAll.getLogicTupleListResult();
+                dev.add(l);
+            }
+            acc.exit();
+        }
+        catch(Exception ex) {
+            ex.printStackTrace();
+        }
+        return dev;
+    }
+	
+	private String getDevString(LogicTuple lt) {
+        String str = "Device ";
+        try {
+            //ds = new DeviceService();
+            Device d = deviceService.getDeviceById(database.getDatabase(),lt.getArg(0).intValue());
+            str += d.name+" : currently "+lt.getArg(1).toString();
+        }
+        catch(Exception ex) {
+            ex.printStackTrace();
+        }
+        return str;
+    }
+
+}

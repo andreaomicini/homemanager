@@ -8,4 +8,6 @@ public interface ScheduleInterface {
 	
 	public void launch() throws Exception;
 	
+	public String getName();
+	
 }

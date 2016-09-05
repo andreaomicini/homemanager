@@ -39,6 +39,7 @@
               </Group>
               <EmptySpace pref="188" max="32767" attributes="0"/>
           </Group>
+		  <Component id="cbScheduler" alignment="0" min="-2" pref="489" max="-2" attributes="1"/>
           <Group type="102" alignment="0" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
               <Component id="tempModePanel" min="-2" max="-2" attributes="0"/>
@@ -81,6 +82,7 @@
                       <Component id="btLogOut" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
               </Group>
+			  <Component id="cbScheduler" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
               <Component id="tempModePanel" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
@@ -315,6 +317,21 @@
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="cbRoomActionPerformed"/>
       </Events>
     </Component>
+	
+	<Component class="javax.swing.JComboBox" name="cbScheduler">
+      <Properties>
+        <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+          <Font name="Courier New" size="13" style="0"/>
+        </Property>
+        <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
+          <StringArray count="0"/>
+        </Property>
+      </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="cbSchedulerActionPerformed"/>
+      </Events>
+    </Component>
+	
     <Component class="javax.swing.JComboBox" name="cbCmd">
       <Properties>
         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">

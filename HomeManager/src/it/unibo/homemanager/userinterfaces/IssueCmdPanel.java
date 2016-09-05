@@ -7,18 +7,22 @@
 package it.unibo.homemanager.userinterfaces;
 
 import alice.logictuple.*;
+import alice.logictuple.exceptions.InvalidLogicTupleException;
 import alice.tucson.api.*;
 import alice.tuplecentre.api.TupleCentreId;
 import it.unibo.homemanager.ServiceFactory;
 import it.unibo.homemanager.dbmanagement.Database;
 import it.unibo.homemanager.scheduler.RandomScheduler;
+import it.unibo.homemanager.scheduler.RapidScheduler;
 import it.unibo.homemanager.scheduler.ScheduleInterface;
+import it.unibo.homemanager.scheduler.ScheduledDevice;
 import it.unibo.homemanager.scheduler.SchedulerAgent;
 import it.unibo.homemanager.tablemap.*;
 import it.unibo.homemanager.tablemap.ServicesInterfaces.DeviceServiceInterface;
 import it.unibo.homemanager.tablemap.ServicesInterfaces.RoomServiceInterface;
 import it.unibo.homemanager.util.Utilities;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -38,10 +42,15 @@ public class IssueCmdPanel extends javax.swing.JPanel {
     private Device d;
     private Vector rooms,tid;//,devs;
     private ArrayList<Device> devs;
+    private ArrayList<Device> allDevs;//usata per schDevs
+    
+    private ArrayList<ScheduledDevice> schDevs;
+    //vettore che tiene memorizzato lo stato di schedulazione di ogni dispositivo
+    
     
     private MainPanel mp;
     private SchedulerAgent sa;
-    private ScheduleInterface si;
+    private ArrayList<ScheduleInterface> schedulersList;
     
     //private TupleCentreId tid;
     
@@ -56,19 +65,34 @@ public class IssueCmdPanel extends javax.swing.JPanel {
         this.sf = sf;
         try {
         	this.database = sf.getDatabaseInterface();
+        	ds = sf.getDeviceServiceInterface();
         	sa = new SchedulerAgent("schedulerAgent");
-        	si = new RandomScheduler(sf, database, tCmd, tid);
         	sa.go();
         	
+        	//inserisco gli algoritmi di schedulazione
+        	schedulersList = new ArrayList<ScheduleInterface>();
+        	schedulersList.add(new RandomScheduler(sf, database, tCmd, tid));
+        	schedulersList.add(new RapidScheduler(sf, database, tCmd, tid));
+        	
+        	//popolo schDevs con tutti i dispositivi di HomeManager e imposto lo stato NOT SCHEDULED
+    		schDevs = new ArrayList<ScheduledDevice>();
+            allDevs = ds.getDevices(database);
+    			
+    		for (int i=0; i<allDevs.size(); i++)
+    			schDevs.add(new ScheduledDevice(allDevs.get(i)));
+    		
         } catch (Exception ex) {
         	Logger.getLogger(IssueCmdPanel.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
     
     protected void init(User u) {
-        usr = u;
-        si.setUser(u);
-        sa.setSchedule(si);
+        usr = u;       
+        //imposto l'utente su tutti gli scheduler
+        for(int i=0; i<schedulersList.size(); i++)
+        	schedulersList.get(i).setUser(usr);
+        
+        sa.setSchedule(schedulersList.get(0));
         init();
     }
     
@@ -81,6 +105,7 @@ public class IssueCmdPanel extends javax.swing.JPanel {
     	
         this.btCancelCmd.setEnabled(false); // cannot cancel command
         this.btIssue.setEnabled(false);
+        this.btSchCmd.setEnabled(false);
         this.btView.setEnabled(true);
         tCmd.setText(""); // empty cmd text-field
         
@@ -100,6 +125,12 @@ public class IssueCmdPanel extends javax.swing.JPanel {
                 cbRoom.addItem(room.name);
         }
         cbRoom.setSelectedItem(null);
+        
+        cbScheduler.removeAllItems();
+        for(int i=0; i<schedulersList.size(); i++)
+        	cbScheduler.addItem(schedulersList.get(i).getName());
+        cbScheduler.setSelectedIndex(0);
+        cbScheduler.setEnabled(true);
         
         this.cbRoom.setEnabled(true);
         d = null;
@@ -127,8 +158,10 @@ public class IssueCmdPanel extends javax.swing.JPanel {
         rbManual = new javax.swing.JRadioButton();
         rbAuto = new javax.swing.JRadioButton();
         selectModePanel = new javax.swing.JPanel();
+        cbScheduler = new javax.swing.JComboBox();
     	
         btIssue = new javax.swing.JButton();
+        btSchCmd = new javax.swing.JButton();
         btView = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
         cbDevice = new javax.swing.JComboBox();
@@ -180,9 +213,6 @@ public class IssueCmdPanel extends javax.swing.JPanel {
         org.jdesktop.layout.GroupLayout selectModePanelLayout = new org.jdesktop.layout.GroupLayout(selectModePanel);
         selectModePanel.setLayout(selectModePanelLayout);
         selectModePanelLayout.setHorizontalGroup(
-        		//selectModePanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-                //.addContainerGap()
-                //.add(selectModePanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
         		selectModePanelLayout.createSequentialGroup()
                 .add(rbManual)
                 .addContainerGap(28, Short.MAX_VALUE)
@@ -190,12 +220,9 @@ public class IssueCmdPanel extends javax.swing.JPanel {
                 
         );
         selectModePanelLayout.setVerticalGroup(
-        		selectModePanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            //.add(selectModePanelLayout.createSequentialGroup()
+        		selectModePanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)       
                 .add(rbManual)
-                //.addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(rbAuto)
-                //.addContainerGap(28, Short.MAX_VALUE))
         );
         
         
@@ -205,6 +232,15 @@ public class IssueCmdPanel extends javax.swing.JPanel {
         btIssue.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btIssueActionPerformed(evt);
+            }
+        });
+        
+        btSchCmd.setFont(new java.awt.Font("Courier New", 1, 14)); // NOI18N
+        btSchCmd.setForeground(new java.awt.Color(102, 0, 102));
+        btSchCmd.setText("SCHEDULE COMMAND");
+        btSchCmd.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+            	btSchCmdActionPerformed(evt);
             }
         });
         
@@ -259,6 +295,13 @@ public class IssueCmdPanel extends javax.swing.JPanel {
                 cbRoomActionPerformed(evt);
             }
         });
+        
+        cbScheduler.setFont(new java.awt.Font("Courier New", 0, 13)); // NOI18N
+        cbScheduler.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cbSchedulerActionPerformed(evt);
+            }
+        });
 
         cbCmd.setFont(new java.awt.Font("Courier New", 0, 13)); // NOI18N
         cbCmd.addFocusListener(new java.awt.event.FocusAdapter() {
@@ -308,9 +351,11 @@ public class IssueCmdPanel extends javax.swing.JPanel {
         layout.setHorizontalGroup(
             layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
             .add(layout.createSequentialGroup()
-                .add(180, 180, 180)
+                .add(12, 12, 12)
                 .add(layout.createSequentialGroup()
-                        .add(btIssue, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 178, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                        .add(btIssue)
+                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .add(btSchCmd)
                         .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .add(btView, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 178, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(188, Short.MAX_VALUE))
@@ -333,7 +378,10 @@ public class IssueCmdPanel extends javax.swing.JPanel {
                         .add(org.jdesktop.layout.GroupLayout.LEADING, cbCmd, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 488, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                         .add(org.jdesktop.layout.GroupLayout.LEADING, tCmd, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 489, Short.MAX_VALUE)
                         .add(org.jdesktop.layout.GroupLayout.LEADING, jLabel4, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .add(selectModePanel, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 489, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                        .add(layout.createSequentialGroup()
+                        	.add(selectModePanel)
+                        	.addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        	.add(cbScheduler))
                         .add(org.jdesktop.layout.GroupLayout.LEADING, cbDevice, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 488, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
                     .add(org.jdesktop.layout.GroupLayout.LEADING, jLabel2, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 489, Short.MAX_VALUE))
                 .add(39, 39, 39))
@@ -342,8 +390,9 @@ public class IssueCmdPanel extends javax.swing.JPanel {
             layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
             .add(layout.createSequentialGroup()
             	.add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-                    .add(selectModePanel, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap()
+                    .add(selectModePanel)
+            		.add(cbScheduler))
+            	.add(9, 9, 9)
                 .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
                     .add(jLabel1)
                     .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
@@ -370,6 +419,7 @@ public class IssueCmdPanel extends javax.swing.JPanel {
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
                 		.add(btIssue, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                		.add(btSchCmd)
                 		.add(btView))
                 .add(54, 54, 54))
         );
@@ -380,11 +430,232 @@ public class IssueCmdPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_backToMenu
 
     private void btIssueActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btIssueActionPerformed
-        sendCmd();
-    }//GEN-LAST:event_btIssueActionPerformed
+        Device dev;
+        ScheduledDevice sd;
+        boolean devFinded=false, showInfoMsg=false;
+        
+        String runningProg="";					//stato attuale del dispositivo
+        String nextProg=cbCmd.getSelectedItem().toString();	//stato da impostare
+        
+        String currentSchState="";				//schedulazione attuale
+        String currentSchProg="";
+        
+        String errorMsg="", infoMsg="";
+        
+        for(int i=0; i<schDevs.size(); i++){ //cerco il dispositivo nell'array   
+    		sd  = schDevs.get(i);
+    		dev = sd.getDevice();
+    		
+    		if(dev.toString().equals(d.toString())){  //dispositivo trovato
+    			devFinded = true;
+    			
+    			//salvataggio dello scheduling attuale
+    			currentSchState = sd.getScheduleState();
+    			currentSchProg  = sd.getProgram();
+    			
+    			//salvataggio dello stato del dispositivo
+    			runningProg=getDevStateByID(dev.idDev);
+    			
+    			//inizio casistiche
+    			switch(currentSchState){
+	    		case "NOT SCHEDULED":
+	    			if(runningProg.equals("off"))
+	    				if(nextProg.equals("off"))
+	    					errorMsg="The device "+dev.name+" you are trying to turn off, is already off.";
+	    				else{//tutto ok
+	    					sendCmd();
+	    					showInfoMsg=true;
+	    					infoMsg="Program '"+nextProg+"' setted correcty on the device "+dev.name+".";
+	    				}
+	    			else
+						if(nextProg.equals("off")){
+							showInfoMsg=true;
+							sendCmd();
+							infoMsg="The device "+dev.name+" was running a program ("+runningProg+")"
+									+"\nProgram terminated and device turned off.";
+						}
+						else
+							if(nextProg.equals(runningProg))
+								errorMsg="The device is already running the program you want to start ("+runningProg+").";
+							else{
+								showInfoMsg=true;
+								sendCmd();
+								infoMsg="The device "+dev.name+" was running a program ("+runningProg+")"
+										+"\nProgram terminated and setted a new program ("+nextProg+").";
+							}
+					break;
+	    		case "SCHEDULED":
+	    			if(runningProg.equals("off")){
+	    				if(nextProg.equals("off"))
+	    					errorMsg="The device "+dev.name+" you are trying to turn off, is already off."+
+	    							"\nThe device also have a schedule ("+currentSchProg+")";
+	    				else{
+	    					sendCmd();
+	    					showInfoMsg=true;
+	    					sd.setScheduleState("NOT SCHEDULED");
+	    					sd.setProgram("off");
+	    					infoMsg="Program '"+nextProg+"' setted correcty on the device "+dev.name
+	    							+".\nThe previous schedule ("+currentSchProg+") has been deleted.";
+	    				}
+	    			}
+	    			else//stato di scheduling errato
+	    				errorMsg="Something went wrong. Illegal schedule state."
+	    						+"\nThe device has a schedule and is running a program";
+	    			break;
+	    		case "RUNNING":
+	    			if(runningProg.equals(currentSchProg)){//tutto ok
+	    				sendCmd();
+    					showInfoMsg=true;
+    					sd.setScheduleState("NOT SCHEDULED");
+    					sd.setProgram("off");
+	    				
+	    				if(nextProg.equals("off"))
+	    					infoMsg="The device "+dev.name+" was running a scheduled program ("+currentSchProg+")"
+	    							+"\nProgram terminated and device turned off.";
+	    				else
+	    					infoMsg="The device "+dev.name+" was running a scheduled program ("+currentSchProg+")"
+	    							+"\nProgram terminated and setted a new program ("+nextProg+").";
+	    			}
+	    			else//stato di scheduling errato
+	    				errorMsg="Something went wrong. Illegal schedule state."
+	    						+"\nThe schedule state show the program is running '"+currentSchProg
+	    						+"', but the device is '"+runningProg+"'.";
+	    			break;
+	    		default://stato di scheduling errato
+	    			errorMsg="The device "+dev.name+" have an incorrect schedule: "+currentSchState+".";
+	    			break;
+    			}
+    			
+    			break;	
+    		}
+        }
+        
+        if(!devFinded)//dispositivo non trovato
+    		errorMsg="Device "+d.toString()+" not found.";
+    	
+    	if(showInfoMsg==true){
+    		System.err.println(infoMsg);
+    		javax.swing.JOptionPane.showMessageDialog(null,infoMsg,
+                    "Ok",javax.swing.JOptionPane.INFORMATION_MESSAGE);
+    	}
+    	else{
+    		System.err.println(errorMsg);
+    		javax.swing.JOptionPane.showMessageDialog(null,errorMsg,
+                    "Error",javax.swing.JOptionPane.ERROR_MESSAGE);
+    	}
+    }
+    
+    private void btSchCmdActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btIssueActionPerformed
+    	Device dev;
+    	ScheduledDevice sd;
+    	boolean devFinded=false, showInfoMsg=false;
+    	String runningProg="";					//stato attuale del dispositivo
+    	
+    	String previousSchState="";				//scheduling precedente
+    	String previousSchProg="";
+    	
+    	String nextSch="SCHEDULED";				//scheduling da applicare
+    	String nextProg=cbCmd.getSelectedItem().toString();
+    	
+    	String errorMsg="", infoMsg="";
+    	
+    	for(int i=0; i<schDevs.size(); i++) //cerco il dispositivo nell'array
+        {   
+    		sd  = schDevs.get(i);
+    		dev = sd.getDevice();
+    		
+    		if(dev.toString().equals(d.toString())){  //dispositivo trovato
+    			devFinded = true;
+    			//salvataggio dello scheduling precedente
+    			previousSchState = sd.getScheduleState();
+    			previousSchProg  = sd.getProgram();
+    			
+    			//salvataggio dello stato del dispositivo
+    			runningProg=getDevStateByID(dev.idDev);
+
+    			//inizio casistiche
+    	    	switch (previousSchState){
+    	    		case "NOT SCHEDULED":
+    	    			if(runningProg.equals("off")){
+    	    				if(!nextProg.equals("off")){ //tutto ok!
+    	    					showInfoMsg=true;
+    	    					sd.setScheduleState(nextSch);
+    	    					sd.setProgram(nextProg);
+    	    					infoMsg="The schedule '"+nextProg+"' for the device "+dev.name+" has been set.";
+    	    				}
+    	    				else
+    	    					errorMsg="It's not possible to delete a schedule for the device "+dev.name+
+    	    							 ".\nThe device haven't any schedule yet.";
+    	    			}
+    	    			else
+    	    				errorMsg="It's not possible to set the schedule for the device "+dev.name+
+    	    						".\nThe device is already running a program ("+runningProg+").";
+    	    			break;
+    	    		case "SCHEDULED":
+    	    			if(nextProg.equals("off")){//disattivo la precedente schedulazione
+    	    				showInfoMsg=true;
+    	    				sd.setScheduleState("NOT SCHEDULED");
+    	    				sd.setProgram("off");
+    	    				infoMsg="The schedule '"+previousSchProg+"' for the device "+dev.name+" has been deleted.";
+    	    			}
+    	    			else
+    	    				errorMsg="It's not possible to set the schedule for the device "+dev.name+
+    	    						".\nThe device already have a schedule for the program ("+previousSchProg+").";
+    	    			break;
+    	    		case "RUNNING":
+    	    			errorMsg="It's not possible to set the schedule.\nThe device is now running a scheduled program.";
+    	    			break;
+    	    		default: //stato di scheduling errato
+    	    			errorMsg="The device "+dev.name+" have an incorrect schedule: "+previousSchState+".";
+    	    			break;
+    	    	}
+    	    	
+    	    	break;
+        	}
+        }
+    	
+    	if(!devFinded)//dispositivo non trovato
+    		errorMsg="Device "+d.toString()+" not found.";
+    	
+    	if( showInfoMsg==true ){
+    		System.err.println(infoMsg);
+    		javax.swing.JOptionPane.showMessageDialog(null,infoMsg,
+                    "Ok",javax.swing.JOptionPane.INFORMATION_MESSAGE);
+    	}
+    	else{
+    		System.err.println(errorMsg);
+    		javax.swing.JOptionPane.showMessageDialog(null,errorMsg,
+                    "Error",javax.swing.JOptionPane.ERROR_MESSAGE);
+    	}
+    }
+    
+    private String getDevStateByID(int id)
+    {
+    	String devState="";
+    	try {
+    		TucsonAgentId agent = new TucsonAgentId("getStateAgent");
+    		EnhancedSynchACC acc = TucsonMetaACC.getContext(agent);
+    		LogicTuple devCurrStatusTemplate = new LogicTuple("dev_curr_st", new Value(id),new Var("X"));
+        
+    		for(int i=0; i<tid.size();i++){
+    			ITucsonOperation op_rdp = acc.rdp((TucsonTupleCentreId)tid.elementAt(i), devCurrStatusTemplate, null);
+        
+    			if(op_rdp.isResultSuccess()){
+    				LogicTuple state = op_rdp.getLogicTupleResult();
+    				devState=state.getArg(1).toString();
+    				break;
+    			}
+    		}
+    		acc.exit();
+    	}
+    	catch(Exception ex) {
+    		ex.printStackTrace();
+    	}
+    	return devState;
+    }
     
     private void btViewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btIssueActionPerformed
-    	ViewStateFrame vs = new ViewStateFrame(tid, sf);
+    	ViewStateFrame vs = new ViewStateFrame(tid, sf, schDevs);
         vs.setVisible(true);
     }
 
@@ -407,6 +678,7 @@ public class IssueCmdPanel extends javax.swing.JPanel {
         cbCmd.setSelectedItem(null);
         btCancelCmd.setEnabled(false);
         btIssue.setEnabled(false);
+        btSchCmd.setEnabled(false);
     }//GEN-LAST:event_btCancelCmdActionPerformed
 
     private void cbCmdFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_cbCmdFocusGained
@@ -429,6 +701,11 @@ public class IssueCmdPanel extends javax.swing.JPanel {
         if(cbRoom.getSelectedItem() != null)
             cbDevice.setEnabled(true);
     }//GEN-LAST:event_cbRoomActionPerformed
+    
+    private void cbSchedulerActionPerformed(java.awt.event.ActionEvent evt) {
+        if(cbScheduler.getSelectedItem() != null)
+        	sa.setSchedule(schedulersList.get(cbScheduler.getSelectedIndex()));
+    }
 
     private void btSeeCmdActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btSeeCmdActionPerformed
         if(cbRoom.getSelectedItem() == null ||
@@ -439,6 +716,7 @@ public class IssueCmdPanel extends javax.swing.JPanel {
                     "MISSING SELECTION",javax.swing.JOptionPane.ERROR_MESSAGE);
             btCancelCmd.setEnabled(false); // cannot cancel
             btIssue.setEnabled(false); // cannot issue command
+            btSchCmd.setEnabled(false);
             cbRoom.setEnabled(true);
             cbDevice.setEnabled(false);
             d = null;
@@ -452,6 +730,7 @@ public class IssueCmdPanel extends javax.swing.JPanel {
                 cbCmd.getSelectedItem().toString()+")");
         this.btCancelCmd.setEnabled(true);
         this.btIssue.setEnabled(true);
+        this.btSchCmd.setEnabled(true);
     }//GEN-LAST:event_btSeeCmdActionPerformed
 
     private void cbDeviceFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_cbDeviceFocusGained
@@ -528,6 +807,7 @@ public class IssueCmdPanel extends javax.swing.JPanel {
     private javax.swing.JPanel selectModePanel;
     private javax.swing.JButton btCancelCmd;
     private javax.swing.JButton btIssue;
+    private javax.swing.JButton btSchCmd;
     private javax.swing.JButton btView;
     private javax.swing.JButton btLogOut;
     private javax.swing.JButton btMenu;
@@ -535,6 +815,7 @@ public class IssueCmdPanel extends javax.swing.JPanel {
     private javax.swing.JComboBox cbCmd;
     private javax.swing.JComboBox cbDevice;
     private javax.swing.JComboBox cbRoom;
+    private javax.swing.JComboBox cbScheduler;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;

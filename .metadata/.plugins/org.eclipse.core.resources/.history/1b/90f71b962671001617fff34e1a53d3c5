@@ -1,0 +1,29 @@
+package it.unibo.homemanager.scheduler;
+
+import it.unibo.homemanager.tablemap.User;
+
+public class RapidScheduler implements ScheduleInterface {
+
+	public RapidScheduler() {
+		// TODO Auto-generated constructor stub
+	}
+
+	@Override
+	public void setUser(User u) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void launch() throws Exception {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public String getName() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+}

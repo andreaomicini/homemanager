@@ -1,7 +1,10 @@
 package it.unibo.homemanager.scheduler;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
+
+import javax.swing.JTextArea;
 
 import alice.logictuple.LogicTuple;
 import alice.logictuple.Var;
@@ -16,11 +19,11 @@ import it.unibo.homemanager.ServiceFactory;
 import it.unibo.homemanager.dbmanagement.Database;
 import it.unibo.homemanager.tablemap.Device;
 import it.unibo.homemanager.tablemap.ServicesInterfaces.DeviceServiceInterface;
-import it.unibo.homemanager.userinterfaces.ViewStateFrame;
 
 public class RefreshThread extends Thread {
-
-	private ViewStateFrame vsf;
+	private ArrayList<ScheduledDevice> schDevs;
+	private JTextArea taDev;
+	private JTextArea taSch;
 	private int refreshTime;
 	
 	private TucsonAgentId agent;
@@ -28,8 +31,10 @@ public class RefreshThread extends Thread {
 	private DeviceServiceInterface deviceService;
 	private Database database;
 	
-	public RefreshThread(ViewStateFrame vsf, Vector t, ServiceFactory sf, int refreshTime) {
-		this.vsf = vsf;
+	public RefreshThread(Vector t, ServiceFactory sf, ArrayList<ScheduledDevice> schDevs, int refreshTime, JTextArea taDev, JTextArea taSch) {
+		this.schDevs = schDevs;
+		this.taDev = taDev;
+		this.taSch = taSch;
 		this.refreshTime = refreshTime;
 		try {
 			agent = new TucsonAgentId("refreshThreadAgent");
@@ -46,8 +51,8 @@ public class RefreshThread extends Thread {
 	public void run() {
 		try {
 			while(true) {
-				readDevicesStatus();				//azione
-				RefreshThread.sleep(refreshTime);   //refresh
+				readDevsAndSchedule();				//azione: lettura + scrittura su TextArea
+				RefreshThread.sleep(refreshTime);   //tempo di refresh
 			}
 		}
 		catch (Exception e) {//se sono qui, qualcuno ha chiuso ViewStateFrame
@@ -56,16 +61,53 @@ public class RefreshThread extends Thread {
 		}
 	}
 	
+	private void readDevsAndSchedule() throws InvalidLogicTupleException
+	{
+		readDevicesStatus();
+		readScheduledDevices();
+	}
+	
+	private void readScheduledDevices()
+	{
+		String name;
+		String schedule;
+		String program;
+		
+		String format;//serve per tabulare il testo correttamente
+		String riga;
+		
+		taSch.setText("");//elimino gli schedule vecchi dalla TextArea
+		
+		for(int i=0; i<schDevs.size(); i++)
+		{   
+			name = schDevs.get(i).getDevice().name;
+			schedule = schDevs.get(i).getScheduleState();
+			program = schDevs.get(i).getProgram();
+			
+			if(schedule.equals("NOT SCHEDULED"))
+			{
+				format = "%1$-37s %2$-15s";
+				riga = String.format(format, name, schedule);
+			}
+			else
+			{
+				format = "%1$-37s %2$-15s %3$-7s";
+				riga = String.format(format, name, schedule, program);
+			}
+			
+			taSch.append(riga+"\n");
+		}
+	}
+	
 	private void readDevicesStatus() throws InvalidLogicTupleException
 	{
-		vsf.textArea.setText("");
+		taDev.setText("");//elimino gli stati vecchi dalla TextArea
         
         List<LogicTuple> l = getDevStates();
         for(int i=0;i<l.size();i++) {
             for(int j=0;j<((List)l.get(i)).size();j++) {
-            LogicTuple lt = LogicTuple.parse(((List)l.get(i)).get(j).toString());
-            vsf.textArea.setText(vsf.textArea.getText()+getDevString(lt)+
-                    (i==l.size()-1?"":"\n"));
+            	LogicTuple lt = LogicTuple.parse(((List)l.get(i)).get(j).toString());
+            	taDev.append(getDevString(lt)+(i==l.size()-1?"":"\n"));
             }
         }
 	}
@@ -94,11 +136,10 @@ public class RefreshThread extends Thread {
     }
 	
 	private String getDevString(LogicTuple lt) {
-        String str = "Device ";
+        String str = "";
         try {
-            //ds = new DeviceService();
             Device d = deviceService.getDeviceById(database.getDatabase(),lt.getArg(0).intValue());
-            str += d.name+" : currently "+lt.getArg(1).toString();
+            str += d.name+" \t currently "+lt.getArg(1).toString();
         }
         catch(Exception ex) {
             ex.printStackTrace();

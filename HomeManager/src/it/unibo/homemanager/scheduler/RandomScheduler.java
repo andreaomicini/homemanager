@@ -24,6 +24,7 @@ import it.unibo.homemanager.util.Utilities;
 public class RandomScheduler implements ScheduleInterface {
 
 	private User usr; //per inviare i comandi, verranno utilizzate le autorizzazioni di usr
+	private String name; //nome rappresentativo dello schedule
 	private ServiceFactory sf;
     private RoomServiceInterface rs;
     private DeviceServiceInterface ds;
@@ -36,6 +37,7 @@ public class RandomScheduler implements ScheduleInterface {
 		this.db=db;
         this.textF=textF;
         this.tid=tuple;
+        name = "Random Scheduler";
 		
 		//ottengo le interfacce
 		rs = sf.getRoomServiceInterface();
@@ -45,6 +47,11 @@ public class RandomScheduler implements ScheduleInterface {
 	public void setUser(User u)
 	{
 		usr = u;
+	}
+	
+	public String getName()
+	{
+		return name;
 	}
 
 	@Override

@@ -1,0 +1,36 @@
+package it.unibo.homemanager.scheduler;
+
+import it.unibo.homemanager.userinterfaces.ViewStateFrame;
+
+public class RefreshThread extends Thread {
+
+	private ViewStateFrame vsf;
+	private int refreshTime; //tempo (in ms) che intercorre tra due refresh
+	
+	public RefreshThread(ViewStateFrame vsf) {
+		this.vsf = vsf;
+		refreshTime = 5000;
+	}
+
+	public void run()
+	{
+		try
+		{
+			String text = "ciao";
+
+			while(true)
+			{
+				text = text + " mond\no";
+				vsf.textArea.setText(text);
+
+				RefreshThread.sleep(refreshTime);
+			}
+		}
+		catch (InterruptedException e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
+}
