@@ -42,11 +42,10 @@ public class IssueCmdPanel extends javax.swing.JPanel {
     private Device d;
     private Vector rooms,tid;//,devs;
     private ArrayList<Device> devs;
-    private ArrayList<Device> allDevs;//usata per schDevs
+    private ArrayList<Device> allDevs;//used for scheduled devs
     
     private ArrayList<ScheduledDevice> schDevs;
-    //vettore che tiene memorizzato lo stato di schedulazione di ogni dispositivo
-    
+    //array with all devices and their current schedule state
     
     private MainPanel mp;
     private SchedulerAgent sa;
@@ -69,12 +68,12 @@ public class IssueCmdPanel extends javax.swing.JPanel {
         	sa = new SchedulerAgent("schedulerAgent");
         	sa.go();
         	
-        	//inserisco gli algoritmi di schedulazione
+        	//input of schedule algorithms
         	schedulersList = new ArrayList<ScheduleInterface>();
         	schedulersList.add(new RandomScheduler(sf, database, tCmd, tid));
         	schedulersList.add(new RapidScheduler(sf, database, tCmd, tid));
         	
-        	//popolo schDevs con tutti i dispositivi di HomeManager e imposto lo stato NOT SCHEDULED
+        	//set schDevs with all devices. Each device setted with the schedule state "NOT SCHEDULED"
     		schDevs = new ArrayList<ScheduledDevice>();
             allDevs = ds.getDevices(database);
     			
@@ -88,7 +87,7 @@ public class IssueCmdPanel extends javax.swing.JPanel {
     
     protected void init(User u) {
         usr = u;       
-        //imposto l'utente su tutti gli scheduler
+        //set the user for every schedule
         for(int i=0; i<schedulersList.size(); i++)
         	schedulersList.get(i).setUser(usr);
         
@@ -432,37 +431,34 @@ public class IssueCmdPanel extends javax.swing.JPanel {
     private void btIssueActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btIssueActionPerformed
         Device dev;
         ScheduledDevice sd;
-        boolean devFinded=false, showInfoMsg=false;
+        boolean devFound=false, showInfoMsg=false;
         
-        String runningProg="";					//stato attuale del dispositivo
-        String nextProg=cbCmd.getSelectedItem().toString();	//stato da impostare
+        String runningProg="";								//current program of the device
+        String nextProg=cbCmd.getSelectedItem().toString();	//next program to be set
         
-        String currentSchState="";				//schedulazione attuale
+        String currentSchState="";							//current schedule state
         String currentSchProg="";
         
         String errorMsg="", infoMsg="";
         
-        for(int i=0; i<schDevs.size(); i++){ //cerco il dispositivo nell'array   
+        for(int i=0; i<schDevs.size(); i++){ 				//searching for the right device in the array   
     		sd  = schDevs.get(i);
     		dev = sd.getDevice();
     		
-    		if(dev.toString().equals(d.toString())){  //dispositivo trovato
-    			devFinded = true;
+    		if(dev.toString().equals(d.toString())){  		//device found
+    			devFound = true;
     			
-    			//salvataggio dello scheduling attuale
+    			//saving current schedule state and current program
     			currentSchState = sd.getScheduleState();
     			currentSchProg  = sd.getProgram();
-    			
-    			//salvataggio dello stato del dispositivo
     			runningProg=getDevStateByID(dev.idDev);
     			
-    			//inizio casistiche
     			switch(currentSchState){
 	    		case "NOT SCHEDULED":
 	    			if(runningProg.equals("off"))
 	    				if(nextProg.equals("off"))
 	    					errorMsg="The device "+dev.name+" you are trying to turn off, is already off.";
-	    				else{//tutto ok
+	    				else{
 	    					sendCmd();
 	    					showInfoMsg=true;
 	    					infoMsg="Program '"+nextProg+"' setted correcty on the device "+dev.name+".";
@@ -498,12 +494,12 @@ public class IssueCmdPanel extends javax.swing.JPanel {
 	    							+".\nThe previous schedule ("+currentSchProg+") has been deleted.";
 	    				}
 	    			}
-	    			else//stato di scheduling errato
+	    			else//illegal schedule state
 	    				errorMsg="Something went wrong. Illegal schedule state."
 	    						+"\nThe device has a schedule and is running a program";
 	    			break;
 	    		case "RUNNING":
-	    			if(runningProg.equals(currentSchProg)){//tutto ok
+	    			if(runningProg.equals(currentSchProg)){
 	    				sendCmd();
     					showInfoMsg=true;
     					sd.setScheduleState("NOT SCHEDULED");
@@ -516,12 +512,12 @@ public class IssueCmdPanel extends javax.swing.JPanel {
 	    					infoMsg="The device "+dev.name+" was running a scheduled program ("+currentSchProg+")"
 	    							+"\nProgram terminated and setted a new program ("+nextProg+").";
 	    			}
-	    			else//stato di scheduling errato
+	    			else//illegal schedule state
 	    				errorMsg="Something went wrong. Illegal schedule state."
 	    						+"\nThe schedule state show the program is running '"+currentSchProg
 	    						+"', but the device is '"+runningProg+"'.";
 	    			break;
-	    		default://stato di scheduling errato
+	    		default://illegal schedule state
 	    			errorMsg="The device "+dev.name+" have an incorrect schedule: "+currentSchState+".";
 	    			break;
     			}
@@ -530,7 +526,7 @@ public class IssueCmdPanel extends javax.swing.JPanel {
     		}
         }
         
-        if(!devFinded)//dispositivo non trovato
+        if(!devFound)
     		errorMsg="Device "+d.toString()+" not found.";
     	
     	if(showInfoMsg==true){
@@ -548,36 +544,33 @@ public class IssueCmdPanel extends javax.swing.JPanel {
     private void btSchCmdActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btIssueActionPerformed
     	Device dev;
     	ScheduledDevice sd;
-    	boolean devFinded=false, showInfoMsg=false;
-    	String runningProg="";					//stato attuale del dispositivo
+    	boolean devFound=false, showInfoMsg=false;
+    	String runningProg="";					//current program of the device
     	
-    	String previousSchState="";				//scheduling precedente
+    	String previousSchState="";				//previous schedule state and scheduled program
     	String previousSchProg="";
     	
-    	String nextSch="SCHEDULED";				//scheduling da applicare
+    	String nextSch="SCHEDULED";				//scheduling to be set
     	String nextProg=cbCmd.getSelectedItem().toString();
     	
     	String errorMsg="", infoMsg="";
     	
-    	for(int i=0; i<schDevs.size(); i++) //cerco il dispositivo nell'array
+    	for(int i=0; i<schDevs.size(); i++) 	//searching for the right device in the array
         {   
     		sd  = schDevs.get(i);
     		dev = sd.getDevice();
     		
-    		if(dev.toString().equals(d.toString())){  //dispositivo trovato
-    			devFinded = true;
-    			//salvataggio dello scheduling precedente
+    		if(dev.toString().equals(d.toString())){  //device found
+    			devFound = true;
+    			//saving previous schedule state and current program
     			previousSchState = sd.getScheduleState();
     			previousSchProg  = sd.getProgram();
-    			
-    			//salvataggio dello stato del dispositivo
     			runningProg=getDevStateByID(dev.idDev);
 
-    			//inizio casistiche
     	    	switch (previousSchState){
     	    		case "NOT SCHEDULED":
     	    			if(runningProg.equals("off")){
-    	    				if(!nextProg.equals("off")){ //tutto ok!
+    	    				if(!nextProg.equals("off")){
     	    					showInfoMsg=true;
     	    					sd.setScheduleState(nextSch);
     	    					sd.setProgram(nextProg);
@@ -592,7 +585,7 @@ public class IssueCmdPanel extends javax.swing.JPanel {
     	    						".\nThe device is already running a program ("+runningProg+").";
     	    			break;
     	    		case "SCHEDULED":
-    	    			if(nextProg.equals("off")){//disattivo la precedente schedulazione
+    	    			if(nextProg.equals("off")){//the previous schedule has to be removed
     	    				showInfoMsg=true;
     	    				sd.setScheduleState("NOT SCHEDULED");
     	    				sd.setProgram("off");
@@ -605,7 +598,7 @@ public class IssueCmdPanel extends javax.swing.JPanel {
     	    		case "RUNNING":
     	    			errorMsg="It's not possible to set the schedule.\nThe device is now running a scheduled program.";
     	    			break;
-    	    		default: //stato di scheduling errato
+    	    		default: //illegal schedule state
     	    			errorMsg="The device "+dev.name+" have an incorrect schedule: "+previousSchState+".";
     	    			break;
     	    	}
@@ -614,7 +607,7 @@ public class IssueCmdPanel extends javax.swing.JPanel {
         	}
         }
     	
-    	if(!devFinded)//dispositivo non trovato
+    	if(!devFound)
     		errorMsg="Device "+d.toString()+" not found.";
     	
     	if( showInfoMsg==true ){

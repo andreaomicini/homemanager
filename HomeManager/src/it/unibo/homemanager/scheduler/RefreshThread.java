@@ -51,12 +51,12 @@ public class RefreshThread extends Thread {
 	public void run() {
 		try {
 			while(true) {
-				readDevsAndSchedule();				//azione: lettura + scrittura su TextArea
-				RefreshThread.sleep(refreshTime);   //tempo di refresh
+				readDevsAndSchedule();				//reading device and schedule state + writing in the TextArea
+				RefreshThread.sleep(refreshTime);   //time of refresh
 			}
 		}
-		catch (Exception e) {//se sono qui, qualcuno ha chiuso ViewStateFrame
-							 //ignoro l'eccezzione?? boh
+		catch (Exception e) {//someone has closed ViewStateFrame
+							 //ignore the exception?
 			e.printStackTrace();
 		}
 	}
@@ -67,41 +67,9 @@ public class RefreshThread extends Thread {
 		readScheduledDevices();
 	}
 	
-	private void readScheduledDevices()
-	{
-		String name;
-		String schedule;
-		String program;
-		
-		String format;//serve per tabulare il testo correttamente
-		String riga;
-		
-		taSch.setText("");//elimino gli schedule vecchi dalla TextArea
-		
-		for(int i=0; i<schDevs.size(); i++)
-		{   
-			name = schDevs.get(i).getDevice().name;
-			schedule = schDevs.get(i).getScheduleState();
-			program = schDevs.get(i).getProgram();
-			
-			if(schedule.equals("NOT SCHEDULED"))
-			{
-				format = "%1$-37s %2$-15s";
-				riga = String.format(format, name, schedule);
-			}
-			else
-			{
-				format = "%1$-37s %2$-15s %3$-7s";
-				riga = String.format(format, name, schedule, program);
-			}
-			
-			taSch.append(riga+"\n");
-		}
-	}
-	
 	private void readDevicesStatus() throws InvalidLogicTupleException
 	{
-		taDev.setText("");//elimino gli stati vecchi dalla TextArea
+		taDev.setText("");
         
         List<LogicTuple> l = getDevStates();
         for(int i=0;i<l.size();i++) {
@@ -146,5 +114,37 @@ public class RefreshThread extends Thread {
         }
         return str;
     }
+	
+	private void readScheduledDevices()
+	{
+		String name;
+		String schedule;
+		String program;
+		
+		String format;//used for displaying in columns the output
+		String line;
+		
+		taSch.setText("");
+		
+		for(int i=0; i<schDevs.size(); i++)
+		{   
+			name = schDevs.get(i).getDevice().name;
+			schedule = schDevs.get(i).getScheduleState();
+			program = schDevs.get(i).getProgram();
+			
+			if(schedule.equals("NOT SCHEDULED"))
+			{
+				format = "%1$-37s %2$-15s";
+				line = String.format(format, name, schedule);
+			}
+			else
+			{
+				format = "%1$-37s %2$-15s %3$-7s";
+				line = String.format(format, name, schedule, program);
+			}
+			
+			taSch.append(line+"\n");
+		}
+	}
 
 }

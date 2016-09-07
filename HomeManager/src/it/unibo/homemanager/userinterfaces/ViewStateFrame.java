@@ -29,24 +29,25 @@ public class ViewStateFrame extends JFrame {
 	private JTextArea taDev;
 	
 	private RefreshThread refreshView;
-	private int refreshTime = 10000; //tempo (in ms) che intercorre tra due refresh
+	private int refreshTime = 10000; //time (in ms) between 2 refresh
+	//TuCSoN need almost 5 seconds to load all the devices!
+	//Don't set a refreshTime under 5 seconds
 	private JLabel lblNewLabel;
 	private JScrollPane spSch;
 	private JTextArea taSch;
-									 //per caricare tutti i dispositivi, Tucson impiega circa 5s
-									 //non usare un refresh sotto i 5 secondi!!!
+
 
 	/**
 	 * Create the frame.
 	 */
 	public ViewStateFrame(Vector t, ServiceFactory sf, ArrayList<ScheduledDevice> schDevs) {
 		setTitle("View State");
-		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);//prima di chiudersi, deve terminare il thread
-		addWindowListener(new WindowAdapter() { //azioni da fare durante la chiusura della form
+		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);//before closing, the thresh must be terminated
+		addWindowListener(new WindowAdapter() { //actions to do before closing the frame
 	        @Override
 	        public void windowClosing(WindowEvent event) {
-	        	refreshView.interrupt();//termina il thread
-	            dispose();//chiudi frame
+	        	refreshView.interrupt();//terminate the thread
+	            dispose();//close the frame
 	        }
 	    });
 		setBounds(100, 100, 548, 307);
@@ -91,7 +92,7 @@ public class ViewStateFrame extends JFrame {
 		lblNewLabel_1.setBounds(331, 252, 191, 14);
 		contentPane.add(lblNewLabel_1);
 		
-		refreshView = new RefreshThread(t, sf, schDevs, refreshTime, taDev, taSch); //thread che si occupa del refresh delle textArea
+		refreshView = new RefreshThread(t, sf, schDevs, refreshTime, taDev, taSch); //thread used for the refresh of the textArea
 		refreshView.start();
 	}
 }

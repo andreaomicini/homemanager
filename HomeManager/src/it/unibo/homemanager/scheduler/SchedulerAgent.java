@@ -43,28 +43,23 @@ public class SchedulerAgent extends AbstractTucsonAgent {
 	@Override
 	protected void main() {
 		
-		try
-        {   
+		try{   
 			while(true)
 			{	
 				synchronized(lock)
 				{
 					while (paused)
-					{
 						lock.wait();
-					}
 				}
 				
 				si.launch();
-				Thread.sleep(20000);//pausa tra uno schedule e quello successivo
+				Thread.sleep(20000);//sleep between a schedule and the next one
 			}
 		}
-		catch(InterruptedException e)
-		{
-			System.err.println("Errore");
+		catch(InterruptedException e){
+			System.err.println("Error");
 		}
-        catch(Exception e)
-        {
+        catch(Exception e){
         	e.printStackTrace();
         }
 	}

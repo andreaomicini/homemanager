@@ -6,10 +6,9 @@ public class ScheduledDevice {
 
 	private Device device;
 	private String scheduleState;
-	//può essere "SCHEDULED", "NOT SCHEDULED" o "RUNNING"
+	//it can be: "SCHEDULED", "NOT SCHEDULED" or "RUNNING"
 	private String program;
-	//questa variabile ha significato solo quando lo stato è impostato a SCHEDULED o RUNNING
-	
+	//this variable is used only when the schedule state is SCHEDULED or RUNNING	
 	
 	public ScheduledDevice(Device d) {
 		this(d, "NOT SCHEDULED");
@@ -42,7 +41,7 @@ public class ScheduledDevice {
 				 || scheduleState.equals("RUNNING"))
 			this.scheduleState = scheduleState;
 		else
-			throw new IllegalArgumentException();//parametro errato
+			throw new IllegalArgumentException();
 	}
 
 	public String getProgram() {

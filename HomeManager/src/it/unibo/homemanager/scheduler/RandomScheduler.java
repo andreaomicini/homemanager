@@ -23,8 +23,8 @@ import it.unibo.homemanager.util.Utilities;
 
 public class RandomScheduler implements ScheduleInterface {
 
-	private User usr; //per inviare i comandi, verranno utilizzate le autorizzazioni di usr
-	private String name; //nome rappresentativo dello schedule
+	private User usr; //used user's authorization for sending commands
+	private String name; //name of the schedule
 	private ServiceFactory sf;
     private RoomServiceInterface rs;
     private DeviceServiceInterface ds;
@@ -39,7 +39,6 @@ public class RandomScheduler implements ScheduleInterface {
         this.tid=tuple;
         name = "Random Scheduler";
 		
-		//ottengo le interfacce
 		rs = sf.getRoomServiceInterface();
 		ds = sf.getDeviceServiceInterface();
 	}
@@ -58,17 +57,17 @@ public class RandomScheduler implements ScheduleInterface {
 	public void launch() throws Exception {
 		
 		ArrayList<Device> devs;
-		String[] functions;
+		String[] programs;
 		Room room;
 		Device device;
-		String function;
+		String program;
 		
 		Random randomGen;
-		int devNumber, funcNumber;
-		int runningTime = 15000;//quanto tempo tengo attiva una funzione prima di sospenderla (in ms)
+		int devNumber, progNumber;
+		int runningTime = 15000;//time between starting and stopping the program (in ms)
 		
 		devs = ds.getDevices(db);
-		//rimuovo TV Plasma Panasonic. Utente grace non riesce ad accenderlo
+		//TV Plasma Panasonic removed. Grace user can't switch it on
 		devs.remove(2);
 
 		randomGen = new Random();
@@ -77,26 +76,25 @@ public class RandomScheduler implements ScheduleInterface {
 	    device = devs.get(devNumber);
 	    	
 	    room = rs.getRoomById(db, device.roomId);
-	    	
-	    //funzione random del dispositivo. (se trovata OFF, ripeto la ricerca)
+	    
+	    //random function for select the program to activate. If OFF returned, repeat the random function 
 	    while(true)
 	    {
-	       	functions = Utilities.getDevCmds(device.param);
-	       	funcNumber = randomGen.nextInt(functions.length);
-	       	function = functions[funcNumber];
+	       	programs = Utilities.getDevCmds(device.param);
+	       	progNumber = randomGen.nextInt(programs.length);
+	       	program = programs[progNumber];
 	        	
-	       	if(!function.equalsIgnoreCase("off"))
+	       	if(!program.equalsIgnoreCase("off"))
 	       		break;
 	    }
 			
-	    sendCmd(room, device, function, textF); //invia AVVIO
-	    System.err.println("***INVIO COMANDO: Stanza "+room.name+", Disp "+device.name+", Funz "+function);
-			
-	    //pausa tra avvio comando e sua terminazione
+	    sendCmd(room, device, program, textF); //send START
+	    System.err.println("Sending command START: Room "+room.name+", Dev "+device.name+", Prog "+program);
+		
 	    Thread.sleep(runningTime);
 	        
-		sendCmd(room, device, "off", textF); //invia STOP
-		System.err.println("***INVIO COMANDO STOP: Stanza "+room.name+", Disp "+device.name+", Funz "+"off");	
+		sendCmd(room, device, "off", textF); //send STOP
+		System.err.println("Sending command STOP: Room "+room.name+", Dev "+device.name+", Prog "+"off");	
 
 	}
 	
