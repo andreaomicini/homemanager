@@ -1,0 +1,55 @@
+package it.unibo.homemanager.scheduler;
+
+import java.util.Vector;
+
+import javax.swing.JTextField;
+
+import alice.logictuple.LogicTuple;
+import alice.logictuple.Value;
+import alice.tucson.api.EnhancedSynchACC;
+import alice.tucson.api.TucsonAgentId;
+import alice.tucson.api.TucsonMetaACC;
+import alice.tucson.api.TucsonTupleCentreId;
+import it.unibo.homemanager.tablemap.Device;
+import it.unibo.homemanager.tablemap.Room;
+import it.unibo.homemanager.tablemap.User;
+import it.unibo.homemanager.util.Utilities;
+
+public class RunningThread extends Thread {
+	
+	private ScheduledDevice schDev;
+	private Room r;
+	private User u;
+	private Vector tid;
+	private int runningTime;
+	
+	public RunningThread(Room r, ScheduledDevice schDev, Vector tid) {
+		this.schDev 	 = schDev;
+		this.r 			 = r;
+		this.tid 		 = tid;
+	}
+	
+	public void initialize(User user, int runningTime)
+	{
+		this.u = user;
+		this.runningTime = runningTime;
+	}
+	
+	public void run()
+	{
+		try {
+			RunningThread.sleep(runningTime);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		//sending STOP cmd
+		Utilities.sendCmd(r, schDev.getDevice(), "off", u, tid);
+		
+		schDev.setScheduleState("NOT SCHEDULED");
+		schDev.setProgram("off");
+		
+		return;//thread close itself when its job is finished
+	}
+}

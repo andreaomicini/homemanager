@@ -14,7 +14,7 @@ import it.unibo.homemanager.ServiceFactory;
 import it.unibo.homemanager.dbmanagement.Database;
 import it.unibo.homemanager.scheduler.RandomScheduler;
 import it.unibo.homemanager.scheduler.RapidScheduler;
-import it.unibo.homemanager.scheduler.ScheduleInterface;
+import it.unibo.homemanager.scheduler.AbstractScheduler;
 import it.unibo.homemanager.scheduler.ScheduledDevice;
 import it.unibo.homemanager.scheduler.SchedulerAgent;
 import it.unibo.homemanager.tablemap.*;
@@ -49,7 +49,7 @@ public class IssueCmdPanel extends javax.swing.JPanel {
     
     private MainPanel mp;
     private SchedulerAgent sa;
-    private ArrayList<ScheduleInterface> schedulersList;
+    private ArrayList<AbstractScheduler> schedulersList;
     
     //private TupleCentreId tid;
     
@@ -64,21 +64,23 @@ public class IssueCmdPanel extends javax.swing.JPanel {
         this.sf = sf;
         try {
         	this.database = sf.getDatabaseInterface();
+            rs = sf.getRoomServiceInterface();
         	ds = sf.getDeviceServiceInterface();
         	sa = new SchedulerAgent("schedulerAgent");
         	sa.go();
         	
-        	//input of schedule algorithms
-        	schedulersList = new ArrayList<ScheduleInterface>();
-        	schedulersList.add(new RandomScheduler(sf, database, tCmd, tid));
-        	schedulersList.add(new RapidScheduler(sf, database, tCmd, tid));
-        	
         	//set schDevs with all devices. Each device setted with the schedule state "NOT SCHEDULED"
     		schDevs = new ArrayList<ScheduledDevice>();
             allDevs = ds.getDevices(database);
-    			
+            
     		for (int i=0; i<allDevs.size(); i++)
-    			schDevs.add(new ScheduledDevice(allDevs.get(i)));
+    			schDevs.add(
+    					new ScheduledDevice( rs.getRoomById(database, allDevs.get(i).roomId), allDevs.get(i), tid ));
+    		
+    		//input of schedule algorithms
+        	schedulersList = new ArrayList<AbstractScheduler>();
+        	schedulersList.add(new RandomScheduler(sf, schDevs, tCmd, tid));
+        	schedulersList.add(new RapidScheduler(sf, schDevs, tCmd, tid));
     		
         } catch (Exception ex) {
         	Logger.getLogger(IssueCmdPanel.class.getName()).log(Level.SEVERE, null, ex);
@@ -109,7 +111,6 @@ public class IssueCmdPanel extends javax.swing.JPanel {
         tCmd.setText(""); // empty cmd text-field
         
         // fill combo-box with rooms
-        rs = sf.getRoomServiceInterface();
         try {
             rooms = rs.getRooms(database.getDatabase());
         }
@@ -451,7 +452,7 @@ public class IssueCmdPanel extends javax.swing.JPanel {
     			//saving current schedule state and current program
     			currentSchState = sd.getScheduleState();
     			currentSchProg  = sd.getProgram();
-    			runningProg=getDevStateByID(dev.idDev);
+    			runningProg		= Utilities.getDevStateByID(dev.idDev, tid);
     			
     			switch(currentSchState){
 	    		case "NOT SCHEDULED":
@@ -459,14 +460,14 @@ public class IssueCmdPanel extends javax.swing.JPanel {
 	    				if(nextProg.equals("off"))
 	    					errorMsg="The device "+dev.name+" you are trying to turn off, is already off.";
 	    				else{
-	    					sendCmd();
 	    					showInfoMsg=true;
+	    					Utilities.sendCmd(r, dev, nextProg, usr, tid);
 	    					infoMsg="Program '"+nextProg+"' setted correcty on the device "+dev.name+".";
 	    				}
 	    			else
 						if(nextProg.equals("off")){
 							showInfoMsg=true;
-							sendCmd();
+							Utilities.sendCmd(r, dev, nextProg, usr, tid);
 							infoMsg="The device "+dev.name+" was running a program ("+runningProg+")"
 									+"\nProgram terminated and device turned off.";
 						}
@@ -475,7 +476,7 @@ public class IssueCmdPanel extends javax.swing.JPanel {
 								errorMsg="The device is already running the program you want to start ("+runningProg+").";
 							else{
 								showInfoMsg=true;
-								sendCmd();
+								Utilities.sendCmd(r, dev, nextProg, usr, tid);
 								infoMsg="The device "+dev.name+" was running a program ("+runningProg+")"
 										+"\nProgram terminated and setted a new program ("+nextProg+").";
 							}
@@ -486,8 +487,8 @@ public class IssueCmdPanel extends javax.swing.JPanel {
 	    					errorMsg="The device "+dev.name+" you are trying to turn off, is already off."+
 	    							"\nThe device also have a schedule ("+currentSchProg+")";
 	    				else{
-	    					sendCmd();
 	    					showInfoMsg=true;
+	    					Utilities.sendCmd(r, dev, nextProg, usr, tid);
 	    					sd.setScheduleState("NOT SCHEDULED");
 	    					sd.setProgram("off");
 	    					infoMsg="Program '"+nextProg+"' setted correcty on the device "+dev.name
@@ -500,10 +501,13 @@ public class IssueCmdPanel extends javax.swing.JPanel {
 	    			break;
 	    		case "RUNNING":
 	    			if(runningProg.equals(currentSchProg)){
-	    				sendCmd();
     					showInfoMsg=true;
+    					
+    					sd.getrThread().interrupt();
     					sd.setScheduleState("NOT SCHEDULED");
     					sd.setProgram("off");
+    					
+    					Utilities.sendCmd(r, dev, nextProg, usr, tid);
 	    				
 	    				if(nextProg.equals("off"))
 	    					infoMsg="The device "+dev.name+" was running a scheduled program ("+currentSchProg+")"
@@ -565,7 +569,7 @@ public class IssueCmdPanel extends javax.swing.JPanel {
     			//saving previous schedule state and current program
     			previousSchState = sd.getScheduleState();
     			previousSchProg  = sd.getProgram();
-    			runningProg=getDevStateByID(dev.idDev);
+    			runningProg		 = Utilities.getDevStateByID(dev.idDev, tid);
 
     	    	switch (previousSchState){
     	    		case "NOT SCHEDULED":
@@ -620,31 +624,6 @@ public class IssueCmdPanel extends javax.swing.JPanel {
     		javax.swing.JOptionPane.showMessageDialog(null,errorMsg,
                     "Error",javax.swing.JOptionPane.ERROR_MESSAGE);
     	}
-    }
-    
-    private String getDevStateByID(int id)
-    {
-    	String devState="";
-    	try {
-    		TucsonAgentId agent = new TucsonAgentId("getStateAgent");
-    		EnhancedSynchACC acc = TucsonMetaACC.getContext(agent);
-    		LogicTuple devCurrStatusTemplate = new LogicTuple("dev_curr_st", new Value(id),new Var("X"));
-        
-    		for(int i=0; i<tid.size();i++){
-    			ITucsonOperation op_rdp = acc.rdp((TucsonTupleCentreId)tid.elementAt(i), devCurrStatusTemplate, null);
-        
-    			if(op_rdp.isResultSuccess()){
-    				LogicTuple state = op_rdp.getLogicTupleResult();
-    				devState=state.getArg(1).toString();
-    				break;
-    			}
-    		}
-    		acc.exit();
-    	}
-    	catch(Exception ex) {
-    		ex.printStackTrace();
-    	}
-    	return devState;
     }
     
     private void btViewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btIssueActionPerformed
@@ -748,26 +727,6 @@ public class IssueCmdPanel extends javax.swing.JPanel {
         if(cbDevice.getSelectedItem() != null)
             cbCmd.setEnabled(true);
     }//GEN-LAST:event_cbDeviceActionPerformed
-   
-    private void sendCmd() {
-        try {
-            //TucsonContext ctx = Tucson.enterDefaultContext();
-            TucsonAgentId agent = new TucsonAgentId("sendCmdAgent");
-            EnhancedSynchACC acc = TucsonMetaACC.getContext(agent);
-            
-            LogicTuple cmd = new LogicTuple("send_cmd",new Value(usr.idUser),new Value(r.idRoom),
-                new Value(d.idDev),new Value(cbCmd.getSelectedItem().toString()));
-            
-            acc.out((TucsonTupleCentreId)tid.elementAt(r.idRoom-1), cmd, null);
-           // ctx.out((TupleCentreId)tid.elementAt(r.idRoom-1),cmd);
-            Utilities.insertTupleInto((TucsonTupleCentreId)tid.elementAt(r.idRoom-1), cmd);
-            System.err.println("CMD SENT: "+this.tCmd.getText()+" / "+cmd);
-            acc.exit();
-        }
-        catch(Exception ex) {
-            ex.printStackTrace();
-        }
-    }
     
     private void rbSelectionActionPerformed(java.awt.event.ActionEvent evt)
     {

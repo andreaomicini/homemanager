@@ -1,0 +1,58 @@
+package it.unibo.homemanager.scheduler;
+
+import it.unibo.homemanager.tablemap.Device;
+import it.unibo.homemanager.tablemap.Room;
+
+public class ScheduledDevice {
+	private Room room;
+	private Device device;
+	private String scheduleState;
+	//it can be: "SCHEDULED", "NOT SCHEDULED" or "RUNNING"
+	private String program;
+	//this variable is used only when the schedule state is SCHEDULED or RUNNING
+	private RunningThread rThread; //thread that keep track the execution of a scheduled program
+	
+	public ScheduledDevice(Room r, Device d) {
+		this(r, d, "NOT SCHEDULED");
+	}
+	
+	public ScheduledDevice(Room r, Device d, String ss) {
+		this(r, d, ss, "");
+	}
+	
+	public ScheduledDevice(Room r, Device d, String ss, String prog) {
+		this.room = r;
+		this.device = d;
+		setScheduleState(ss);
+		this.program = prog;
+		rThread = new RunningThread(r, this, tid, runningTime);
+	}
+	
+	public Device getDevice() {
+		return device;
+	}
+
+	public void setDevice(Device device) {
+		this.device = device;
+	}
+
+	public String getScheduleState() {
+		return scheduleState;
+	}
+
+	public void setScheduleState(String scheduleState) {
+		if (scheduleState.equals("SCHEDULED") || scheduleState.equals("NOT SCHEDULED")
+				 || scheduleState.equals("RUNNING"))
+			this.scheduleState = scheduleState;
+		else
+			throw new IllegalArgumentException();
+	}
+
+	public String getProgram() {
+		return program;
+	}
+
+	public void setProgram(String program) {
+		this.program = program;
+	}
+}

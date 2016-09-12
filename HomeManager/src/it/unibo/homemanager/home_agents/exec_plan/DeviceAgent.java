@@ -92,7 +92,7 @@ public class DeviceAgent extends AbstractTucsonAgent {
                 // execute command (only if state is changed)
                 if(state.compareTo(st) != 0) {
                     // if device is a washer, then we have to consider also program duration
-                    if(dev.type == "W") {
+                    if(dev.type.equals("'W'")) {
                         // if command is not "off" (i.e. this is a program)
                         if(!st.equals("off")) {
                             // if current state is not "off" (i.e. this is another program):
@@ -149,7 +149,7 @@ public class DeviceAgent extends AbstractTucsonAgent {
             acc.out(home_room,new LogicTuple("dev_curr_act",new Value(dev.idDev),
                     new Value(wp.duration),new Value(dev.energy),new Value(dev.roomId)), null);
             tp.appendText("checkWasherProgram: start program "+st+" of device" +
-                    dev.name+" for "+(wp.duration/1000)+" seconds.");
+                    dev.name+" for "+wp.duration+" seconds.");
         }
         catch(Exception ex) {
             ex.printStackTrace();

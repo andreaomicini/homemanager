@@ -17,105 +17,78 @@ import it.unibo.homemanager.dbmanagement.Database;
 import it.unibo.homemanager.tablemap.Device;
 import it.unibo.homemanager.tablemap.Room;
 import it.unibo.homemanager.tablemap.User;
+import it.unibo.homemanager.tablemap.WasherProgram;
 import it.unibo.homemanager.tablemap.ServicesInterfaces.DeviceServiceInterface;
 import it.unibo.homemanager.tablemap.ServicesInterfaces.RoomServiceInterface;
+import it.unibo.homemanager.tablemap.ServicesInterfaces.WasherProgramServiceInterface;
 import it.unibo.homemanager.util.Utilities;
 
-public class RandomScheduler implements ScheduleInterface {
-
-	private User usr; //used user's authorization for sending commands
-	private String name; //name of the schedule
-	private ServiceFactory sf;
-    private RoomServiceInterface rs;
-    private DeviceServiceInterface ds;
-	private Database db;
-	private JTextField textF;
-	private Vector tid;
+public class RandomScheduler extends AbstractScheduler{
 	
-	public RandomScheduler(ServiceFactory sf, Database db, JTextField textF, Vector tuple) {
-		this.sf=sf;
-		this.db=db;
-        this.textF=textF;
-        this.tid=tuple;
-        name = "Random Scheduler";
-		
-		rs = sf.getRoomServiceInterface();
-		ds = sf.getDeviceServiceInterface();
-	}
-	
-	public void setUser(User u)
-	{
-		usr = u;
-	}
-	
-	public String getName()
-	{
-		return name;
+	public RandomScheduler(ServiceFactory sf, 
+						ArrayList<ScheduledDevice> allSchDevs, JTextField textF, Vector tuple) throws Exception {
+		super(sf, "Random Scheduler", allSchDevs, textF, tuple);
 	}
 
 	@Override
 	public void launch() throws Exception {
+		ArrayList<ScheduledDevice> schDevs;
 		
-		ArrayList<Device> devs;
-		String[] programs;
+		ScheduledDevice schDev;
+		String program="";
 		Room room;
 		Device device;
-		String program;
 		
 		Random randomGen;
-		int devNumber, progNumber;
+		int devNumber;
 		int runningTime = 15000;//time between starting and stopping the program (in ms)
 		
-		devs = ds.getDevices(db);
-		//TV Plasma Panasonic removed. Grace user can't switch it on
-		devs.remove(2);
-
+		//just ScheduledDevices with "SCHEDULE" state
+		schDevs = Utilities.findDevicesFromScheduleState(allSchDevs, "SCHEDULED");
+		
+		if(schDevs.isEmpty())
+			return;
+		
 		randomGen = new Random();
 		
-		devNumber = randomGen.nextInt(devs.size());
-	    device = devs.get(devNumber);
-	    	
+		while(true){//exit when the device TV Plasma Panasonic is not selected randomly
+			devNumber = randomGen.nextInt(schDevs.size());
+			schDev = schDevs.get(devNumber);
+			device = schDev.getDevice();
+			program = schDev.getProgram();
+			
+			if(!device.name.equals("'TV Plasma Panasonic TX-32PS12D'"))
+				break;
+		}
+		
 	    room = rs.getRoomById(db, device.roomId);
 	    
-	    //random function for select the program to activate. If OFF returned, repeat the random function 
-	    while(true)
-	    {
-	       	programs = Utilities.getDevCmds(device.param);
-	       	progNumber = randomGen.nextInt(programs.length);
-	       	program = programs[progNumber];
-	        	
-	       	if(!program.equalsIgnoreCase("off"))
-	       		break;
+	    if(program.equals("off")) //if "SCHEDULED - OFF" 
+	    {	//it should never be the case. SCHEDULED OFF intercepted by IssueCmdPanel and managed by it
+	    	schDev.setScheduleState("NOT SCHEDULED");
+	    	schDev.setProgram("off");
+	    	return;
 	    }
-			
-	    sendCmd(room, device, program, textF); //send START
-	    System.err.println("Sending command START: Room "+room.name+", Dev "+device.name+", Prog "+program);
-		
-	    Thread.sleep(runningTime);
-	        
-		sendCmd(room, device, "off", textF); //send STOP
-		System.err.println("Sending command STOP: Room "+room.name+", Dev "+device.name+", Prog "+"off");	
-
+	    
+	    if(device.type.equals("'W'")){//if device is a washer
+	    	WasherProgramServiceInterface ws = sf.getWasherProgramServiceInterface();
+	    	WasherProgram wp = ws.getWasherProgram(db.getDatabase(),program,device.idDev);
+	    	runningTime = wp.duration*1000;
+	    }//else: default runningTime is used
+	    
+	    if(schDev.getrThread().getState() != Thread.State.NEW){
+	    	//if a thread is started, then interrupted, a new thread has to be created
+	    	//A thread can't be started 2 times
+	    	RunningThread rThread = new RunningThread(room, schDev, tid);
+	    	schDev.setrThread(rThread);
+	    }
+	    
+	    schDev.getrThread().initialize(usr, runningTime);
+	    
+	    Utilities.sendCmd(room, device, program, usr, tid);
+	    schDev.setScheduleState("RUNNING");
+	    
+	    schDev.getrThread().start();
 	}
-	
-	private void sendCmd(Room r, Device d, String function, JTextField textF) {
-        try {
-            //TucsonContext ctx = Tucson.enterDefaultContext();
-            TucsonAgentId agent = new TucsonAgentId("sendCmdAgent");
-            EnhancedSynchACC acc = TucsonMetaACC.getContext(agent);
-            
-            LogicTuple cmd = new LogicTuple("send_cmd",new Value(this.usr.idUser),new Value(r.idRoom),
-                new Value(d.idDev),new Value(function));
-            
-            acc.out((TucsonTupleCentreId)tid.elementAt(r.idRoom-1), cmd, null);
-           // ctx.out((TupleCentreId)tid.elementAt(r.idRoom-1),cmd);
-            Utilities.insertTupleInto((TucsonTupleCentreId)tid.elementAt(r.idRoom-1), cmd);
-            System.err.println("CMD SENT: "+textF.getText()+" / "+cmd);
-            acc.exit();
-        }
-        catch(Exception ex) {
-            ex.printStackTrace();
-        }
-    }
 
 }

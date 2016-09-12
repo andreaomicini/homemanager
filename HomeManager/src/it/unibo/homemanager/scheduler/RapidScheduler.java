@@ -21,34 +21,11 @@ import it.unibo.homemanager.tablemap.ServicesInterfaces.DeviceServiceInterface;
 import it.unibo.homemanager.tablemap.ServicesInterfaces.RoomServiceInterface;
 import it.unibo.homemanager.util.Utilities;
 
-public class RapidScheduler implements ScheduleInterface {
+public class RapidScheduler extends AbstractScheduler {
 
-	private User usr; //used user's authorization for sending commands
-	private String name; //name of the schedule
-	private ServiceFactory sf;
-    private RoomServiceInterface rs;
-    private DeviceServiceInterface ds;
-	private Database db;
-	private JTextField textF;
-	private Vector tid;
-	
-	public RapidScheduler(ServiceFactory sf, Database db, JTextField textF, Vector tuple) {
-		this.sf=sf;
-		this.db=db;
-        this.textF=textF;
-        this.tid=tuple;
-        name = "Rapid Scheduler";
-		
-		rs = sf.getRoomServiceInterface();
-		ds = sf.getDeviceServiceInterface();
-	}
-
-	public void setUser(User u) {
-		usr = u;
-	}
-	
-	public String getName() {
-		return name;
+	public RapidScheduler(ServiceFactory sf, 
+						ArrayList<ScheduledDevice> allSchDevs, JTextField textF, Vector tuple) throws Exception {
+		super(sf, "Rapid Scheduler", allSchDevs, textF, tuple);
 	}
 
 	public void launch() throws Exception { //filler code. Same code as RandomScheduler. Just to have 2 schedule algorithms
@@ -62,10 +39,10 @@ public class RapidScheduler implements ScheduleInterface {
 		int devNumber, progNumber;
 		int runningTime = 15000;//time between starting and stopping the program (in ms)
 		
-		devs = ds.getDevices(db);
+		//devs = ds.getDevices(db);
 		//TV Plasma Panasonic removed. Grace user can't switch it on
-		devs.remove(2);
-
+		//devs.remove(2);
+/*
 		randomGen = new Random();
 		
 		devNumber = randomGen.nextInt(devs.size());
@@ -91,7 +68,7 @@ public class RapidScheduler implements ScheduleInterface {
 	        
 		sendCmd(room, device, "off", textF); //send STOP
 		System.err.println("Sending command STOP: Room "+room.name+", Dev "+device.name+", Prog "+"off");	
-
+*/
 	}
 
 	private void sendCmd(Room r, Device d, String function, JTextField textF) {

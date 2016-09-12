@@ -9,11 +9,8 @@
 <fullyQualifiedTypeName name="it.unibo.homemanager.dbmanagement.Database"/>
 <fullyQualifiedTypeName name="java.util.Random"/>
 <fullyQualifiedTypeName name="it.unibo.homemanager.tablemap.ServicesInterfaces.DeviceServiceInterface"/>
-<fullyQualifiedTypeName name="java.lang.Thread"/>
 <fullyQualifiedTypeName name="it.unibo.homemanager.scheduler.ScheduleInterface"/>
 <fullyQualifiedTypeName name="it.unibo.homemanager.scheduler.RandomScheduler"/>
-<fullyQualifiedTypeName name="it.unibo.homemanager.tablemap.User"/>
-<fullyQualifiedTypeName name="java.util.Vector"/>
 <fullyQualifiedTypeName name="java.awt.event.WindowAdapter"/>
 <fullyQualifiedTypeName name="java.awt.event.WindowEvent"/>
 <fullyQualifiedTypeName name="javax.swing.JPanel"/>
@@ -23,5 +20,11 @@
 <fullyQualifiedTypeName name="java.lang.IllegalArgumentException"/>
 <fullyQualifiedTypeName name="java.util.ArrayList"/>
 <fullyQualifiedTypeName name="java.lang.System"/>
+<fullyQualifiedTypeName name="java.lang.Thread"/>
 <fullyQualifiedTypeName name="it.unibo.homemanager.scheduler.ScheduledDevice"/>
+<fullyQualifiedTypeName name="it.unibo.homemanager.tablemap.User"/>
+<fullyQualifiedTypeName name="it.unibo.homemanager.util.Utilities"/>
+<fullyQualifiedTypeName name="it.unibo.homemanager.tablemap.Room"/>
+<fullyQualifiedTypeName name="java.util.Vector"/>
+<fullyQualifiedTypeName name="it.unibo.homemanager.scheduler.RunningThread"/>
 </qualifiedTypeNameHistroy>

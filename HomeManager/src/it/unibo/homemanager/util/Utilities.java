@@ -7,6 +7,8 @@
 package it.unibo.homemanager.util;
 
 import alice.logictuple.LogicTuple;
+import alice.logictuple.Value;
+import alice.logictuple.Var;
 import alice.tucson.api.EnhancedSynchACC;
 import alice.tucson.api.ITucsonOperation;
 import alice.tucson.api.TucsonAgentId;
@@ -14,8 +16,10 @@ import alice.tucson.api.TucsonMetaACC;
 import alice.tucson.api.TucsonTupleCentreId;
 import it.unibo.homemanager.ServiceFactory;
 import it.unibo.homemanager.dbmanagement.Database;
+import it.unibo.homemanager.scheduler.ScheduledDevice;
 import it.unibo.homemanager.tablemap.Device;
 import it.unibo.homemanager.tablemap.Room;
+import it.unibo.homemanager.tablemap.User;
 import it.unibo.homemanager.tablemap.ServicesInterfaces.DeviceServiceInterface;
 import it.unibo.homemanager.tablemap.ServicesInterfaces.RoomServiceInterface;
 import java.util.ArrayList;
@@ -23,6 +27,8 @@ import java.util.Hashtable;
 import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import javax.swing.JTextField;
 
 /**
  *
@@ -211,4 +217,60 @@ public class Utilities {
         return "cons";
     }
     
+    public static ArrayList<ScheduledDevice> findDevicesFromScheduleState(ArrayList<ScheduledDevice> allSchDevs, String schedule)
+    {
+    	ArrayList<ScheduledDevice> schDevs = new ArrayList<ScheduledDevice>();
+    	
+    	for(int i=0; i<allSchDevs.size(); i++)
+    		if(allSchDevs.get(i).getScheduleState().equals(schedule))
+    			schDevs.add(allSchDevs.get(i));
+    	
+    	return schDevs;
+    }
+    
+    public static void sendCmd(Room r, Device d, String prog, User u, Vector tid) {
+    	try {
+            //TucsonContext ctx = Tucson.enterDefaultContext();
+            TucsonAgentId agent = new TucsonAgentId("sendCmdAgent");
+            EnhancedSynchACC acc = TucsonMetaACC.getContext(agent);
+            
+            LogicTuple cmd = new LogicTuple("send_cmd",new Value(u.idUser),new Value(r.idRoom),
+            								new Value(d.idDev),new Value(prog));
+            
+            acc.out((TucsonTupleCentreId)tid.elementAt(r.idRoom-1), cmd, null);
+           // ctx.out((TupleCentreId)tid.elementAt(r.idRoom-1),cmd);
+            Utilities.insertTupleInto((TucsonTupleCentreId)tid.elementAt(r.idRoom-1), cmd);
+            
+            System.err.println("CMD SENT: send_cmd("+r.name+","+d.name+","+prog+") / "+cmd);
+            acc.exit();
+        }
+        catch(Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+    
+    public static String getDevStateByID(int id, Vector tid)
+    {
+    	String devState="";
+    	try {
+    		TucsonAgentId agent = new TucsonAgentId("getStateAgent");
+    		EnhancedSynchACC acc = TucsonMetaACC.getContext(agent);
+    		LogicTuple devCurrStatusTemplate = new LogicTuple("dev_curr_st", new Value(id),new Var("X"));
+        
+    		for(int i=0; i<tid.size();i++){
+    			ITucsonOperation op_rdp = acc.rdp((TucsonTupleCentreId)tid.elementAt(i), devCurrStatusTemplate, null);
+        
+    			if(op_rdp.isResultSuccess()){
+    				LogicTuple state = op_rdp.getLogicTupleResult();
+    				devState=state.getArg(1).toString();
+    				break;
+    			}
+    		}
+    		acc.exit();
+    	}
+    	catch(Exception ex) {
+    		ex.printStackTrace();
+    	}
+    	return devState;
+    }
 }

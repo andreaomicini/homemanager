@@ -1,0 +1,9 @@
+package it.unibo.homemanager.scheduler;
+
+public abstract class AbstractScheduler {
+
+	public AbstractScheduler() {
+		// TODO Auto-generated constructor stub
+	}
+
+}

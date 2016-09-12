@@ -1,0 +1,40 @@
+package it.unibo.homemanager.scheduler;
+
+import java.util.Vector;
+import javax.swing.JTextField;
+import it.unibo.homemanager.ServiceFactory;
+import it.unibo.homemanager.dbmanagement.Database;
+import it.unibo.homemanager.tablemap.User;
+import it.unibo.homemanager.tablemap.ServicesInterfaces.DeviceServiceInterface;
+import it.unibo.homemanager.tablemap.ServicesInterfaces.RoomServiceInterface;
+
+public abstract class AbstractScheduler {
+
+	protected ServiceFactory sf;
+	protected Database db;
+	protected JTextField textF;
+	protected Vector tid;
+	protected String name; //name of the schedule
+	protected RoomServiceInterface rs;
+	protected User usr; //used user's authorization for sending commands
+
+	public AbstractScheduler(String name, RoomServiceInterface rs, Database db, JTextField textF, Vector tuple) {
+		this.sf=sf;
+		this.db=db;
+        this.textF=textF;
+        this.tid=tuple;
+        this.name = name;
+        this.rs = rs;
+	}
+
+	public void setUser(User u){
+		usr = u;
+	}
+	
+	public String getName(){
+		return name;
+	}
+	
+	public abstract void launch() throws Exception;
+	
+}

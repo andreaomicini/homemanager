@@ -1,0 +1,102 @@
+package it.unibo.homemanager.scheduler;
+
+import java.util.ArrayList;
+import java.util.Random;
+import java.util.Vector;
+
+import javax.swing.JTextField;
+
+import alice.logictuple.LogicTuple;
+import alice.logictuple.Value;
+import alice.tucson.api.EnhancedSynchACC;
+import alice.tucson.api.TucsonAgentId;
+import alice.tucson.api.TucsonMetaACC;
+import alice.tucson.api.TucsonTupleCentreId;
+import it.unibo.homemanager.ServiceFactory;
+import it.unibo.homemanager.dbmanagement.Database;
+import it.unibo.homemanager.tablemap.Device;
+import it.unibo.homemanager.tablemap.Room;
+import it.unibo.homemanager.tablemap.User;
+import it.unibo.homemanager.tablemap.ServicesInterfaces.DeviceServiceInterface;
+import it.unibo.homemanager.tablemap.ServicesInterfaces.RoomServiceInterface;
+import it.unibo.homemanager.util.Utilities;
+
+public class RandomScheduler extends AbstractScheduler{
+	
+	public RandomScheduler(RoomServiceInterface rs, Database db, 
+						ArrayList<ScheduledDevice> allSchDevs, JTextField textF, Vector tuple) {
+		super("Random Scheduler", rs, db, allSchDevs, textF, tuple);
+	}
+
+	@Override
+	public void launch() throws Exception {
+		//just ScheduleDevices with "SCHEDULE" state
+		ArrayList<ScheduledDevice> schDevs = Utilities.findDevicesFromScheduleState(allSchDevs, "SCHEDULED");
+		
+		//if schDevs is empty, RandomScheduler stops and check for scheduled devices every 30 seconds
+		while(true)
+			if(schDevs.isEmpty())
+				Thread.sleep(30000);
+			else
+				break;
+		
+		ScheduledDevice schDev;
+		String[] programs;
+		Room room;
+		Device device;
+		String program;
+		
+		Random randomGen;
+		int devNumber, progNumber;
+		int runningTime = 15000;//time between starting and stopping the program (in ms)
+		
+		randomGen = new Random();
+		
+		while(true){//exit when the device TV Plasma Panasonic is not selected randomly
+			devNumber = randomGen.nextInt(schDevs.size());
+			schDev = schDevs.get(devNumber);
+			device = schDev.getDevice();
+			
+			if(!device.name.equals("'TV Plasma Panasonic TX-32PS12D'"))
+				break;
+		}
+		
+	    room = rs.getRoomById(db, device.roomId);
+	    
+	    if(schDev.getProgram().equals("off")) //if "SCHEDULED OFF" 
+	    {	//it should never be the case. SCHEDULED OFF intercepted by IssueCmdPanel and dealed with it
+	    	schDev.setScheduleState("NOT SCHEDULED");
+	    	schDev.setProgram("off");
+	    	return;
+	    }
+	    
+	    //if SCHEDULED PROGRAM
+	    Utilities.sendCmd(room, device, schDev.getProgram(), usr, tid);
+	    
+	    //new thread();
+	    //RunningThread rThread = new RunningThread(room, schDev, usr, tid, 12345);
+	    
+	    //runningThread.setUser
+	    //runningThread.start
+	    
+	    /*//random function for select the program to activate. If OFF returned, repeat the random function 
+	    while(true)
+	    {
+	       	programs = Utilities.getDevCmds(device.param);
+	       	progNumber = randomGen.nextInt(programs.length);
+	       	program = programs[progNumber];
+	        	
+	       	if(!program.equalsIgnoreCase("off"))
+	       		break;
+	    }*/
+			
+	    //sendCmd(room, device, program, textF); //send START
+	    //System.err.println("Sending command START: Room "+room.name+", Dev "+device.name+", Prog "+program);
+		
+	    Thread.sleep(runningTime);
+	    
+		Utilities.sendCmd(room, device, "off", usr, tid);
+		
+	}
+
+}
