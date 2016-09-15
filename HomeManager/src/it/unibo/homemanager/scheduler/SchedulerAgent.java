@@ -34,7 +34,7 @@ public class SchedulerAgent extends AbstractTucsonAgent {
 	public final Object lock = new Object();
 	public volatile boolean paused = true;
 	
-	private AbstractScheduler scheduler;
+	private AbstractScheduler absScheduler;
 	
 	public SchedulerAgent(String id) throws TucsonInvalidAgentIdException {
         super(id);
@@ -42,17 +42,13 @@ public class SchedulerAgent extends AbstractTucsonAgent {
 	
 	@Override
 	protected void main() {
-		
 		try{   
-			while(true)
-			{	
-				synchronized(lock)
-				{
+			while(true){	
+				synchronized(lock){
 					while (paused)
 						lock.wait();
 				}
-				
-				scheduler.launch();
+				absScheduler.launch();
 				Thread.sleep(20000);//sleep between a schedule and the next one
 			}
 		}
@@ -66,12 +62,12 @@ public class SchedulerAgent extends AbstractTucsonAgent {
 	
 	public void setSchedule(AbstractScheduler s)
 	{
-		scheduler = s;
+		absScheduler = s;
 	}
 	
 	public AbstractScheduler getSchedule()
 	{
-		return scheduler;
+		return absScheduler;
 	}
 
 	@Override

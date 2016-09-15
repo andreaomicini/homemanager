@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <persistency>
-    <snapshot tc="'@'(db,':'(localhost,'20504'))" time="2016-05-22_18.04.54">
+    <snapshot tc="'@'(db,':'(localhost,'20504'))" time="2016-09-14_19.08.55">
         <tuples>
             <tuple>device(1,'Stereo Philips MCM 190/22',20,'on;off;cd;tuner','R',2)</tuple>
             <tuple>device(2,'TV Plasma Samsung PS 42C7H',20,'on;off','R',2)</tuple>
             <tuple>device(3,'TV Plasma Panasonic TX-32PS12D',20,'on;off','R',3)</tuple>
-            <tuple>device(4,'Washer Hoover Vision VHD816PI-30',1.52,'prog_A;prog_B;prog_C;prog_D;prog_E;off','W',4)</tuple>
+            <tuple>device(4,'Washer Hoover Vision VHD816PI-30',1.52,'prog_A;prog_B;prog_C;prog_D;prog_E;prog_F;off','W',4)</tuple>
             <tuple>device(5,'Captain Oven',40,'on;off','E',5)</tuple>
             <tuple>device(6,'Condizionatore Freezy',30,'on;off','E',2)</tuple>
             <tuple>device(7,'Riscaldamento hot',30,'on;off','E',2)</tuple>
@@ -14,6 +14,7 @@
             <tuple>washer_programs(3,4,prog_C,2000)</tuple>
             <tuple>washer_programs(4,4,prog_D,1000)</tuple>
             <tuple>washer_programs(5,4,prog_E,1800)</tuple>
+            <tuple>washer_programs(6,4,prog_F,10)</tuple>
             <tuple>sensor(1,'HALL_1',1)</tuple>
             <tuple>sensor(2,'HALL_2',1)</tuple>
             <tuple>sensor(3,'DINING_ROOM_1',2)</tuple>
@@ -49,7 +50,7 @@
         <specTuples/>
         <predicates/>
     </snapshot>
-<updates time="2016-05-22_18.04.54">
+<updates time="2016-09-14_19.08.55">
         <update action="addition" subject="tuple">is_persistent(db)</update>
     </updates>
 </persistency>

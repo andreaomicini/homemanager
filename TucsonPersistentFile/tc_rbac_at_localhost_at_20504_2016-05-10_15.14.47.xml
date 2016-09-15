@@ -22,6 +22,7 @@
             <tuple>ass_roles_perm('Genitore','Bagno_Privato')</tuple>
             <tuple>ass_roles_perm('Genitore','Studio')</tuple>
             <tuple>ass_roles_perm('Genitore','Ele_Cottura')</tuple>
+			<tuple>ass_roles_perm('Genitore','Ele_Temperatura')</tuple>
             <tuple>ass_roles_perm('Genitore','Garage')</tuple>
             <tuple>visitor(1,'Patrick','Jones')</tuple>
             <tuple>role_set_dsd(rs_figlio_bambino,['Bambino','Figlio'])</tuple>
@@ -174,6 +175,7 @@
             <tuple>dev_rule(5,'Home_Entertainment','Bambino',['_'],['13:10','13:15'],['_','_'],['Monday','Friday'])</tuple>
             <tuple>dev_rule(6,'Ele_Cottura','Genitore',['_'],['_','_'],['_','_'],['_','_'])</tuple>
             <tuple>dev_rule(7,'Ele_Pulitura','Genitore',['_'],['_','_'],['_','_'],['_','_'])</tuple>
+			<tuple>dev_rule(8,'Ele_Temperatura','Genitore',['_'],['_','_'],['_','_'],['_','_'])</tuple>
             <tuple>calc_length(ass_user_roles(_0,'Genitore'),ass_user_roles(_0,'Genitore'),0)</tuple>
             <tuple>calc_length(ass_user_roles(_0,'Genitore'),ass_user_roles(_0,'Genitore'),0)</tuple>
             <tuple>default_activate(1,'Genitore')</tuple>
@@ -195,12 +197,14 @@
             <tuple>permission('Studio')</tuple>
             <tuple>permission('Camera_Doppia')</tuple>
             <tuple>permission('Ele_Taglio')</tuple>
+			<tuple>permission('Ele_Temperatura')</tuple>
             <tuple>permission('Corridoio')</tuple>
             <tuple>permission('Cucina')</tuple>
             <tuple>class('Ele_Refrigeranti')</tuple>
             <tuple>class('Ele_Pulitura')</tuple>
             <tuple>class('Ele_Taglio')</tuple>
             <tuple>class('Ele_Cottura')</tuple>
+			<tuple>class('Ele_Temperatura')</tuple>
             <tuple>class('Home_Entertainment')</tuple>
             <tuple>ass_class_devs('Ele_Refrigeranti','Ariston Frost')</tuple>
             <tuple>ass_class_devs('Ele_Refrigeranti','Ariston Frigo')</tuple>
@@ -209,6 +213,8 @@
             <tuple>ass_class_devs('Ele_Taglio','DeLonghi Robot')</tuple>
             <tuple>ass_class_devs('Ele_Cottura','Ariston Fornello')</tuple>
 			<tuple>ass_class_devs('Ele_Cottura','Captain Oven')</tuple>
+			<tuple>ass_class_devs('Ele_Temperatura','Condizionatore Freezy')</tuple>
+			<tuple>ass_class_devs('Ele_Temperatura','Riscaldamento hot')</tuple>
             <tuple>ass_class_devs('Home_Entertainment','TV Plasma Samsung PS 42C7H')</tuple>
             <tuple>ass_class_devs('Home_Entertainment','Stereo Philips MCM 190/22')</tuple>
             <tuple>ass_class_devs('Home_Entertainment','PC Asus M6000')</tuple>

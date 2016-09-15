@@ -203,7 +203,7 @@ public class AccessPanel extends javax.swing.JPanel {
             );
             
             acc.out(this.casa, actReq, null);
-            acc.out(tid, detection, null);
+            //acc.out(tid, detection, null); //comment this to make TV Panasonic work again
             
             tp.appendText("User " + usr.username + " logged in Home Manager");
             acc.exit();

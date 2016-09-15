@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <persistency>
-    <snapshot tc="'@'(dictionary,':'(localhost,'20504'))" time="2016-09-12_20.27.07">
+    <snapshot tc="'@'(dictionary,':'(localhost,'20504'))" time="2016-09-14_19.08.55">
         <tuples>
             <tuple>match('DictionaryMatteo','EAB5E4A4',milk)</tuple>
             <tuple>match('DictionaryMatteo','AA8BE4A4',cocco)</tuple>
@@ -10,7 +10,7 @@
         <specTuples/>
         <predicates/>
     </snapshot>
-<updates time="2016-09-12_20.27.07">
+<updates time="2016-09-14_19.08.55">
         <update action="addition" subject="tuple">is_persistent(dictionary)</update>
     </updates>
 </persistency>
