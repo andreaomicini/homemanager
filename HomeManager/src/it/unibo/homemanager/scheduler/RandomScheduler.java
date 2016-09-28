@@ -51,15 +51,10 @@ public class RandomScheduler extends AbstractScheduler{
 		
 		randomGen = new Random();
 		
-		while(true){//exit when the device TV Plasma Panasonic is not selected randomly
-			devNumber = randomGen.nextInt(schDevs.size());
-			schDev = schDevs.get(devNumber);
-			device = schDev.getDevice();
-			program = schDev.getProgram();
-			
-			if(!device.name.equals("'TV Plasma Panasonic TX-32PS12D'"))
-				break;
-		}
+		devNumber = randomGen.nextInt(schDevs.size());
+		schDev = schDevs.get(devNumber);
+		device = schDev.getDevice();
+		program = schDev.getProgram();
 		
 	    room = rs.getRoomById(db, device.roomId);
 	    

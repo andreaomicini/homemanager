@@ -29,25 +29,26 @@ public class RapidScheduler extends AbstractScheduler {
 	}
 
 	public void launch() throws Exception { //filler code. Same code as RandomScheduler. Just to have 2 schedule algorithms
-		ArrayList<Device> devs;
+		ArrayList<ScheduledDevice> devs;
 		String[] programs;
 		Room room;
 		Device device;
 		String program;
+		ScheduledDevice sd;
 		
 		Random randomGen;
 		int devNumber, progNumber;
 		int runningTime = 15000;//time between starting and stopping the program (in ms)
 		
-		//devs = ds.getDevices(db);
+		devs = Utilities.findDevicesFromScheduleState(allSchDevs, "SCHEDULED");
 		//TV Plasma Panasonic removed. Grace user can't switch it on
 		//devs.remove(2);
-/*
+
 		randomGen = new Random();
 		
 		devNumber = randomGen.nextInt(devs.size());
-	    device = devs.get(devNumber);
-	    	
+	    sd = devs.get(devNumber);
+	    device = sd.getDevice();	
 	    room = rs.getRoomById(db, device.roomId);
 	    
 	    //random function for select the program to activate. If OFF returned, repeat the random function 
@@ -62,13 +63,13 @@ public class RapidScheduler extends AbstractScheduler {
 	    }
 			
 	    sendCmd(room, device, program, textF); //send START
-	    System.err.println("Sending command START: Room "+room.name+", Dev "+device.name+", Prog "+program);
+	    System.err.println("RapidScheduler - Sending command START: Room "+room.name+", Dev "+device.name+", Prog "+program);
 		
 	    Thread.sleep(runningTime);
 	        
 		sendCmd(room, device, "off", textF); //send STOP
-		System.err.println("Sending command STOP: Room "+room.name+", Dev "+device.name+", Prog "+"off");	
-*/
+		System.err.println("RapidScheduler - Sending command STOP: Room "+room.name+", Dev "+device.name+", Prog "+"off");	
+
 	}
 
 	private void sendCmd(Room r, Device d, String function, JTextField textF) {
