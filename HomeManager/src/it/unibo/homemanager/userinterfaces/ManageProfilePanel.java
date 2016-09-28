@@ -17,7 +17,7 @@ import alice.tucson.api.TucsonMetaACC;
 import alice.tucson.api.TucsonTupleCentreId;
 import it.unibo.homemanager.ServiceFactory;
 import it.unibo.homemanager.dbmanagement.Database;
-import it.unibo.homemanager.tablemap.Device;
+import it.unibo.homemanager.detection.Device;
 import it.unibo.homemanager.tablemap.Room;
 import it.unibo.homemanager.tablemap.ServicesInterfaces.DeviceServiceInterface;
 import it.unibo.homemanager.tablemap.ServicesInterfaces.RoomServiceInterface;
@@ -136,7 +136,7 @@ public class ManageProfilePanel extends javax.swing.JPanel {
                     for(int j=0;j<devs.size();j++) {
                         Device dev = devs.get(i);//(Device)devs.elementAt(j);
                         //lt = ctx.rdp(rbac, new LogicTuple("ass_class_devs", new Var("X"), new Value(dev.name)));
-                        ITucsonOperation op_rdp = acc.rdp(rbac, new LogicTuple("ass_class_devs", new Var("X"), new Value(dev.name)), null);
+                        ITucsonOperation op_rdp = acc.rdp(rbac, new LogicTuple("ass_class_devs", new Var("X"), new Value(dev.getDeviceName())), null);
                         lt = op_rdp.getLogicTupleResult();
                         System.out.println(lt);
                         if(lt!=null && isDeviceUsePermitted(list, lt.getArg(0))){
@@ -177,7 +177,7 @@ public class ManageProfilePanel extends javax.swing.JPanel {
     
     private JCheckBox getCbDev(Device d) {
         JCheckBox cb  = null;
-        cb = new JCheckBox(" "+d.name);
+        cb = new JCheckBox(" "+d.getDeviceName());
         cb.setBackground(new java.awt.Color(102, 0, 102));
         cb.setFont(new java.awt.Font("Courier New",java.awt.Font.PLAIN,12));
         cb.setForeground(java.awt.Color.WHITE);
@@ -192,7 +192,7 @@ public class ManageProfilePanel extends javax.swing.JPanel {
         
         while(i<strings.length && !res) {
             ActPreference ap = new ActPreference(strings[i]);
-            if(ap.getDev() == d.idDev) res = true;
+            if(ap.getDev() == d.getDeviceId()) res = true;
             i++;
         }
         
@@ -522,7 +522,7 @@ public class ManageProfilePanel extends javax.swing.JPanel {
             JCheckBox cb = (JCheckBox)checkBoxes.elementAt(i);
             if(cb.isSelected()) {
                 Device dev = devices.get(i);//(Device)devices.elementAt(i);
-                str += dev.roomId+"-"+dev.idDev+",";
+                str += dev.getDeviceRoomId()+"-"+dev.getDeviceId()+",";
             }
         }
         // take away comma

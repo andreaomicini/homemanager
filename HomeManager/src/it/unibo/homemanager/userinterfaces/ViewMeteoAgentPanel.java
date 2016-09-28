@@ -7,7 +7,7 @@ package it.unibo.homemanager.userinterfaces;
 
 import alice.logictuple.exceptions.InvalidVarNameException;
 import alice.tucson.api.TucsonTupleCentreId;
-import it.unibo.homemanager.meteo.AgentManager;
+import it.unibo.homemanager.detection.AgentManager;
 import it.unibo.homemanager.meteo.MeteoAgent;
 import it.unibo.homemanager.tablemap.User;
 

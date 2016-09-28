@@ -1,21 +1,11 @@
 package it.unibo.homemanager.social;
 
-import it.unibo.homemanager.dbmanagement.Database;
-import it.unibo.homemanager.dbmanagement.TucsonDatabase;
-import it.unibo.homemanager.meteo.TucsonAgentInterface;
-import it.unibo.homemanager.userinterfaces.TracePanel;
-import it.unibo.homemanager.userinterfaces.ViewManageAgentPanel;
-import it.unibo.homemanager.userinterfaces.ViewTwitterAgentPanel;
-
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 import javax.swing.JPanel;
 
-import twitter4j.Status;
-import twitter4j.Twitter;
-import twitter4j.TwitterException;
 import alice.logictuple.LogicTuple;
 import alice.logictuple.Value;
 import alice.logictuple.Var;
@@ -28,6 +18,15 @@ import alice.tucson.api.exceptions.TucsonOperationNotPossibleException;
 import alice.tucson.api.exceptions.UnreachableNodeException;
 import alice.tuplecentre.api.exceptions.OperationTimeOutException;
 import alice.tuplecentre.core.AbstractTupleCentreOperation;
+import it.unibo.homemanager.agents.TucsonAgentInterface;
+import it.unibo.homemanager.dbmanagement.Database;
+import it.unibo.homemanager.dbmanagement.TucsonDatabase;
+import it.unibo.homemanager.userinterfaces.TracePanel;
+import it.unibo.homemanager.userinterfaces.ViewManageAgentPanel;
+import it.unibo.homemanager.userinterfaces.ViewTwitterAgentPanel;
+import twitter4j.Status;
+import twitter4j.Twitter;
+import twitter4j.TwitterException;
 
 public class TwitterAgent extends AbstractTucsonAgent implements TucsonAgentInterface
 {

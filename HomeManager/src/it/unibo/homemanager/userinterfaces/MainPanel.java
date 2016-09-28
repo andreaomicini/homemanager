@@ -1,835 +1,841 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package it.unibo.homemanager.userinterfaces;
 
-import alice.tucson.api.TucsonTupleCentreId;
-import it.unibo.homemanager.ServiceFactory;
-import it.unibo.homemanager.meteo.AgentManager;
-import it.unibo.homemanager.meteo.MeteoAgent;
-import it.unibo.homemanager.meteo.TucsonAgentInterface;
-import it.unibo.homemanager.tablemap.User;
-
 import java.awt.CardLayout;
+import java.awt.Color;
+import java.awt.Font;
 import java.awt.event.ActionEvent;
-import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Vector;
 
 import javax.swing.BorderFactory;
 import javax.swing.JPanel;
+import javax.swing.border.Border;
 import javax.swing.border.TitledBorder;
 
-/**
- *
- * @author sik
- */
+import alice.tucson.api.TucsonTupleCentreId;
+import it.unibo.homemanager.ServiceFactory;
+import it.unibo.homemanager.agents.TucsonAgentInterface;
+import it.unibo.homemanager.detection.AgentManager;
+import it.unibo.homemanager.detection.AgentsFactory;
+import it.unibo.homemanager.detection.Device;
+import it.unibo.homemanager.detection.DeviceListener;
+import it.unibo.homemanager.detection.DeviceManagerAgent;
+import it.unibo.homemanager.tablemap.User;
+
 public class MainPanel extends JPanel {
+	private static final long serialVersionUID = 1L;
 
-    private JPanel cards; //a panel that uses CardLayout
-    private CardLayout cl;
-    private User user = null;
-    
-    private AccessPanel aPanel;
-    private IssueCmdPanel icPanel;
-    private InitAdminPanel iaPanel;
-    private InitOrdinaryPanel ioPanel;
-    private InfoPanel iPanel;
-    private PolicyPanel pPanel;
-    private VisitorsPanel vPanel;
-    private ViewPlanPanel vpPanel;
-    private ViewPolicyPanel vpoPanel;
-    private ManageProfilePanel mpPanel;
-    private ManageUsersPanel muPanel;
-    
-    private ViewManageAgentPanel butlerPanel;
-    
-    
-    //RBAC
-    private RBACManager rbacPanel;
-    private ManRoles manRolePanel;
-    private ManRolesPerm manRolPermPanel;
-    private ManUsersRoles manUsRoPanel;
-    private ManPerm manPermPanel;
-    private ManRBACConstr manRBACConstrPanel;
-    private ManDevicesConstr manDevConstrPanel;
-    private ManRoomsConstr manRoomConstrPanel;
-    private ViewRBACPolicy viewRBACPanel;
-    private ViewUserRBAC viewuserRBAC;
-    private RBACStatistics rbacStatistics;
-    
-    private final static String ACCESS_PANEL = "Log In";
-    private final static String INIT_ADMIN_PANEL = "Welcome Administrator";
-    private final static String INIT_ORDINARY_PANEL = "Welcome User";
-    private final static String ISSUE_CMD_PANEL = "Issue Command";
-    private final static String INFO_PANEL = "View Info";
-    private final static String POLICY_PANEL = "Decide policy";
-    private final static String VISITORS_PANEL = "Manage Visitors";
-    private final static String VIEW_PLAN_PANEL = "View Plan";
-    private final static String VIEW_POLICY_PANEL = "View Policy";
-    private final static String MANAGE_PROFILE_PANEL = "Manage Profile";
-    private final static String MANAGE_USERS_PANEL = "Manage Users";
-    
-    private final static String BUTLER="BUTLER";
-    // RBAC
-    private final static String MANAGE_RBAC_PANEL = "Manage RBAC";
-    private final static String ROLES_PANEL = "Manage ROLES";
-    private final static String ROLES_PERMS_PANEL = "Manage Ass. ROLES-PERM.";
-    private final static String USER_ROLES_PANEL = "Manage Ass. USER-ROLES";
-    private final static String PERMS_PANEL = "Manage PERMISSIONS";
-    private final static String RBAC_CONSTR_PANEL = "Manage RBAC CONSTRAINTS";
-    private final static String DEV_CONSTR_PANEL = "Manage DEVICE CONSTRAINTS";
-    private final static String ROOMS_CONSTR_PANEL = "Manage ROOMS CONSTRAINTS";
-    private final static String VIEW_RBAC_PANEL = "Manage RBAC POLICY";
-    private final static String VIEW_RBAC_USR_PANEL = "Manage RBAC USER POLICY";
-    private final static String RBAC_STATISTICS = "Manage RBAC STATISTICS";
- 
-    
-    public MainPanel() {
-        lookAndFeel();
-    }
-    
-    public MainPanel(TracePanel tp, Vector tCenters, int roomId, int sensId, TucsonTupleCentreId casa_tc, TucsonTupleCentreId rbac_tc, ServiceFactory sf) {
-        lookAndFeel();
-        
-        aPanel = new AccessPanel(this, tp,roomId,sensId,(TucsonTupleCentreId)tCenters.elementAt(2), rbac_tc, casa_tc, sf);
-        icPanel = new IssueCmdPanel(this,tCenters, sf);
-        iaPanel = new InitAdminPanel(this,tCenters, casa_tc, rbac_tc);
-        ioPanel = new InitOrdinaryPanel(this, casa_tc, rbac_tc);
-        iPanel = new InfoPanel(this, sf);
-        pPanel = new PolicyPanel(this,casa_tc, sf);
-        vPanel = new VisitorsPanel(this, sf);
-        vpPanel = new ViewPlanPanel(this,tCenters, sf);
-        vpoPanel = new ViewPolicyPanel(this,casa_tc, sf);
-        mpPanel = new ManageProfilePanel(this, rbac_tc, sf);
-        muPanel = new ManageUsersPanel(this, tCenters, sf);
-        
-        ArrayList<TucsonTupleCentreId> l=new ArrayList<TucsonTupleCentreId>();
-        for(int i=0;i<tCenters.size();i++)
-		{
-			if(((TucsonTupleCentreId)tCenters.elementAt(i)).getName().equals("meteo_tc"))
-			{
-			    l.add((TucsonTupleCentreId)tCenters.elementAt(i));
-			}
-			else if(((TucsonTupleCentreId)tCenters.elementAt(i)).getName().equals("twitter_tc"))
-			{
-				l.add((TucsonTupleCentreId)tCenters.elementAt(i));
-			}
-			else if(((TucsonTupleCentreId)tCenters.elementAt(i)).getName().equals("presence_tc"))
-			{
-				l.add((TucsonTupleCentreId)tCenters.elementAt(i));
-			}
-			
-			
+	private TracePanel tracePanel;
+	
+	private Map<String, TucsonTupleCentreId> tupleCentres;
+
+	private JPanel cards;
+	private CardLayout cardLayout;
+	private User user = null;
+
+	private AccessPanel accessPanel;
+	private IssueCmdPanel issueCmdPanel;
+	private InitAdminPanel initAdminPanel;
+	private InitOrdinaryPanel initOrdinaryPanel;
+	private InfoPanel infoPanel;
+	private PolicyPanel policyPanel;
+	private VisitorsPanel visitorsPanel;
+	private ViewPlanPanel viewPlanPanel;
+	private ViewPolicyPanel viewPolicyPanel;
+	private ManageProfilePanel manageProfilePanel;
+	private ManageUsersPanel manageUsersPanel;
+
+	private ViewManageAgentPanel butlerPanel;
+
+	private RBACManager rbacPanel;
+	private ManRoles manRolesPanel;
+	private ManRolesPerm manRolesPermPanel;
+	private ManUsersRoles manUsersRolesPanel;
+	private ManPerm manPermPanel;
+	private ManRBACConstr manRBACConstrPanel;
+	private ManDevicesConstr manDevicesConstrPanel;
+	private ManRoomsConstr manRoomsConstrPanel;
+	private ViewRBACPolicy viewRBACPolicyPanel;
+	private ViewUserRBAC viewUserRBACPanel;
+	private RBACStatistics rbacStatisticsPanel;
+
+	private final static String ACCESS_PANEL = "Log In";
+	private final static String INIT_ADMIN_PANEL = "Welcome Administrator";
+	private final static String INIT_ORDINARY_PANEL = "Welcome User";
+	private final static String ISSUE_CMD_PANEL = "Issue Command";
+	private final static String INFO_PANEL = "View Info";
+	private final static String POLICY_PANEL = "Decide policy";
+	private final static String VISITORS_PANEL = "Manage Visitors";
+	private final static String VIEW_PLAN_PANEL = "View Plan";
+	private final static String VIEW_POLICY_PANEL = "View Policy";
+	private final static String MANAGE_PROFILE_PANEL = "Manage Profile";
+	private final static String MANAGE_USERS_PANEL = "Manage Users";
+
+	private final static String BUTLER = "BUTLER";
+
+	private final static String MANAGE_RBAC_PANEL = "Manage RBAC";
+	private final static String ROLES_PANEL = "Manage ROLES";
+	private final static String ROLES_PERMS_PANEL = "Manage Ass. ROLES-PERM.";
+	private final static String USER_ROLES_PANEL = "Manage Ass. USER-ROLES";
+	private final static String PERMS_PANEL = "Manage PERMISSIONS";
+	private final static String RBAC_CONSTR_PANEL = "Manage RBAC CONSTRAINTS";
+	private final static String DEV_CONSTR_PANEL = "Manage DEVICE CONSTRAINTS";
+	private final static String ROOMS_CONSTR_PANEL = "Manage ROOMS CONSTRAINTS";
+	private final static String VIEW_RBAC_PANEL = "Manage RBAC POLICY";
+	private final static String VIEW_RBAC_USR_PANEL = "Manage RBAC USER POLICY";
+	private final static String RBAC_STATISTICS = "Manage RBAC STATISTICS";
+
+	public MainPanel() {
+		lookAndFeel();
+	}
+
+	public MainPanel(TracePanel tracePanel, Vector<TucsonTupleCentreId> tupleCentresList, int roomId, int sensorId, 
+						TucsonTupleCentreId casa_tc, TucsonTupleCentreId rbac_tc, ServiceFactory serviceFactory) {
+		this.tracePanel = tracePanel;
+		
+		lookAndFeel();
+		initTupleCentres(tupleCentresList);
+		
+		cardLayout = new CardLayout();
+		cards = new JPanel(cardLayout);
+
+		accessPanel = new AccessPanel(this, tracePanel, roomId, sensorId, tupleCentresList.elementAt(2), rbac_tc, casa_tc, serviceFactory);
+		cards.add(accessPanel, ACCESS_PANEL);
+		issueCmdPanel = new IssueCmdPanel(this, tupleCentresList, serviceFactory);
+		cards.add(issueCmdPanel, ISSUE_CMD_PANEL);
+		initAdminPanel = new InitAdminPanel(this, tupleCentresList, casa_tc, rbac_tc);
+		cards.add(initAdminPanel, INIT_ADMIN_PANEL);
+		initOrdinaryPanel = new InitOrdinaryPanel(this, casa_tc, rbac_tc);
+		cards.add(initOrdinaryPanel, INIT_ORDINARY_PANEL);
+		infoPanel = new InfoPanel(this, serviceFactory);
+		cards.add(infoPanel, INFO_PANEL);
+		policyPanel = new PolicyPanel(this, casa_tc, serviceFactory);
+		cards.add(policyPanel, POLICY_PANEL);
+		visitorsPanel = new VisitorsPanel(this, serviceFactory);
+		cards.add(visitorsPanel, VISITORS_PANEL);
+		viewPlanPanel = new ViewPlanPanel(this, tupleCentresList, serviceFactory);
+		cards.add(viewPlanPanel, VIEW_PLAN_PANEL);
+		viewPolicyPanel = new ViewPolicyPanel(this, casa_tc, serviceFactory);
+		cards.add(viewPolicyPanel, VIEW_POLICY_PANEL);
+		manageProfilePanel = new ManageProfilePanel(this, rbac_tc, serviceFactory);
+		cards.add(manageProfilePanel, MANAGE_PROFILE_PANEL);
+		manageUsersPanel = new ManageUsersPanel(this, tupleCentresList, serviceFactory);
+		cards.add(manageUsersPanel, MANAGE_USERS_PANEL);
+
+		butlerPanel = new ViewManageAgentPanel(this);
+		cards.add(butlerPanel, BUTLER);
+
+		rbacPanel = new RBACManager(this);
+		cards.add(rbacPanel, MANAGE_RBAC_PANEL);
+		manRolesPanel = new ManRoles(this, rbac_tc, rbacPanel);
+		cards.add(manRolesPanel, ROLES_PANEL);
+		manRolesPermPanel = new ManRolesPerm(this, rbac_tc, rbacPanel);
+		cards.add(manRolesPermPanel, ROLES_PERMS_PANEL);
+		manUsersRolesPanel = new ManUsersRoles(this, rbac_tc, rbacPanel, serviceFactory);
+		cards.add(manUsersRolesPanel, USER_ROLES_PANEL);
+		manPermPanel = new ManPerm(this, rbac_tc, rbacPanel, serviceFactory);
+		cards.add(manPermPanel, PERMS_PANEL);
+		manRBACConstrPanel = new ManRBACConstr(this, rbac_tc, rbacPanel);
+		cards.add(manRBACConstrPanel, RBAC_CONSTR_PANEL);
+		manDevicesConstrPanel = new ManDevicesConstr(this, rbac_tc, rbacPanel);
+		cards.add(manDevicesConstrPanel, DEV_CONSTR_PANEL);
+		manRoomsConstrPanel = new ManRoomsConstr(this, rbac_tc, rbacPanel, serviceFactory);
+		cards.add(manRoomsConstrPanel, ROOMS_CONSTR_PANEL);
+		viewRBACPolicyPanel = new ViewRBACPolicy(this, rbac_tc, rbacPanel, serviceFactory);
+		cards.add(viewRBACPolicyPanel, VIEW_RBAC_PANEL);
+		viewUserRBACPanel = new ViewUserRBAC(this, rbac_tc, casa_tc);
+		cards.add(viewUserRBACPanel, VIEW_RBAC_USR_PANEL);
+		rbacStatisticsPanel = new RBACStatistics(this, rbac_tc, rbacPanel, serviceFactory);
+		cards.add(rbacStatisticsPanel, RBAC_STATISTICS);
+
+		AgentManager agentManager = AgentManager.getInstance();
+		agentManager.initComponents(serviceFactory, butlerPanel, tracePanel, tupleCentres);
+		
+		for ( TucsonAgentInterface agent : agentManager.getAgents() )
+			cards.add(agent.getInterface(), agent.getName());
+
+		cards.setLocation(0, 0);
+		add(cards);
+		loadAccessPanel();
+		
+		try {
+			DeviceManagerAgent deviceManagerAgent = DeviceManagerAgent.getInstance();
+			deviceManagerAgent.addListener(new DeviceListener() {
+				@Override
+				public void onNewDevice(Device device) {
+					onNewDeviceEvent(device);
+				}
+			});
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
-        butlerPanel=new ViewManageAgentPanel(this, l, tp, sf);
-        AgentManager.getInstance().inizializeComponent(butlerPanel, sf, tp,l);
-        
-        /*for(int i=0;i<tCenters.size();i++)
-		{
-			if(((TucsonTupleCentreId)tCenters.elementAt(i)).getName().equals("meteo_tc"))
-			{
-				butlerPanel=new ViewManageAgentPanel(this, ((TucsonTupleCentreId)tCenters.elementAt(i)), tp,sf);
-				ArrayList<TucsonTupleCentreId> l=new ArrayList<TucsonTupleCentreId>();
-			    l.add((TucsonTupleCentreId)tCenters.elementAt(i));
-				AgentManager.getInstance().inizializeComponet(butlerPanel, sf, tp,l);
-				break;
+	}
+
+	private void onNewDeviceEvent(Device device) {
+		if (device.getDeviceType().equals("s")) {
+			AgentManager agentManager = AgentManager.getInstance();
+			TucsonAgentInterface agent = AgentsFactory.createAgent(device, tupleCentres, tracePanel, agentManager.getDatabase(), butlerPanel);
+			if (agent != null) {
+				agentManager.addAgent(agent);
+				agentManager.goAgent(agent.getName());
+				cards.add(agent.getInterface(), agent.getName());
 			}
-		}*/
-       
-        /*MeteoAgent finded=(MeteoAgent)ManageAgent.getInstance().getAgentbyName("Agente Meteo 1");
-        finded.setPanel(butlerPanel);*/
-        
-        //create RBAC panels
-        rbacPanel = new RBACManager(this);
-        manRolePanel = new ManRoles(this, rbac_tc, this.rbacPanel);
-        manRolPermPanel = new ManRolesPerm(this, rbac_tc, this.rbacPanel);
-        manUsRoPanel = new ManUsersRoles(this, rbac_tc, this.rbacPanel, sf);
-        manPermPanel = new ManPerm(this, rbac_tc, this.rbacPanel, sf);
-        manRBACConstrPanel = new ManRBACConstr(this, rbac_tc, this.rbacPanel);
-        manDevConstrPanel = new ManDevicesConstr(this, rbac_tc, this.rbacPanel);
-        manRoomConstrPanel = new ManRoomsConstr(this, rbac_tc, this.rbacPanel, sf);
-        viewRBACPanel = new ViewRBACPolicy(this, rbac_tc, this.rbacPanel, sf);
-        viewuserRBAC = new ViewUserRBAC(this, rbac_tc, casa_tc);
-        rbacStatistics = new RBACStatistics(this, rbac_tc, rbacPanel, sf);
-        
-        
-        cards = new JPanel(new CardLayout());
-        
-        cards.add(butlerPanel,BUTLER);
-        addListAgenttoCards(cards);
-        
-        cards.add(icPanel,ISSUE_CMD_PANEL);
-        cards.add(iaPanel,INIT_ADMIN_PANEL);
-        cards.add(ioPanel,INIT_ORDINARY_PANEL);
-        cards.add(aPanel,ACCESS_PANEL);
-        cards.add(iPanel,INFO_PANEL);
-        cards.add(pPanel,POLICY_PANEL);
-        cards.add(vPanel,VISITORS_PANEL);
-        cards.add(vpPanel,VIEW_PLAN_PANEL);
-        cards.add(vpoPanel,VIEW_POLICY_PANEL);
-        cards.add(mpPanel,MANAGE_PROFILE_PANEL);
-        cards.add(muPanel,MANAGE_USERS_PANEL);
-        //RBAC
-        cards.add(rbacPanel,MANAGE_RBAC_PANEL);
-        cards.add(manRolePanel, ROLES_PANEL);
-        cards.add(manRolPermPanel, ROLES_PERMS_PANEL);
-        cards.add(manUsRoPanel, USER_ROLES_PANEL);
-        cards.add(manPermPanel, PERMS_PANEL);
-        cards.add(manRBACConstrPanel,RBAC_CONSTR_PANEL);
-        cards.add(manDevConstrPanel,DEV_CONSTR_PANEL);
-        cards.add(manRoomConstrPanel, ROOMS_CONSTR_PANEL);
-        cards.add(viewRBACPanel, VIEW_RBAC_PANEL);
-        cards.add(viewuserRBAC, VIEW_RBAC_USR_PANEL);
-        cards.add(rbacStatistics, RBAC_STATISTICS);
+		}
+	}
 
-        cards.setLocation(0,0);
-        this.add(cards);
-        // manage visibility
-        cl = (CardLayout)(cards.getLayout());
-        loadAccessPanel();
-    }
+	private void lookAndFeel() {
+		Color darkBlue = new Color(0, 0, 102);
+		Border etchedBorder = BorderFactory.createEtchedBorder(null, darkBlue);
+		Font font = new Font("Courier New", 1, 12);
+		Color superDarkBlue = new Color(0, 0, 51);
+		Border border = BorderFactory.createTitledBorder(etchedBorder, "Home Manager", TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.DEFAULT_POSITION, font, superDarkBlue);
+		setBorder(border);
+		setBounds(0, 0, 538, 343);
+		Color violet = new Color(204, 204, 255);
+		setBackground(violet);
+	}
 
-    private void lookAndFeel() {
-        setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(
-                null, new java.awt.Color(0, 0, 102)), "Home Manager",
-                TitledBorder.DEFAULT_JUSTIFICATION,TitledBorder.DEFAULT_POSITION,
-                new java.awt.Font("Courier New", 1, 12), new java.awt.Color(0, 0, 51)));
-        this.setBounds(0,0,538,343);
-        setBackground(new java.awt.Color(204,204,255));
-    }
+	private void initTupleCentres(Vector<TucsonTupleCentreId> tupleCentresList) {
+		tupleCentres = new HashMap<String, TucsonTupleCentreId>();
+		for (int i = 0; i < tupleCentresList.size(); i++) {
+			TucsonTupleCentreId agent = tupleCentresList.elementAt(i);
+			if (agent.getName().equals("meteo_tc"))
+				tupleCentres.put("meteo_tc", agent);
+			if (agent.getName().equals("twitter_tc"))
+				tupleCentres.put("twitter_tc", agent);
+			if (agent.getName().equals("device_manager_tc"))
+				tupleCentres.put("device_manager_tc", agent);
+			if (agent.getName().equals("usage_manager_tc"))
+				tupleCentres.put("usage_manager_tc", agent);
+			if (agent.getName().equals("mixer_tc"))
+				tupleCentres.put("mixer_tc", agent);
+			if (agent.getName().equals("mixer_container_tc"))
+				tupleCentres.put("mixer_container_tc", agent);
+			if (agent.getName().equals("fridge_tc"))
+				tupleCentres.put("fridge_tc", agent);
+			if (agent.getName().equals("oven_tc"))
+				tupleCentres.put("oven_tc", agent);
+			if (agent.getName().equals("pantry_tc"))
+				tupleCentres.put("pantry_tc", agent);
+		}
+	}
+	
+	private void loadAccessPanel() {
+		accessPanel.init();
+		butlerPanel.hidePanel();
+		issueCmdPanel.hidePanel();
+		initAdminPanel.hidePanel();
+		cardLayout.show(cards, ACCESS_PANEL);
+	}
 
-    private void loadAccessPanel() {
-        aPanel.init();
-        butlerPanel.hidePanel();
-        icPanel.hidePanel();
-        iaPanel.hidePanel();
-        cl.show(cards,ACCESS_PANEL);
-    }
+	void loadInitRolePanel(User usr) {
+		user = usr;
+		System.err.println("[loadInitRolePanel@MainPanel] user: " + user.toString());
+		if (user.getRoleChar() == 'A')
+			loadInitAdminPanel();
+		else if (user.getRoleChar() == 'O')
+			loadInitOrdinaryPanel();
+	}
 
-    void loadInitRolePanel(User usr) {
-        user = usr;
-        //System.err.println("user: " + user.toString());
-	System.err.println("[loadInitRolePanel@MainPanel] user: " + user.toString());
-        if(user.getRoleChar() == 'A')
-            loadInitAdminPanel();
-        else 
-            if(user.getRoleChar() == 'O')
-                loadInitOrdinaryPanel();
-    }
+	private void loadInitAdminPanel() {
+		initAdminPanel.init(user);
+		butlerPanel.hidePanel();
+		issueCmdPanel.hidePanel();
+		accessPanel.hidePanel();
+		infoPanel.hidePanel();
+		policyPanel.hidePanel();
+		visitorsPanel.hidePanel();
+		viewPlanPanel.hidePanel();
+		viewPolicyPanel.hidePanel();
+		initOrdinaryPanel.hidePanel();
+		manageProfilePanel.hidePanel();
+		manageUsersPanel.hidePanel();
+		rbacPanel.hidePanel();
+		manRolesPanel.hidePanel();
+		manRolesPermPanel.hidePanel();
+		manUsersRolesPanel.hidePanel();
+		manPermPanel.hidePanel();
+		manRBACConstrPanel.hidePanel();
+		manDevicesConstrPanel.hidePanel();
+		manRoomsConstrPanel.hidePanel();
+		viewRBACPolicyPanel.hidePanel();
+		viewUserRBACPanel.hidePanel();
+		rbacStatisticsPanel.hidePanel();
+		cardLayout.show(cards, INIT_ADMIN_PANEL);
+	}
 
-    private void loadInitAdminPanel() {
-        iaPanel.init(user);
-        butlerPanel.hidePanel();
-        icPanel.hidePanel();
-        aPanel.hidePanel();
-        iPanel.hidePanel();
-        pPanel.hidePanel();
-        vPanel.hidePanel();
-        vpPanel.hidePanel();
-        vpoPanel.hidePanel();
-        ioPanel.hidePanel();
-        mpPanel.hidePanel();
-        muPanel.hidePanel();
-        rbacPanel.hidePanel();
-        manRolePanel.hidePanel();
-        manRolPermPanel.hidePanel();
-        manUsRoPanel.hidePanel();
-        manPermPanel.hidePanel();
-        manRBACConstrPanel.hidePanel();
-        manDevConstrPanel.hidePanel();
-        manRoomConstrPanel.hidePanel();
-        viewRBACPanel.hidePanel();
-        viewuserRBAC.hidePanel();
-        rbacStatistics.hidePanel();
-        cl.show(cards,INIT_ADMIN_PANEL);
-    }
+	private void loadInitOrdinaryPanel() {
+		initOrdinaryPanel.init(user);
+		butlerPanel.hidePanel();
+		issueCmdPanel.hidePanel();
+		accessPanel.hidePanel();
+		infoPanel.hidePanel();
+		policyPanel.hidePanel();
+		visitorsPanel.hidePanel();
+		viewPlanPanel.hidePanel();
+		viewPolicyPanel.hidePanel();
+		initAdminPanel.hidePanel();
+		manageProfilePanel.hidePanel();
+		manageUsersPanel.hidePanel();
+		rbacPanel.hidePanel();
+		manRolesPanel.hidePanel();
+		manRolesPermPanel.hidePanel();
+		manUsersRolesPanel.hidePanel();
+		manPermPanel.hidePanel();
+		manRBACConstrPanel.hidePanel();
+		manDevicesConstrPanel.hidePanel();
+		manRoomsConstrPanel.hidePanel();
+		viewRBACPolicyPanel.hidePanel();
+		viewUserRBACPanel.hidePanel();
+		rbacStatisticsPanel.hidePanel();
+		cardLayout.show(cards, INIT_ORDINARY_PANEL);
+	}
 
-    private void loadInitOrdinaryPanel() {
-        ioPanel.init(user);
-        butlerPanel.hidePanel();
-        icPanel.hidePanel();
-        aPanel.hidePanel();
-        iPanel.hidePanel();
-        pPanel.hidePanel();
-        vPanel.hidePanel();
-        vpPanel.hidePanel();
-        vpoPanel.hidePanel();
-        iaPanel.hidePanel();
-        mpPanel.hidePanel();
-        muPanel.hidePanel();
-        rbacPanel.hidePanel();
-        manRolePanel.hidePanel();
-        manRolPermPanel.hidePanel();
-        manUsRoPanel.hidePanel();
-        manPermPanel.hidePanel();
-        manRBACConstrPanel.hidePanel();
-        manDevConstrPanel.hidePanel();
-        manRoomConstrPanel.hidePanel();
-        viewRBACPanel.hidePanel();
-        viewuserRBAC.hidePanel();
-        rbacStatistics.hidePanel();
-        cl.show(cards,INIT_ORDINARY_PANEL);
-    }
+	void loadIssueCmdPanel() {
+		issueCmdPanel.init(user);
+		butlerPanel.hidePanel();
+		initAdminPanel.hidePanel();
+		initOrdinaryPanel.hidePanel();
+		accessPanel.hidePanel();
+		infoPanel.hidePanel();
+		policyPanel.hidePanel();
+		visitorsPanel.hidePanel();
+		viewPlanPanel.hidePanel();
+		viewPolicyPanel.hidePanel();
+		manageProfilePanel.hidePanel();
+		manageUsersPanel.hidePanel();
+		rbacPanel.hidePanel();
+		manRolesPanel.hidePanel();
+		manRolesPermPanel.hidePanel();
+		manUsersRolesPanel.hidePanel();
+		manPermPanel.hidePanel();
+		manRBACConstrPanel.hidePanel();
+		manDevicesConstrPanel.hidePanel();
+		manRoomsConstrPanel.hidePanel();
+		viewRBACPolicyPanel.hidePanel();
+		viewUserRBACPanel.hidePanel();
+		rbacStatisticsPanel.hidePanel();
+		cardLayout.show(cards, ISSUE_CMD_PANEL);
+	}
 
-    void loadIssueCmdPanel() {
-        icPanel.init(user);
-        butlerPanel.hidePanel();
-        iaPanel.hidePanel();
-        ioPanel.hidePanel();
-        aPanel.hidePanel();
-        iPanel.hidePanel();
-        pPanel.hidePanel();
-        vPanel.hidePanel();
-        vpPanel.hidePanel();
-        vpoPanel.hidePanel();
-        mpPanel.hidePanel();
-        muPanel.hidePanel();
-        rbacPanel.hidePanel();
-        manRolePanel.hidePanel();
-        manRolPermPanel.hidePanel();
-        manUsRoPanel.hidePanel();
-        manPermPanel.hidePanel();
-        manRBACConstrPanel.hidePanel();
-        manDevConstrPanel.hidePanel();
-        manRoomConstrPanel.hidePanel();
-        viewRBACPanel.hidePanel();
-        viewuserRBAC.hidePanel();
-        rbacStatistics.hidePanel();
-        cl.show(cards,ISSUE_CMD_PANEL);
-    }
+	void logOut(ActionEvent evt) {
+		loadAccessPanel();
+	}
 
-    void logOut(ActionEvent evt) {
-        loadAccessPanel();
-    }
-    //RBAC
-    void loadManRBACPanel() {
-        rbacPanel.init(user);
-        butlerPanel.hidePanel();
-        icPanel.hidePanel();
-        iaPanel.hidePanel();
-        ioPanel.hidePanel();
-        aPanel.hidePanel();
-        iPanel.hidePanel();
-        pPanel.hidePanel();
-        vPanel.hidePanel();
-        vpPanel.hidePanel();
-        vpoPanel.hidePanel();
-        mpPanel.hidePanel();
-        muPanel.hidePanel();
-        manRolePanel.hidePanel();
-        manRolPermPanel.hidePanel();
-        manUsRoPanel.hidePanel();
-        manPermPanel.hidePanel();
-        manRBACConstrPanel.hidePanel();
-        manDevConstrPanel.hidePanel();
-        manRoomConstrPanel.hidePanel();
-        viewRBACPanel.hidePanel();
-        viewuserRBAC.hidePanel();
-        rbacStatistics.hidePanel();
-        cl.show(cards,MANAGE_RBAC_PANEL);
-    }
+	void loadManRBACPanel() {
+		rbacPanel.init(user);
+		butlerPanel.hidePanel();
+		issueCmdPanel.hidePanel();
+		initAdminPanel.hidePanel();
+		initOrdinaryPanel.hidePanel();
+		accessPanel.hidePanel();
+		infoPanel.hidePanel();
+		policyPanel.hidePanel();
+		visitorsPanel.hidePanel();
+		viewPlanPanel.hidePanel();
+		viewPolicyPanel.hidePanel();
+		manageProfilePanel.hidePanel();
+		manageUsersPanel.hidePanel();
+		manRolesPanel.hidePanel();
+		manRolesPermPanel.hidePanel();
+		manUsersRolesPanel.hidePanel();
+		manPermPanel.hidePanel();
+		manRBACConstrPanel.hidePanel();
+		manDevicesConstrPanel.hidePanel();
+		manRoomsConstrPanel.hidePanel();
+		viewRBACPolicyPanel.hidePanel();
+		viewUserRBACPanel.hidePanel();
+		rbacStatisticsPanel.hidePanel();
+		cardLayout.show(cards, MANAGE_RBAC_PANEL);
+	}
 
-    void loadManRolePanel() {
-        manRolePanel.init(user);
-        butlerPanel.hidePanel();
-        rbacPanel.hidePanel();
-        icPanel.hidePanel();
-        iaPanel.hidePanel();
-        ioPanel.hidePanel();
-        aPanel.hidePanel();
-        iPanel.hidePanel();
-        pPanel.hidePanel();
-        vPanel.hidePanel();
-        vpPanel.hidePanel();
-        vpoPanel.hidePanel();
-        mpPanel.hidePanel();
-        muPanel.hidePanel();
-        manRolPermPanel.hidePanel();
-        manUsRoPanel.hidePanel();
-        manPermPanel.hidePanel();
-        manRBACConstrPanel.hidePanel();
-        manDevConstrPanel.hidePanel();
-        manRoomConstrPanel.hidePanel();
-        viewRBACPanel.hidePanel();
-        viewuserRBAC.hidePanel();
-        rbacStatistics.hidePanel();
-        cl.show(cards,ROLES_PANEL);
-    }
+	void loadManRolePanel() {
+		manRolesPanel.init(user);
+		butlerPanel.hidePanel();
+		rbacPanel.hidePanel();
+		issueCmdPanel.hidePanel();
+		initAdminPanel.hidePanel();
+		initOrdinaryPanel.hidePanel();
+		accessPanel.hidePanel();
+		infoPanel.hidePanel();
+		policyPanel.hidePanel();
+		visitorsPanel.hidePanel();
+		viewPlanPanel.hidePanel();
+		viewPolicyPanel.hidePanel();
+		manageProfilePanel.hidePanel();
+		manageUsersPanel.hidePanel();
+		manRolesPermPanel.hidePanel();
+		manUsersRolesPanel.hidePanel();
+		manPermPanel.hidePanel();
+		manRBACConstrPanel.hidePanel();
+		manDevicesConstrPanel.hidePanel();
+		manRoomsConstrPanel.hidePanel();
+		viewRBACPolicyPanel.hidePanel();
+		viewUserRBACPanel.hidePanel();
+		rbacStatisticsPanel.hidePanel();
+		cardLayout.show(cards, ROLES_PANEL);
+	}
 
-    void loadManUsRolPanel() {
-        manRolePanel.hidePanel();
-        butlerPanel.hidePanel();
-        rbacPanel.hidePanel();
-        icPanel.hidePanel();
-        iaPanel.hidePanel();
-        ioPanel.hidePanel();
-        aPanel.hidePanel();
-        iPanel.hidePanel();
-        pPanel.hidePanel();
-        vPanel.hidePanel();
-        vpPanel.hidePanel();
-        vpoPanel.hidePanel();
-        mpPanel.hidePanel();
-        muPanel.hidePanel();
-        manRolPermPanel.hidePanel();
-        manUsRoPanel.init(user);
-        manPermPanel.hidePanel();
-        manRBACConstrPanel.hidePanel();
-        manDevConstrPanel.hidePanel();
-        manRoomConstrPanel.hidePanel();
-        viewRBACPanel.hidePanel();
-        viewuserRBAC.hidePanel();
-        rbacStatistics.hidePanel();
-        cl.show(cards,USER_ROLES_PANEL);
-    }
+	void loadManUsRolPanel() {
+		manRolesPanel.hidePanel();
+		butlerPanel.hidePanel();
+		rbacPanel.hidePanel();
+		issueCmdPanel.hidePanel();
+		initAdminPanel.hidePanel();
+		initOrdinaryPanel.hidePanel();
+		accessPanel.hidePanel();
+		infoPanel.hidePanel();
+		policyPanel.hidePanel();
+		visitorsPanel.hidePanel();
+		viewPlanPanel.hidePanel();
+		viewPolicyPanel.hidePanel();
+		manageProfilePanel.hidePanel();
+		manageUsersPanel.hidePanel();
+		manRolesPermPanel.hidePanel();
+		manUsersRolesPanel.init(user);
+		manPermPanel.hidePanel();
+		manRBACConstrPanel.hidePanel();
+		manDevicesConstrPanel.hidePanel();
+		manRoomsConstrPanel.hidePanel();
+		viewRBACPolicyPanel.hidePanel();
+		viewUserRBACPanel.hidePanel();
+		rbacStatisticsPanel.hidePanel();
+		cardLayout.show(cards, USER_ROLES_PANEL);
+	}
 
-    void loadManRolPermPanel() {
-        manRolePanel.hidePanel();
-        butlerPanel.hidePanel();
-        rbacPanel.hidePanel();
-        icPanel.hidePanel();
-        iaPanel.hidePanel();
-        ioPanel.hidePanel();
-        aPanel.hidePanel();
-        iPanel.hidePanel();
-        pPanel.hidePanel();
-        vPanel.hidePanel();
-        vpPanel.hidePanel();
-        vpoPanel.hidePanel();
-        mpPanel.hidePanel();
-        muPanel.hidePanel();
-        manRolPermPanel.init(user);
-        manUsRoPanel.hidePanel();
-        manPermPanel.hidePanel();
-        manRBACConstrPanel.hidePanel();
-        manDevConstrPanel.hidePanel();
-        manRoomConstrPanel.hidePanel();
-        viewRBACPanel.hidePanel();
-        viewuserRBAC.hidePanel();
-        rbacStatistics.hidePanel();
-        cl.show(cards,ROLES_PERMS_PANEL);
-    }
+	void loadManRolPermPanel() {
+		manRolesPanel.hidePanel();
+		butlerPanel.hidePanel();
+		rbacPanel.hidePanel();
+		issueCmdPanel.hidePanel();
+		initAdminPanel.hidePanel();
+		initOrdinaryPanel.hidePanel();
+		accessPanel.hidePanel();
+		infoPanel.hidePanel();
+		policyPanel.hidePanel();
+		visitorsPanel.hidePanel();
+		viewPlanPanel.hidePanel();
+		viewPolicyPanel.hidePanel();
+		manageProfilePanel.hidePanel();
+		manageUsersPanel.hidePanel();
+		manRolesPermPanel.init(user);
+		manUsersRolesPanel.hidePanel();
+		manPermPanel.hidePanel();
+		manRBACConstrPanel.hidePanel();
+		manDevicesConstrPanel.hidePanel();
+		manRoomsConstrPanel.hidePanel();
+		viewRBACPolicyPanel.hidePanel();
+		viewUserRBACPanel.hidePanel();
+		rbacStatisticsPanel.hidePanel();
+		cardLayout.show(cards, ROLES_PERMS_PANEL);
+	}
 
-    void loadManPermPanel() {
-        manRolePanel.hidePanel();
-        butlerPanel.hidePanel();
-        rbacPanel.hidePanel();
-        icPanel.hidePanel();
-        iaPanel.hidePanel();
-        ioPanel.hidePanel();
-        aPanel.hidePanel();
-        iPanel.hidePanel();
-        pPanel.hidePanel();
-        vPanel.hidePanel();
-        vpPanel.hidePanel();
-        vpoPanel.hidePanel();
-        mpPanel.hidePanel();
-        muPanel.hidePanel();
-        manRolPermPanel.hidePanel();
-        manUsRoPanel.hidePanel();
-        manPermPanel.init(user);
-        manRBACConstrPanel.hidePanel();
-        manDevConstrPanel.hidePanel();
-        manRoomConstrPanel.hidePanel();
-        viewRBACPanel.hidePanel();
-        viewuserRBAC.hidePanel();
-        rbacStatistics.hidePanel();
-        cl.show(cards,PERMS_PANEL);
-    }
+	void loadManPermPanel() {
+		manRolesPanel.hidePanel();
+		butlerPanel.hidePanel();
+		rbacPanel.hidePanel();
+		issueCmdPanel.hidePanel();
+		initAdminPanel.hidePanel();
+		initOrdinaryPanel.hidePanel();
+		accessPanel.hidePanel();
+		infoPanel.hidePanel();
+		policyPanel.hidePanel();
+		visitorsPanel.hidePanel();
+		viewPlanPanel.hidePanel();
+		viewPolicyPanel.hidePanel();
+		manageProfilePanel.hidePanel();
+		manageUsersPanel.hidePanel();
+		manRolesPermPanel.hidePanel();
+		manUsersRolesPanel.hidePanel();
+		manPermPanel.init(user);
+		manRBACConstrPanel.hidePanel();
+		manDevicesConstrPanel.hidePanel();
+		manRoomsConstrPanel.hidePanel();
+		viewRBACPolicyPanel.hidePanel();
+		viewUserRBACPanel.hidePanel();
+		rbacStatisticsPanel.hidePanel();
+		cardLayout.show(cards, PERMS_PANEL);
+	}
 
-    void loadManRBACContrPanel() {
-        manRolePanel.hidePanel();
-        butlerPanel.hidePanel();
-        rbacPanel.hidePanel();
-        icPanel.hidePanel();
-        iaPanel.hidePanel();
-        ioPanel.hidePanel();
-        aPanel.hidePanel();
-        iPanel.hidePanel();
-        pPanel.hidePanel();
-        vPanel.hidePanel();
-        vpPanel.hidePanel();
-        vpoPanel.hidePanel();
-        mpPanel.hidePanel();
-        muPanel.hidePanel();
-        manRolPermPanel.hidePanel();
-        manUsRoPanel.hidePanel();
-        manPermPanel.hidePanel();
-        manRBACConstrPanel.init(user);
-        manDevConstrPanel.hidePanel();
-        manRoomConstrPanel.hidePanel();
-        viewRBACPanel.hidePanel();
-        viewuserRBAC.hidePanel();
-        rbacStatistics.hidePanel();
-        cl.show(cards,RBAC_CONSTR_PANEL);
-    }
+	void loadManRBACContrPanel() {
+		manRolesPanel.hidePanel();
+		butlerPanel.hidePanel();
+		rbacPanel.hidePanel();
+		issueCmdPanel.hidePanel();
+		initAdminPanel.hidePanel();
+		initOrdinaryPanel.hidePanel();
+		accessPanel.hidePanel();
+		infoPanel.hidePanel();
+		policyPanel.hidePanel();
+		visitorsPanel.hidePanel();
+		viewPlanPanel.hidePanel();
+		viewPolicyPanel.hidePanel();
+		manageProfilePanel.hidePanel();
+		manageUsersPanel.hidePanel();
+		manRolesPermPanel.hidePanel();
+		manUsersRolesPanel.hidePanel();
+		manPermPanel.hidePanel();
+		manRBACConstrPanel.init(user);
+		manDevicesConstrPanel.hidePanel();
+		manRoomsConstrPanel.hidePanel();
+		viewRBACPolicyPanel.hidePanel();
+		viewUserRBACPanel.hidePanel();
+		rbacStatisticsPanel.hidePanel();
+		cardLayout.show(cards, RBAC_CONSTR_PANEL);
+	}
 
-    void loadManDevContrPanel() {
-        manRolePanel.hidePanel();
-        butlerPanel.hidePanel();
-        rbacPanel.hidePanel();
-        icPanel.hidePanel();
-        iaPanel.hidePanel();
-        ioPanel.hidePanel();
-        aPanel.hidePanel();
-        iPanel.hidePanel();
-        pPanel.hidePanel();
-        vPanel.hidePanel();
-        vpPanel.hidePanel();
-        vpoPanel.hidePanel();
-        mpPanel.hidePanel();
-        muPanel.hidePanel();
-        manRolPermPanel.hidePanel();
-        manUsRoPanel.hidePanel();
-        manPermPanel.hidePanel();
-        manRBACConstrPanel.hidePanel();
-        manDevConstrPanel.init(user);
-        manRoomConstrPanel.hidePanel();
-        viewRBACPanel.hidePanel();
-        viewuserRBAC.hidePanel();
-        rbacStatistics.hidePanel();
-        cl.show(cards,DEV_CONSTR_PANEL);
-    }
+	void loadManDevContrPanel() {
+		manRolesPanel.hidePanel();
+		butlerPanel.hidePanel();
+		rbacPanel.hidePanel();
+		issueCmdPanel.hidePanel();
+		initAdminPanel.hidePanel();
+		initOrdinaryPanel.hidePanel();
+		accessPanel.hidePanel();
+		infoPanel.hidePanel();
+		policyPanel.hidePanel();
+		visitorsPanel.hidePanel();
+		viewPlanPanel.hidePanel();
+		viewPolicyPanel.hidePanel();
+		manageProfilePanel.hidePanel();
+		manageUsersPanel.hidePanel();
+		manRolesPermPanel.hidePanel();
+		manUsersRolesPanel.hidePanel();
+		manPermPanel.hidePanel();
+		manRBACConstrPanel.hidePanel();
+		manDevicesConstrPanel.init(user);
+		manRoomsConstrPanel.hidePanel();
+		viewRBACPolicyPanel.hidePanel();
+		viewUserRBACPanel.hidePanel();
+		rbacStatisticsPanel.hidePanel();
+		cardLayout.show(cards, DEV_CONSTR_PANEL);
+	}
 
-    void loadManRoomContrPanel() {
-        manRolePanel.hidePanel();
-        butlerPanel.hidePanel();
-        rbacPanel.hidePanel();
-        icPanel.hidePanel();
-        iaPanel.hidePanel();
-        ioPanel.hidePanel();
-        aPanel.hidePanel();
-        iPanel.hidePanel();
-        pPanel.hidePanel();
-        vPanel.hidePanel();
-        vpPanel.hidePanel();
-        vpoPanel.hidePanel();
-        mpPanel.hidePanel();
-        muPanel.hidePanel();
-        manRolPermPanel.hidePanel();
-        manUsRoPanel.hidePanel();
-        manPermPanel.hidePanel();
-        manRBACConstrPanel.hidePanel();
-        manDevConstrPanel.hidePanel();
-        manRoomConstrPanel.init(user);
-        viewRBACPanel.hidePanel();
-        viewuserRBAC.hidePanel();
-        rbacStatistics.hidePanel();
-        cl.show(cards,ROOMS_CONSTR_PANEL);
-    }
+	void loadManRoomContrPanel() {
+		manRolesPanel.hidePanel();
+		butlerPanel.hidePanel();
+		rbacPanel.hidePanel();
+		issueCmdPanel.hidePanel();
+		initAdminPanel.hidePanel();
+		initOrdinaryPanel.hidePanel();
+		accessPanel.hidePanel();
+		infoPanel.hidePanel();
+		policyPanel.hidePanel();
+		visitorsPanel.hidePanel();
+		viewPlanPanel.hidePanel();
+		viewPolicyPanel.hidePanel();
+		manageProfilePanel.hidePanel();
+		manageUsersPanel.hidePanel();
+		manRolesPermPanel.hidePanel();
+		manUsersRolesPanel.hidePanel();
+		manPermPanel.hidePanel();
+		manRBACConstrPanel.hidePanel();
+		manDevicesConstrPanel.hidePanel();
+		manRoomsConstrPanel.init(user);
+		viewRBACPolicyPanel.hidePanel();
+		viewUserRBACPanel.hidePanel();
+		rbacStatisticsPanel.hidePanel();
+		cardLayout.show(cards, ROOMS_CONSTR_PANEL);
+	}
 
-    void loadViewRBACPanel() {
-        manRolePanel.hidePanel();
-        butlerPanel.hidePanel();
-        rbacPanel.hidePanel();
-        icPanel.hidePanel();
-        iaPanel.hidePanel();
-        ioPanel.hidePanel();
-        aPanel.hidePanel();
-        iPanel.hidePanel();
-        pPanel.hidePanel();
-        vPanel.hidePanel();
-        vpPanel.hidePanel();
-        vpoPanel.hidePanel();
-        mpPanel.hidePanel();
-        muPanel.hidePanel();
-        manRolPermPanel.hidePanel();
-        manUsRoPanel.hidePanel();
-        manPermPanel.hidePanel();
-        manRBACConstrPanel.hidePanel();
-        manDevConstrPanel.hidePanel();
-        manRoomConstrPanel.hidePanel();
-        viewRBACPanel.init(user);
-        viewuserRBAC.hidePanel();
-        rbacStatistics.hidePanel();
-        cl.show(cards,VIEW_RBAC_PANEL);
-    }
+	void loadViewRBACPanel() {
+		manRolesPanel.hidePanel();
+		butlerPanel.hidePanel();
+		rbacPanel.hidePanel();
+		issueCmdPanel.hidePanel();
+		initAdminPanel.hidePanel();
+		initOrdinaryPanel.hidePanel();
+		accessPanel.hidePanel();
+		infoPanel.hidePanel();
+		policyPanel.hidePanel();
+		visitorsPanel.hidePanel();
+		viewPlanPanel.hidePanel();
+		viewPolicyPanel.hidePanel();
+		manageProfilePanel.hidePanel();
+		manageUsersPanel.hidePanel();
+		manRolesPermPanel.hidePanel();
+		manUsersRolesPanel.hidePanel();
+		manPermPanel.hidePanel();
+		manRBACConstrPanel.hidePanel();
+		manDevicesConstrPanel.hidePanel();
+		manRoomsConstrPanel.hidePanel();
+		viewRBACPolicyPanel.init(user);
+		viewUserRBACPanel.hidePanel();
+		rbacStatisticsPanel.hidePanel();
+		cardLayout.show(cards, VIEW_RBAC_PANEL);
+	}
 
-    void loadRBACStatisticsPanel() {
-        manRolePanel.hidePanel();
-        butlerPanel.hidePanel();
-        rbacPanel.hidePanel();
-        icPanel.hidePanel();
-        iaPanel.hidePanel();
-        ioPanel.hidePanel();
-        aPanel.hidePanel();
-        iPanel.hidePanel();
-        pPanel.hidePanel();
-        vPanel.hidePanel();
-        vpPanel.hidePanel();
-        vpoPanel.hidePanel();
-        mpPanel.hidePanel();
-        muPanel.hidePanel();
-        manRolPermPanel.hidePanel();
-        manUsRoPanel.hidePanel();
-        manPermPanel.hidePanel();
-        manRBACConstrPanel.hidePanel();
-        manDevConstrPanel.hidePanel();
-        manRoomConstrPanel.hidePanel();
-        viewRBACPanel.hidePanel();
-        viewuserRBAC.hidePanel();
-        rbacStatistics.init(user);
-        cl.show(cards,RBAC_STATISTICS);
-    }
+	void loadRBACStatisticsPanel() {
+		manRolesPanel.hidePanel();
+		butlerPanel.hidePanel();
+		rbacPanel.hidePanel();
+		issueCmdPanel.hidePanel();
+		initAdminPanel.hidePanel();
+		initOrdinaryPanel.hidePanel();
+		accessPanel.hidePanel();
+		infoPanel.hidePanel();
+		policyPanel.hidePanel();
+		visitorsPanel.hidePanel();
+		viewPlanPanel.hidePanel();
+		viewPolicyPanel.hidePanel();
+		manageProfilePanel.hidePanel();
+		manageUsersPanel.hidePanel();
+		manRolesPermPanel.hidePanel();
+		manUsersRolesPanel.hidePanel();
+		manPermPanel.hidePanel();
+		manRBACConstrPanel.hidePanel();
+		manDevicesConstrPanel.hidePanel();
+		manRoomsConstrPanel.hidePanel();
+		viewRBACPolicyPanel.hidePanel();
+		viewUserRBACPanel.hidePanel();
+		rbacStatisticsPanel.init(user);
+		cardLayout.show(cards, RBAC_STATISTICS);
+	}
 
-    //Misc
-    void loadInfoPanel() {
-        iPanel.init(user);
-        butlerPanel.hidePanel();
-        iaPanel.hidePanel();
-        ioPanel.hidePanel();
-        aPanel.hidePanel();
-        icPanel.hidePanel();
-        pPanel.hidePanel();
-        vPanel.hidePanel();
-        vpPanel.hidePanel();
-        vpoPanel.hidePanel();
-        mpPanel.hidePanel();
-        muPanel.hidePanel();
-        rbacPanel.hidePanel();
-        manRolePanel.hidePanel();
-        manRolPermPanel.hidePanel();
-        manUsRoPanel.hidePanel();
-        manPermPanel.hidePanel();
-        manRBACConstrPanel.hidePanel();
-        manDevConstrPanel.hidePanel();
-        manRoomConstrPanel.hidePanel();
-        viewRBACPanel.hidePanel();
-        viewuserRBAC.hidePanel();
-        rbacStatistics.hidePanel();
-        cl.show(cards,INFO_PANEL);
-    }
+	void loadInfoPanel() {
+		infoPanel.init(user);
+		butlerPanel.hidePanel();
+		initAdminPanel.hidePanel();
+		initOrdinaryPanel.hidePanel();
+		accessPanel.hidePanel();
+		issueCmdPanel.hidePanel();
+		policyPanel.hidePanel();
+		visitorsPanel.hidePanel();
+		viewPlanPanel.hidePanel();
+		viewPolicyPanel.hidePanel();
+		manageProfilePanel.hidePanel();
+		manageUsersPanel.hidePanel();
+		rbacPanel.hidePanel();
+		manRolesPanel.hidePanel();
+		manRolesPermPanel.hidePanel();
+		manUsersRolesPanel.hidePanel();
+		manPermPanel.hidePanel();
+		manRBACConstrPanel.hidePanel();
+		manDevicesConstrPanel.hidePanel();
+		manRoomsConstrPanel.hidePanel();
+		viewRBACPolicyPanel.hidePanel();
+		viewUserRBACPanel.hidePanel();
+		rbacStatisticsPanel.hidePanel();
+		cardLayout.show(cards, INFO_PANEL);
+	}
 
-    void loadVisitorsPanel() {
-        vPanel.init(user);
-        butlerPanel.hidePanel();
-        iaPanel.hidePanel();
-        ioPanel.hidePanel();
-        aPanel.hidePanel();
-        icPanel.hidePanel();
-        pPanel.hidePanel();
-        iPanel.hidePanel();
-        vpPanel.hidePanel();
-        vpoPanel.hidePanel();
-        mpPanel.hidePanel();
-        muPanel.hidePanel();
-        rbacPanel.hidePanel();
-        manRolePanel.hidePanel();
-        manRolPermPanel.hidePanel();
-        manUsRoPanel.hidePanel();
-        manPermPanel.hidePanel();
-        manRBACConstrPanel.hidePanel();
-        manDevConstrPanel.hidePanel();
-        manRoomConstrPanel.hidePanel();
-        viewRBACPanel.hidePanel();
-        viewuserRBAC.hidePanel();
-        rbacStatistics.hidePanel();
-        cl.show(cards,VISITORS_PANEL);
-    }
+	void loadVisitorsPanel() {
+		visitorsPanel.init(user);
+		butlerPanel.hidePanel();
+		initAdminPanel.hidePanel();
+		initOrdinaryPanel.hidePanel();
+		accessPanel.hidePanel();
+		issueCmdPanel.hidePanel();
+		policyPanel.hidePanel();
+		infoPanel.hidePanel();
+		viewPlanPanel.hidePanel();
+		viewPolicyPanel.hidePanel();
+		manageProfilePanel.hidePanel();
+		manageUsersPanel.hidePanel();
+		rbacPanel.hidePanel();
+		manRolesPanel.hidePanel();
+		manRolesPermPanel.hidePanel();
+		manUsersRolesPanel.hidePanel();
+		manPermPanel.hidePanel();
+		manRBACConstrPanel.hidePanel();
+		manDevicesConstrPanel.hidePanel();
+		manRoomsConstrPanel.hidePanel();
+		viewRBACPolicyPanel.hidePanel();
+		viewUserRBACPanel.hidePanel();
+		rbacStatisticsPanel.hidePanel();
+		cardLayout.show(cards, VISITORS_PANEL);
+	}
 
-    void loadPolicyPanel() {
-        pPanel.init(user);
-        butlerPanel.hidePanel();
-        iaPanel.hidePanel();
-        ioPanel.hidePanel();
-        aPanel.hidePanel();
-        iPanel.hidePanel();
-        icPanel.hidePanel();
-        vPanel.hidePanel();
-        vpPanel.hidePanel();
-        vpoPanel.hidePanel();
-        mpPanel.hidePanel();
-        muPanel.hidePanel();
-        rbacPanel.hidePanel();
-        manRolePanel.hidePanel();
-        manRolPermPanel.hidePanel();
-        manUsRoPanel.hidePanel();
-        manPermPanel.hidePanel();
-        manRBACConstrPanel.hidePanel();
-        manDevConstrPanel.hidePanel();
-        manRoomConstrPanel.hidePanel();
-        viewRBACPanel.hidePanel();
-        viewuserRBAC.hidePanel();
-        rbacStatistics.hidePanel();
-        cl.show(cards,POLICY_PANEL);
-    }
+	void loadPolicyPanel() {
+		policyPanel.init(user);
+		butlerPanel.hidePanel();
+		initAdminPanel.hidePanel();
+		initOrdinaryPanel.hidePanel();
+		accessPanel.hidePanel();
+		infoPanel.hidePanel();
+		issueCmdPanel.hidePanel();
+		visitorsPanel.hidePanel();
+		viewPlanPanel.hidePanel();
+		viewPolicyPanel.hidePanel();
+		manageProfilePanel.hidePanel();
+		manageUsersPanel.hidePanel();
+		rbacPanel.hidePanel();
+		manRolesPanel.hidePanel();
+		manRolesPermPanel.hidePanel();
+		manUsersRolesPanel.hidePanel();
+		manPermPanel.hidePanel();
+		manRBACConstrPanel.hidePanel();
+		manDevicesConstrPanel.hidePanel();
+		manRoomsConstrPanel.hidePanel();
+		viewRBACPolicyPanel.hidePanel();
+		viewUserRBACPanel.hidePanel();
+		rbacStatisticsPanel.hidePanel();
+		cardLayout.show(cards, POLICY_PANEL);
+	}
 
-    void loadViewPlanPanel() {
-        vpPanel.init(user);
-        butlerPanel.hidePanel();
-        iaPanel.hidePanel();
-        ioPanel.hidePanel();
-        aPanel.hidePanel();
-        iPanel.hidePanel();
-        pPanel.hidePanel();
-        icPanel.hidePanel();
-        vPanel.hidePanel();
-        vpoPanel.hidePanel();
-        mpPanel.hidePanel();
-        muPanel.hidePanel();
-        rbacPanel.hidePanel();
-        manRolePanel.hidePanel();
-        manRolPermPanel.hidePanel();
-        manUsRoPanel.hidePanel();
-        manPermPanel.hidePanel();
-        manRBACConstrPanel.hidePanel();
-        manDevConstrPanel.hidePanel();
-        manRoomConstrPanel.hidePanel();
-        viewRBACPanel.hidePanel();
-        viewuserRBAC.hidePanel();
-        rbacStatistics.hidePanel();
-        cl.show(cards,VIEW_PLAN_PANEL);
-    }
+	void loadViewPlanPanel() {
+		viewPlanPanel.init(user);
+		butlerPanel.hidePanel();
+		initAdminPanel.hidePanel();
+		initOrdinaryPanel.hidePanel();
+		accessPanel.hidePanel();
+		infoPanel.hidePanel();
+		policyPanel.hidePanel();
+		issueCmdPanel.hidePanel();
+		visitorsPanel.hidePanel();
+		viewPolicyPanel.hidePanel();
+		manageProfilePanel.hidePanel();
+		manageUsersPanel.hidePanel();
+		rbacPanel.hidePanel();
+		manRolesPanel.hidePanel();
+		manRolesPermPanel.hidePanel();
+		manUsersRolesPanel.hidePanel();
+		manPermPanel.hidePanel();
+		manRBACConstrPanel.hidePanel();
+		manDevicesConstrPanel.hidePanel();
+		manRoomsConstrPanel.hidePanel();
+		viewRBACPolicyPanel.hidePanel();
+		viewUserRBACPanel.hidePanel();
+		rbacStatisticsPanel.hidePanel();
+		cardLayout.show(cards, VIEW_PLAN_PANEL);
+	}
 
-    void loadViewPolicyPanel() {
-        vpoPanel.init(user);
-        butlerPanel.hidePanel();
-        iaPanel.hidePanel();
-        ioPanel.hidePanel();
-        aPanel.hidePanel();
-        iPanel.hidePanel();
-        pPanel.hidePanel();
-        icPanel.hidePanel();
-        vPanel.hidePanel();
-        vpPanel.hidePanel();
-        mpPanel.hidePanel();
-        muPanel.hidePanel();
-        rbacPanel.hidePanel();
-        manRolePanel.hidePanel();
-        manRolPermPanel.hidePanel();
-        manUsRoPanel.hidePanel();
-        manPermPanel.hidePanel();
-        manRBACConstrPanel.hidePanel();
-        manDevConstrPanel.hidePanel();
-        manRoomConstrPanel.hidePanel();
-        viewRBACPanel.hidePanel();
-        viewuserRBAC.hidePanel();
-        rbacStatistics.hidePanel();
-        cl.show(cards,VIEW_POLICY_PANEL);
-    }
+	void loadViewPolicyPanel() {
+		viewPolicyPanel.init(user);
+		butlerPanel.hidePanel();
+		initAdminPanel.hidePanel();
+		initOrdinaryPanel.hidePanel();
+		accessPanel.hidePanel();
+		infoPanel.hidePanel();
+		policyPanel.hidePanel();
+		issueCmdPanel.hidePanel();
+		visitorsPanel.hidePanel();
+		viewPlanPanel.hidePanel();
+		manageProfilePanel.hidePanel();
+		manageUsersPanel.hidePanel();
+		rbacPanel.hidePanel();
+		manRolesPanel.hidePanel();
+		manRolesPermPanel.hidePanel();
+		manUsersRolesPanel.hidePanel();
+		manPermPanel.hidePanel();
+		manRBACConstrPanel.hidePanel();
+		manDevicesConstrPanel.hidePanel();
+		manRoomsConstrPanel.hidePanel();
+		viewRBACPolicyPanel.hidePanel();
+		viewUserRBACPanel.hidePanel();
+		rbacStatisticsPanel.hidePanel();
+		cardLayout.show(cards, VIEW_POLICY_PANEL);
+	}
 
-    void loadManageProfilePanel() {
-        mpPanel.init(user);
-        butlerPanel.hidePanel();
-        iaPanel.hidePanel();
-        ioPanel.hidePanel();
-        aPanel.hidePanel();
-        iPanel.hidePanel();
-        pPanel.hidePanel();
-        icPanel.hidePanel();
-        vPanel.hidePanel();
-        vpPanel.hidePanel();
-        vpoPanel.hidePanel();
-        muPanel.hidePanel();
-        rbacPanel.hidePanel();
-        manRolePanel.hidePanel();
-        manRolPermPanel.hidePanel();
-        manUsRoPanel.hidePanel();
-        manPermPanel.hidePanel();
-        manRBACConstrPanel.hidePanel();
-        manDevConstrPanel.hidePanel();
-        manRoomConstrPanel.hidePanel();
-        viewRBACPanel.hidePanel();
-        viewuserRBAC.hidePanel();
-        rbacStatistics.hidePanel();
-        cl.show(cards,MANAGE_PROFILE_PANEL);
-    }
+	void loadManageProfilePanel() {
+		manageProfilePanel.init(user);
+		butlerPanel.hidePanel();
+		initAdminPanel.hidePanel();
+		initOrdinaryPanel.hidePanel();
+		accessPanel.hidePanel();
+		infoPanel.hidePanel();
+		policyPanel.hidePanel();
+		issueCmdPanel.hidePanel();
+		visitorsPanel.hidePanel();
+		viewPlanPanel.hidePanel();
+		viewPolicyPanel.hidePanel();
+		manageUsersPanel.hidePanel();
+		rbacPanel.hidePanel();
+		manRolesPanel.hidePanel();
+		manRolesPermPanel.hidePanel();
+		manUsersRolesPanel.hidePanel();
+		manPermPanel.hidePanel();
+		manRBACConstrPanel.hidePanel();
+		manDevicesConstrPanel.hidePanel();
+		manRoomsConstrPanel.hidePanel();
+		viewRBACPolicyPanel.hidePanel();
+		viewUserRBACPanel.hidePanel();
+		rbacStatisticsPanel.hidePanel();
+		cardLayout.show(cards, MANAGE_PROFILE_PANEL);
+	}
 
-    void loadManageUsersPanel() {
-        iaPanel.hidePanel();
-        butlerPanel.hidePanel();
-        ioPanel.hidePanel();
-        aPanel.hidePanel();
-        iPanel.hidePanel();
-        pPanel.hidePanel();
-        icPanel.hidePanel();
-        vPanel.hidePanel();
-        vpPanel.hidePanel();
-        vpoPanel.hidePanel();
-        mpPanel.hidePanel();
-        muPanel.init(user);
-        rbacPanel.hidePanel();
-        manRolePanel.hidePanel();
-        manRolPermPanel.hidePanel();
-        manUsRoPanel.hidePanel();
-        manPermPanel.hidePanel();
-        manRBACConstrPanel.hidePanel();
-        manDevConstrPanel.hidePanel();
-        manRoomConstrPanel.hidePanel();
-        viewRBACPanel.hidePanel();
-        viewuserRBAC.hidePanel();
-        rbacStatistics.hidePanel();
-        cl.show(cards,MANAGE_USERS_PANEL);
-    }
-    
-    void loadViewUsersRBACPanel() {
-        iaPanel.hidePanel();
-        butlerPanel.hidePanel();
-        ioPanel.hidePanel();
-        aPanel.hidePanel();
-        iPanel.hidePanel();
-        pPanel.hidePanel();
-        icPanel.hidePanel();
-        vPanel.hidePanel();
-        vpPanel.hidePanel();
-        vpoPanel.hidePanel();
-        mpPanel.hidePanel();
-        muPanel.hidePanel();
-        rbacPanel.hidePanel();
-        manRolePanel.hidePanel();
-        manRolPermPanel.hidePanel();
-        manUsRoPanel.hidePanel();
-        manPermPanel.hidePanel();
-        manRBACConstrPanel.hidePanel();
-        manDevConstrPanel.hidePanel();
-        manRoomConstrPanel.hidePanel();
-        viewRBACPanel.hidePanel();
-        viewuserRBAC.init(user);
-        rbacStatistics.hidePanel();
-        cl.show(cards,VIEW_RBAC_USR_PANEL);
-    }
+	void loadManageUsersPanel() {
+		initAdminPanel.hidePanel();
+		butlerPanel.hidePanel();
+		initOrdinaryPanel.hidePanel();
+		accessPanel.hidePanel();
+		infoPanel.hidePanel();
+		policyPanel.hidePanel();
+		issueCmdPanel.hidePanel();
+		visitorsPanel.hidePanel();
+		viewPlanPanel.hidePanel();
+		viewPolicyPanel.hidePanel();
+		manageProfilePanel.hidePanel();
+		manageUsersPanel.init(user);
+		rbacPanel.hidePanel();
+		manRolesPanel.hidePanel();
+		manRolesPermPanel.hidePanel();
+		manUsersRolesPanel.hidePanel();
+		manPermPanel.hidePanel();
+		manRBACConstrPanel.hidePanel();
+		manDevicesConstrPanel.hidePanel();
+		manRoomsConstrPanel.hidePanel();
+		viewRBACPolicyPanel.hidePanel();
+		viewUserRBACPanel.hidePanel();
+		rbacStatisticsPanel.hidePanel();
+		cardLayout.show(cards, MANAGE_USERS_PANEL);
+	}
 
-	public void loadAgentPanel(TucsonAgentInterface t) {
-        butlerPanel.hidePanel();
-        t.show();
+	void loadViewUsersRBACPanel() {
+		initAdminPanel.hidePanel();
+		butlerPanel.hidePanel();
+		initOrdinaryPanel.hidePanel();
+		accessPanel.hidePanel();
+		infoPanel.hidePanel();
+		policyPanel.hidePanel();
+		issueCmdPanel.hidePanel();
+		visitorsPanel.hidePanel();
+		viewPlanPanel.hidePanel();
+		viewPolicyPanel.hidePanel();
+		manageProfilePanel.hidePanel();
+		manageUsersPanel.hidePanel();
+		rbacPanel.hidePanel();
+		manRolesPanel.hidePanel();
+		manRolesPermPanel.hidePanel();
+		manUsersRolesPanel.hidePanel();
+		manPermPanel.hidePanel();
+		manRBACConstrPanel.hidePanel();
+		manDevicesConstrPanel.hidePanel();
+		manRoomsConstrPanel.hidePanel();
+		viewRBACPolicyPanel.hidePanel();
+		viewUserRBACPanel.init(user);
+		rbacStatisticsPanel.hidePanel();
+		cardLayout.show(cards, VIEW_RBAC_USR_PANEL);
+	}
+
+	public void loadAgentPanel(TucsonAgentInterface agent) {
+		butlerPanel.hidePanel();
+		agent.show();
 	}
 
 	public void loadButlerPanel() {
-		iaPanel.hidePanel();
-        ioPanel.hidePanel();
-        aPanel.hidePanel();
-        iPanel.hidePanel();
-        pPanel.hidePanel();
-        icPanel.hidePanel();
-        vPanel.hidePanel();
-        vpPanel.hidePanel();
-        vpoPanel.hidePanel();
-        mpPanel.hidePanel();
-        muPanel.hidePanel();
-        rbacPanel.hidePanel();
-        manRolePanel.hidePanel();
-        manRolPermPanel.hidePanel();
-        manUsRoPanel.hidePanel();
-        manPermPanel.hidePanel();
-        manRBACConstrPanel.hidePanel();
-        manDevConstrPanel.hidePanel();
-        manRoomConstrPanel.hidePanel();
-        viewRBACPanel.hidePanel();
-        butlerPanel.init(user);
-        cl.show(cards,BUTLER);
-		
+		initAdminPanel.hidePanel();
+		initOrdinaryPanel.hidePanel();
+		accessPanel.hidePanel();
+		infoPanel.hidePanel();
+		policyPanel.hidePanel();
+		issueCmdPanel.hidePanel();
+		visitorsPanel.hidePanel();
+		viewPlanPanel.hidePanel();
+		viewPolicyPanel.hidePanel();
+		manageProfilePanel.hidePanel();
+		manageUsersPanel.hidePanel();
+		rbacPanel.hidePanel();
+		manRolesPanel.hidePanel();
+		manRolesPermPanel.hidePanel();
+		manUsersRolesPanel.hidePanel();
+		manPermPanel.hidePanel();
+		manRBACConstrPanel.hidePanel();
+		manDevicesConstrPanel.hidePanel();
+		manRoomsConstrPanel.hidePanel();
+		viewRBACPolicyPanel.hidePanel();
+		butlerPanel.init(user);
+		cardLayout.show(cards, BUTLER);
 	}
-	
-	private void addListAgenttoCards(JPanel cards) {
-	       for(TucsonAgentInterface tucAgentInterface:AgentManager.getInstance().getListAgent()){
-	           cards.add(tucAgentInterface.getInterface(),tucAgentInterface.getName());
-	       }
-	       for(TucsonAgentInterface tucAgentInterface:AgentManager.getInstance().getListAgent()){
-	           cards.add(tucAgentInterface.getInterface(),tucAgentInterface.getName());
-	       }
-	    }
-
 }

@@ -15,6 +15,7 @@ import alice.tucson.api.*;
 import alice.logictuple.*;
 import it.unibo.homemanager.ServiceFactory;
 import it.unibo.homemanager.dbmanagement.Database;
+import it.unibo.homemanager.detection.Device;
 import it.unibo.homemanager.tablemap.ServicesInterfaces.DeviceServiceInterface;
 import it.unibo.homemanager.tablemap.ServicesInterfaces.RoomServiceInterface;
 import it.unibo.homemanager.tablemap.ServicesInterfaces.SensorServiceInterface;
@@ -115,7 +116,7 @@ public class ViewPlanPanel extends javax.swing.JPanel {
         try {
             //ds = new DeviceService();
             Device d = deviceService.getDeviceById(database.getDatabase(),lt.getArg(0).intValue());
-            str += d.name+" : currently "+lt.getArg(1).toString();
+            str += d.getDeviceName()+" : currently "+lt.getArg(1).toString();
         }
         catch(Exception ex) {
             ex.printStackTrace();

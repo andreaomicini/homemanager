@@ -6,17 +6,18 @@
 
 package it.unibo.homemanager;
 
-import alice.logictuple.LogicTuple;
-import alice.logictuple.Value;
-import alice.tucson.api.TucsonTupleCentreId;
-import alice.tucson.service.TucsonNodeService;
-import it.unibo.homemanager.userinterfaces.GeneralFrame;
-import it.unibo.homemanager.util.Initializer;
-import it.unibo.homemanager.util.Utilities;
 import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import javax.swing.JFrame;
+
+import alice.tucson.api.TucsonTupleCentreId;
+import alice.tucson.service.TucsonNodeService;
+import it.unibo.homemanager.detection.DeviceManagerAgent;
+import it.unibo.homemanager.usages.UsageManagerAgent;
+import it.unibo.homemanager.userinterfaces.GeneralFrame;
+import it.unibo.homemanager.util.Initializer;
 
 /**
  *
@@ -24,22 +25,16 @@ import javax.swing.JFrame;
  */
 public class Main {
     
-    @SuppressWarnings("unchecked")
-	public static void main(String[] args) {
+    public static void main(String[] args) {
         try {
             int NUM = ServiceFactory.TUCSON;
             ServiceFactory sf = ServiceFactory.getServiceFactory(NUM);
-	    
-            //TucsonNodeService tns = null;
             
             if(TucsonNodeService.isInstalled(20504))
                 System.out.println("Service already active");
             else {
                 System.out.println("Service not running! :(");
                 System.exit(-1);
-                //tns = new TucsonNodeService(); 
-                //tns.install();
-                //Thread.sleep(30000);
             }
             
             System.out.println("Initializing Home Manager!");
@@ -61,10 +56,18 @@ public class Main {
             //submitted by Alessandro Celi
             TucsonTupleCentreId meteo_tc = new TucsonTupleCentreId("meteo_tc", "localhost", "20504");
             
-            //subtmitted by Jacopo Ameli
-            TucsonTupleCentreId presence_tc = new TucsonTupleCentreId("presence_tc","localhost","20504");
+            // submitted by Mattia Fucili
+            TucsonTupleCentreId deviceManager_tc = new TucsonTupleCentreId("device_manager_tc", "localhost", "20504");
+            // submitted by Luca Scalzotto
+            TucsonTupleCentreId mixer_tc = new TucsonTupleCentreId("mixer_tc", "localhost", "20504");
+            TucsonTupleCentreId mixerContainer_tc = new TucsonTupleCentreId("mixer_container_tc", "localhost", "20504");
+            TucsonTupleCentreId fridge_tc = new TucsonTupleCentreId("fridge_tc","localhost","20504");
+            TucsonTupleCentreId oven_tc = new TucsonTupleCentreId("oven_tc","localhost","20504");
+            // submitted by Erika Gardini
+            TucsonTupleCentreId pantry_tc = new TucsonTupleCentreId("pantry_tc","localhost","20504");
+            TucsonTupleCentreId usageManager_tc = new TucsonTupleCentreId("usage_manager_tc", "localhost", "20504");
             
-            //RC replaced rbac_tc with rbac
+            // RC replaced rbac_tc with rbac
             System.out.println("Creo rbac");
             TucsonTupleCentreId rbac_tc = new TucsonTupleCentreId("rbac", "localhost", "20504");
             TucsonTupleCentreId casa_tc = new TucsonTupleCentreId("casa_tc", "localhost", "20504");
@@ -72,7 +75,7 @@ public class Main {
             System.out.println("TCenters created.. 5 sec to connect the Inspector..");
             Thread.sleep(5000);
             
-            Vector tupleCenters = new Vector();
+            Vector<TucsonTupleCentreId> tupleCenters = new Vector<TucsonTupleCentreId>();
             tupleCenters.add(0, ingresso_tc);
             tupleCenters.add(1, sala_tc);
             tupleCenters.add(2, camera_tc);
@@ -88,8 +91,25 @@ public class Main {
             tupleCenters.add(11, meteo_tc); 
             //subamitted by Sara Bevilacqua
             tupleCenters.add(12,twitter_tc);
-            //submitted by Jacopo Ameli
-            tupleCenters.add(13, presence_tc);
+            
+            // submitted by Mattia Fucili   
+            tupleCenters.add(13, deviceManager_tc);
+            // submitted by Luca Scalzotto
+            tupleCenters.add(14, mixer_tc);
+            tupleCenters.add(15, mixerContainer_tc);
+            tupleCenters.add(16, fridge_tc);
+            tupleCenters.add(17, oven_tc);
+            // submitted by Erika Gardini
+            tupleCenters.add(18, pantry_tc);
+            tupleCenters.add(19, usageManager_tc);
+            
+            // init deviceManager
+            DeviceManagerAgent deviceManagerAgent = DeviceManagerAgent.getInstance();
+            deviceManagerAgent.go();
+            
+            // init usageManager
+            UsageManagerAgent usageManagerAgent = UsageManagerAgent.getInstance();
+            usageManagerAgent.go();
             
             JFrame.setDefaultLookAndFeelDecorated(true);
             GeneralFrame gf = new GeneralFrame("HOME MANAGER", tupleCenters, 3, 5, casa_tc, rbac_tc, sf);

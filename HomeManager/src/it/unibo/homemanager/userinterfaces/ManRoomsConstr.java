@@ -11,11 +11,11 @@
 
 package it.unibo.homemanager.userinterfaces;
 
-import it.unibo.homemanager.tablemap.Device;
 import alice.tucson.api.*;
 import alice.logictuple.*;
 import it.unibo.homemanager.ServiceFactory;
 import it.unibo.homemanager.dbmanagement.Database;
+import it.unibo.homemanager.detection.Device;
 import it.unibo.homemanager.tablemap.Room;
 import it.unibo.homemanager.tablemap.ServicesInterfaces.RoomServiceInterface;
 import it.unibo.homemanager.tablemap.User;

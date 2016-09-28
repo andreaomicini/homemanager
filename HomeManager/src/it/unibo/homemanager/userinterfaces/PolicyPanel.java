@@ -15,7 +15,7 @@ import alice.logictuple.*;
 import alice.tucson.api.*;
 import it.unibo.homemanager.ServiceFactory;
 import it.unibo.homemanager.dbmanagement.Database;
-import it.unibo.homemanager.tablemap.Device;
+import it.unibo.homemanager.detection.Device;
 import it.unibo.homemanager.tablemap.ServicesInterfaces.DeviceServiceInterface;
 import it.unibo.homemanager.tablemap.ServicesInterfaces.UserServiceInterface;
 import it.unibo.homemanager.tablemap.User;
@@ -199,13 +199,13 @@ public class PolicyPanel extends javax.swing.JPanel {
             boolean found;
             for(int i=0;i<devices.size();i++) {
                 Device device = /*(Device)*/devices.get(i);//.elementAt(i);
-                deviceName = device.name;
+                deviceName = device.getDeviceName();
                 j=0;
                 found=false;
                 
                 while(j<l.size() && !found){
                     //LogicTuple dev = LogicTuple.parse(l.get(j).toString());
-                    if(l.get(j).getArg(0).intValue()==device.idDev)
+                    if(l.get(j).getArg(0).intValue()==device.getDeviceId())
                         found = true;
                     j++;
                 }
@@ -250,9 +250,9 @@ public class PolicyPanel extends javax.swing.JPanel {
             
             for(int i=0; i<devices.size(); i++) {
                 Device dev = (Device)devices.get(i);
-                if(!unnecessaryIds.contains(dev.idDev)) {
-                    System.err.println("ID " + dev.idDev + " not found, adding to the list..");
-                    unnecessaryDevicesVector.add(dev.name);
+                if(!unnecessaryIds.contains(dev.getDeviceId())) {
+                    System.err.println("ID " + dev.getDeviceId() + " not found, adding to the list..");
+                    unnecessaryDevicesVector.add(dev.getDeviceName());
                 }
             }   
             

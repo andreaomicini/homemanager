@@ -14,7 +14,7 @@ import alice.logictuple.*;
 import alice.tucson.api.exceptions.TucsonInvalidAgentIdException;
 import alice.tuplecentre.core.AbstractTupleCentreOperation;
 import it.unibo.homemanager.ServiceFactory;
-
+import it.unibo.homemanager.detection.Device;
 import it.unibo.homemanager.tablemap.*;
 import it.unibo.homemanager.home_agents.PlanTupleBuilder;
 
@@ -129,9 +129,9 @@ public class CmdControllerAgent extends AbstractTucsonAgent {
         boolean result = false;
         try{
             Device dev = sf.getDeviceServiceInterface().getDeviceById(sf.getDatabaseInterface().getDatabase(), parse.getArg(2).intValue());
-            LogicTuple outTemplate = new LogicTuple("device_req", new Value(this.myName()), parse.getArg(0), new Value(dev.name.substring(1, dev.name.length()-1)));
+            LogicTuple outTemplate = new LogicTuple("device_req", new Value(this.myName()), parse.getArg(0), new Value(dev.getDeviceName().substring(1, dev.getDeviceName().length()-1)));
             acc.out(this.myTid, outTemplate, null);
-            LogicTuple inTemplate = new LogicTuple("device_resp", new Value(this.myName()), parse.getArg(0), new Value(dev.name.substring(1, dev.name.length()-1)), new Var("X"));
+            LogicTuple inTemplate = new LogicTuple("device_resp", new Value(this.myName()), parse.getArg(0), new Value(dev.getDeviceName().substring(1, dev.getDeviceName().length()-1)), new Var("X"));
             ITucsonOperation op_in = acc.in(myTid, inTemplate, Long.MAX_VALUE);
             LogicTuple response = op_in.getLogicTupleResult();
             if(response.getArg(3).intValue() == 1)
