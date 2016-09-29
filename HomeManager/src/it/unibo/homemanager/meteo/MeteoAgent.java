@@ -4,19 +4,12 @@ import java.math.RoundingMode;
 import java.sql.Timestamp;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
-import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 import javax.swing.JPanel;
 
-import it.unibo.homemanager.dbmanagement.Database;
-import it.unibo.homemanager.dbmanagement.TucsonDatabase;
-import it.unibo.homemanager.tablemap.User;
-import it.unibo.homemanager.userinterfaces.TracePanel;
-import it.unibo.homemanager.userinterfaces.ViewManageAgentPanel;
-import it.unibo.homemanager.userinterfaces.ViewMeteoAgentPanel;
 import alice.logictuple.LogicTuple;
 import alice.logictuple.Value;
 import alice.logictuple.Var;
@@ -27,14 +20,14 @@ import alice.tucson.api.TucsonTupleCentreId;
 import alice.tucson.api.exceptions.TucsonInvalidAgentIdException;
 import alice.tucson.api.exceptions.TucsonOperationNotPossibleException;
 import alice.tucson.api.exceptions.UnreachableNodeException;
-import alice.tuplecentre.api.Tuple;
-import alice.tuplecentre.api.exceptions.InvalidTupleException;
 import alice.tuplecentre.api.exceptions.OperationTimeOutException;
 import alice.tuplecentre.core.AbstractTupleCentreOperation;
-import alice.tuples.javatuples.api.IJTupleTemplate;
-import alice.tuples.javatuples.exceptions.InvalidJValException;
-import alice.tuples.javatuples.impl.JTupleTemplate;
-import alice.tuples.javatuples.impl.JVal;
+import it.unibo.homemanager.agents.TucsonAgentInterface;
+import it.unibo.homemanager.dbmanagement.Database;
+import it.unibo.homemanager.dbmanagement.TucsonDatabase;
+import it.unibo.homemanager.userinterfaces.TracePanel;
+import it.unibo.homemanager.userinterfaces.ViewManageAgentPanel;
+import it.unibo.homemanager.userinterfaces.ViewMeteoAgentPanel;
 
 public class MeteoAgent extends AbstractTucsonAgent implements TucsonAgentInterface {
 

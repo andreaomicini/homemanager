@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 
 import it.unibo.homemanager.dbmanagement.Database;
-import it.unibo.homemanager.tablemap.Device;
+import it.unibo.homemanager.detection.Device;
 
 public interface DeviceServiceInterface {
 		

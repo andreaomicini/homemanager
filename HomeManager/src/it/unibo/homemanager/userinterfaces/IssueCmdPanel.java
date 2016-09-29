@@ -10,6 +10,7 @@ import alice.logictuple.*;
 import alice.tucson.api.*;
 import it.unibo.homemanager.ServiceFactory;
 import it.unibo.homemanager.dbmanagement.Database;
+import it.unibo.homemanager.detection.Device;
 import it.unibo.homemanager.tablemap.*;
 import it.unibo.homemanager.tablemap.ServicesInterfaces.DeviceServiceInterface;
 import it.unibo.homemanager.tablemap.ServicesInterfaces.RoomServiceInterface;
@@ -319,7 +320,7 @@ public class IssueCmdPanel extends javax.swing.JPanel {
             ex.printStackTrace();
         }
         // cmd selection
-        String[] cmds = Utilities.getDevCmds(d.param);
+        String[] cmds = Utilities.getDevCmds(d.getDeviceParameters());
         cbCmd.removeAllItems();
         for(int i=0;i<cmds.length;i++)
             cbCmd.addItem(cmds[i]);
@@ -349,7 +350,7 @@ public class IssueCmdPanel extends javax.swing.JPanel {
             cbCmd.removeAllItems(); // empty cmd combo-box
             return;
         }
-        this.tCmd.setText("send_cmd("+r.name+","+d.name+","+
+        this.tCmd.setText("send_cmd("+r.name+","+d.getDeviceName()+","+
                 cbCmd.getSelectedItem().toString()+")");
         this.btCancelCmd.setEnabled(true);
         this.btIssue.setEnabled(true);
@@ -368,7 +369,7 @@ public class IssueCmdPanel extends javax.swing.JPanel {
         // device selection
         cbDevice.removeAllItems();
         for(int i=0;i<devs.size();i++)
-	    cbDevice.addItem(devs.get(i).name);
+	    cbDevice.addItem(devs.get(i).getDeviceName());
             //cbDevice.addItem(((Device)devs.elementAt(i)).name);
         cbDevice.setSelectedItem(null);
     }//GEN-LAST:event_cbDeviceFocusGained
@@ -385,7 +386,7 @@ public class IssueCmdPanel extends javax.swing.JPanel {
             EnhancedSynchACC acc = TucsonMetaACC.getContext(agent);
             
             LogicTuple cmd = new LogicTuple("send_cmd",new Value(usr.idUser),new Value(r.idRoom),
-                new Value(d.idDev),new Value(cbCmd.getSelectedItem().toString()));
+                new Value(d.getDeviceId()),new Value(cbCmd.getSelectedItem().toString()));
             
             acc.out((TucsonTupleCentreId)tid.elementAt(r.idRoom-1), cmd, null);
            // ctx.out((TupleCentreId)tid.elementAt(r.idRoom-1),cmd);

@@ -15,7 +15,7 @@ import alice.logictuple.*;
 import alice.tucson.api.*;
 import it.unibo.homemanager.ServiceFactory;
 import it.unibo.homemanager.dbmanagement.Database;
-import it.unibo.homemanager.tablemap.Device;
+import it.unibo.homemanager.detection.Device;
 import it.unibo.homemanager.tablemap.Room;
 import it.unibo.homemanager.tablemap.ServicesInterfaces.DeviceServiceInterface;
 import it.unibo.homemanager.tablemap.ServicesInterfaces.RoomServiceInterface;
@@ -195,7 +195,7 @@ public class ManPerm extends javax.swing.JPanel {
             for(int i=0;i<devices.size();i++) {
                 //Device dev = (Device)devices.elementAt(i);
 		Device dev = devices.get(i);
-                ut = dev.name;
+                ut = dev.getDeviceName();
                 items.add(ut);
                 ut="";
             }

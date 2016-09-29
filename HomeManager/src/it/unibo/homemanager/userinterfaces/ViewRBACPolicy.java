@@ -11,10 +11,10 @@
 
 package it.unibo.homemanager.userinterfaces;
 
-import it.unibo.homemanager.tablemap.Device;
 import alice.tucson.api.*;
 import alice.logictuple.*;
 import it.unibo.homemanager.ServiceFactory;
+import it.unibo.homemanager.detection.Device;
 import it.unibo.homemanager.tablemap.ServicesInterfaces.UserServiceInterface;
 import it.unibo.homemanager.tablemap.User;
 import java.util.Hashtable;

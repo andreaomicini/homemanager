@@ -11,7 +11,7 @@
 
 package it.unibo.homemanager.userinterfaces;
 
-import it.unibo.homemanager.tablemap.Device;
+import it.unibo.homemanager.detection.Device;
 import it.unibo.homemanager.tablemap.User;
 import it.unibo.homemanager.util.Utilities;
 import java.util.List;

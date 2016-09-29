@@ -12,7 +12,7 @@ import alice.tucson.api.*;
 import alice.logictuple.*;
 import it.unibo.homemanager.ServiceFactory;
 import it.unibo.homemanager.dbmanagement.Database;
-import it.unibo.homemanager.tablemap.Device;
+import it.unibo.homemanager.detection.Device;
 import it.unibo.homemanager.tablemap.ServicesInterfaces.DeviceServiceInterface;
 import it.unibo.homemanager.tablemap.ServicesInterfaces.UserServiceInterface;
 import java.util.List;
@@ -138,7 +138,7 @@ public class ViewPolicyPanel extends javax.swing.JPanel {
             {
                     //rol = LogicTuple.parse(devs.get(i).toString());
                 Device dev = deviceService.getDeviceById(database.getDatabase(), uDevs.get(i).getArg(0).intValue());
-                unnecessaryDevicesVector.add(dev.name);
+                unnecessaryDevicesVector.add(dev.getDeviceName());
             }
             this.jList_UnnDevs.setListData(unnecessaryDevicesVector);
         }catch(Exception ex){
@@ -158,7 +158,7 @@ public class ViewPolicyPanel extends javax.swing.JPanel {
             {
                     //rol = LogicTuple.parse(indDevs.get(i).toString());
                 Device dev = deviceService.getDeviceById(database.getDatabase(), indDevs.get(i).getArg(0).intValue());
-                indispensableDevicesVector.add(dev.name);
+                indispensableDevicesVector.add(dev.getDeviceName());
             }
             this.jList_IndDevs.setListData(indispensableDevicesVector);
         }catch(Exception ex){

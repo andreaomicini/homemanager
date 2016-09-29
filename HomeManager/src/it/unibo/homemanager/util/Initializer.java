@@ -12,6 +12,8 @@ import it.unibo.homemanager.RBAC.GestoreAttivazioneRuolo;
 import it.unibo.homemanager.RBAC.GestoreDisattivazioneRuolo;
 import it.unibo.homemanager.RBAC.RoomAccessManAgent;
 import it.unibo.homemanager.dbmanagement.Database;
+import it.unibo.homemanager.detection.AgentManager;
+import it.unibo.homemanager.detection.Device;
 import it.unibo.homemanager.home_agents.PlanEntitiesAgent;
 import it.unibo.homemanager.home_agents.check_people.DetectorAgent;
 import it.unibo.homemanager.home_agents.check_people.ListManager;
@@ -20,10 +22,8 @@ import it.unibo.homemanager.home_agents.exec_plan.BrightnessAgent;
 import it.unibo.homemanager.home_agents.exec_plan.DeviceAgent;
 import it.unibo.homemanager.home_agents.exec_plan.LampAgent;
 import it.unibo.homemanager.home_agents.exec_plan.WindowAgent;
-import it.unibo.homemanager.meteo.AgentManager;
 import it.unibo.homemanager.meteo.MeteoAgent;
 import it.unibo.homemanager.tablemap.Blind;
-import it.unibo.homemanager.tablemap.Device;
 import it.unibo.homemanager.tablemap.Lamp;
 import it.unibo.homemanager.tablemap.Room;
 import it.unibo.homemanager.tablemap.Sensor;
@@ -495,7 +495,7 @@ public class Initializer {
 	}*/
     //V1.2
     public void initAgent(){
-        AgentManager.getInstance().goListAgent();
+        AgentManager.getInstance().goAgents();
     }
     //
     
@@ -769,8 +769,8 @@ public class Initializer {
             for(int i=0;i<devs.size();i++) {
                 //Device d = (Device)devs.elementAt(i);
 		Device d = devs.get(i);
-                DeviceAgent da = new DeviceAgent("device_"+d.idDev,tp,(TucsonTupleCentreId)tc.elementAt(d.roomId-1),d, sf);
-                initDevice((TucsonTupleCentreId)tc.elementAt(d.roomId-1),acc,d);
+                DeviceAgent da = new DeviceAgent("device_"+d.getDeviceId(),tp,(TucsonTupleCentreId)tc.elementAt(d.getDeviceRoomId()-1),d, sf);
+                initDevice((TucsonTupleCentreId)tc.elementAt(d.getDeviceRoomId()-1),acc,d);
                 da.go();
                 Thread.sleep(250);
             }
@@ -783,12 +783,12 @@ public class Initializer {
     
     private void initDevice(TucsonTupleCentreId tid,EnhancedSynchACC acc,Device d) {
         try {
-            LogicTuple init = new LogicTuple("upd_dev_curr_st",new Value(d.idDev),new Value("off"));
+            LogicTuple init = new LogicTuple("upd_dev_curr_st",new Value(d.getDeviceId()),new Value("off"));
             acc.out(tid,init, null);
             //device che hanno una temperatura
-            if ((d.idDev>=5) && (d.idDev<=7))
+            if ((d.getDeviceId()>=5) && (d.getDeviceId()<=7))
                 {
-            	   LogicTuple init_temp = new LogicTuple("temp_curr_dev", new Value(d.idDev), new Value(0));
+            	   LogicTuple init_temp = new LogicTuple("temp_curr_dev", new Value(d.getDeviceId()), new Value(0));
                    acc.out(tid,init_temp,null);
                 }
         }

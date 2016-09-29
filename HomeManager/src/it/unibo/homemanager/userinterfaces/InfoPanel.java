@@ -8,6 +8,7 @@ package it.unibo.homemanager.userinterfaces;
 
 import it.unibo.homemanager.ServiceFactory;
 import it.unibo.homemanager.dbmanagement.Database;
+import it.unibo.homemanager.detection.Device;
 import it.unibo.homemanager.tablemap.*;
 import it.unibo.homemanager.tablemap.ServicesInterfaces.DeviceServiceInterface;
 import it.unibo.homemanager.tablemap.ServicesInterfaces.RoomServiceInterface;
@@ -462,8 +463,8 @@ public class InfoPanel extends javax.swing.JPanel {
             devs = ds.getDevices(database.getDatabase());
             for(int i=0;i<devs.size();i++) {
                 Device dv = devs.get(i);//(Device) devs.elementAt(i);
-                Room rm = rs.getRoomById(database.getDatabase(),dv.roomId);
-                String dName = dv.name+", "+rm.name;
+                Room rm = rs.getRoomById(database.getDatabase(),dv.getDeviceId());
+                String dName = dv.getDeviceName()+", "+rm.name;
                 cbDevs.addItem(dName);
             }
         }

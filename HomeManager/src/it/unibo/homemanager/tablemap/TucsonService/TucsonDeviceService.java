@@ -11,8 +11,8 @@ import it.unibo.homemanager.dbmanagement.Database;
 import it.unibo.homemanager.dbmanagement.TucsonDatabase;
 import it.unibo.homemanager.dbmanagement.dbexceptions.DuplicatedRecordDbException;
 import it.unibo.homemanager.dbmanagement.dbexceptions.ResultSetDbException;
+import it.unibo.homemanager.detection.Device;
 import it.unibo.homemanager.tablemap.Conversion;
-import it.unibo.homemanager.tablemap.Device;
 import it.unibo.homemanager.tablemap.ServicesInterfaces.DeviceServiceInterface;
 
 public class TucsonDeviceService implements DeviceServiceInterface {
@@ -54,13 +54,13 @@ public class TucsonDeviceService implements DeviceServiceInterface {
     public Device insertDevice(Database database, String n, float e, String p, String t, int ri) throws Exception{
         Device dev;
 
-        dev = new Device(0,n,e,p,t,ri);
+        dev = new Device(0,n,e,t,p,ri);
 			
         boolean exist = false;
         TucsonDatabase db= (TucsonDatabase)database;
 	/* controllo che il dispositivo non sia gi� presente (nome e stanza) */
-	Value nome=new Value(dev.name);
-	Value roomi= new Value(dev.roomId);
+	Value nome=new Value(dev.getDeviceName());
+	Value roomi= new Value(dev.getDeviceRoomId());
 	LogicTuple template;
 	try {
             template = new LogicTuple(nome_template,new Var("X"),nome,new Var("Y"),new Var("Z"),new Var("A"),roomi);
@@ -76,10 +76,10 @@ public class TucsonDeviceService implements DeviceServiceInterface {
             if((this.calcId(db)+1)==0)
                 throw new Exception("Problema calcolo id");
 
-            Value energy= new Value(dev.energy);
-            Value c= new Value((dev.type));
-            Value par= new Value((dev.param));
-	    dev.idDev=newId.intValue();
+            Value energy= new Value(dev.getDeviceEnergy());
+            Value c= new Value((dev.getDeviceType()));
+            Value par= new Value((dev.getDeviceParameters()));
+	    dev.setDeviceId(newId.intValue());
             LogicTuple lt= new LogicTuple(nome_template,newId,nome,energy,par,c,roomi);
             db.insert(lt);
 	} catch (Exception e1) {
@@ -92,17 +92,17 @@ public class TucsonDeviceService implements DeviceServiceInterface {
 
         try{  
             TucsonDatabase db= (TucsonDatabase)database;
-            Value oi= new Value(dev.idDev); 
+            Value oi= new Value(dev.getDeviceId()); 
             LogicTuple template = new LogicTuple(nome_template,oi,new Var("X"),new Var("Y"),new Var("Z"),new Var("A"),new Var("B"));
             if (db.read(template)==null)
                 throw new ResultSetDbException("Device: update(): Tentativo di aggiornare "+
 								"un dispositivo non esistente.");
 		db.delete(template);
-		Value e= new Value(dev.energy);
-		Value c= new Value(dev.type);
-		Value p= new Value(dev.param);
-		Value n=new Value(dev.name);
-		Value ri= new Value(dev.roomId);
+		Value e= new Value(dev.getDeviceEnergy());
+		Value c= new Value(dev.getDeviceType());
+		Value p= new Value(dev.getDeviceParameters());
+		Value n=new Value(dev.getDeviceName());
+		Value ri= new Value(dev.getDeviceRoomId());
 		LogicTuple lt= new LogicTuple(nome_template,oi,n,e,p,c,ri); 
 		db.insert(lt);
 	} catch (Exception e) {
@@ -118,16 +118,16 @@ public class TucsonDeviceService implements DeviceServiceInterface {
         TucsonDatabase db = (TucsonDatabase)database;
 			
 	try {
-            if(dev.name==null)
+            if(dev.getDeviceName()==null)
                 throw new ResultSetDbException("Device: delete(): Tentativo di eliminazione "+
 							"di un dispositivo non esistente.");
 				
-		Value newId=new Value(dev.idDev);
-		Value e= new Value(dev.energy);
-		Value c= new Value(dev.type);
-		Value p= new Value(dev.param);
-		Value n=new Value(dev.name);
-		Value ri= new Value(dev.roomId);
+		Value newId=new Value(dev.getDeviceId());
+		Value e= new Value(dev.getDeviceEnergy());
+		Value c= new Value(dev.getDeviceType());
+		Value p= new Value(dev.getDeviceParameters());
+		Value n=new Value(dev.getDeviceName());
+		Value ri= new Value(dev.getDeviceRoomId());
 		LogicTuple template= new LogicTuple(nome_template,newId,n,e,p,c,ri); 
 		db.delete(template);
 	} catch (Exception e1) {
@@ -193,7 +193,7 @@ public class TucsonDeviceService implements DeviceServiceInterface {
 	LogicTuple lt=db.read(template);
 	dev=this.createDevicebyLogicTuple(lt);
 
-	return dev.idDev;
+	return dev.getDeviceId();
     }
 		
 
@@ -204,8 +204,8 @@ public class TucsonDeviceService implements DeviceServiceInterface {
 	    ArrayList<Device> v= this.getDevices(database);
 	    for(int i=0;i<v.size();i++)
 	    //{ 
-		if(((Device)v.get(i)).idDev>id)
-		    id=((Device)v.get(i)).idDev;
+		if(((Device)v.get(i)).getDeviceId()>id)
+		    id=((Device)v.get(i)).getDeviceId();
 	    //}
 	    return id;
 	} catch (Exception e) {
@@ -231,7 +231,7 @@ public class TucsonDeviceService implements DeviceServiceInterface {
 	    String param= Conversion.getDatabaseString(t.nextToken());
 	    String type= Conversion.getDatabaseString((t.nextToken()));
 	    int roomId=Integer.parseInt(t.nextToken());
-	    dev= new Device(idDev,name,energy,param,type,roomId);
+	    dev= new Device(idDev,name,energy,type,param,roomId);
 	}
 			
 	return dev;
@@ -247,7 +247,7 @@ public class TucsonDeviceService implements DeviceServiceInterface {
 	    String param = Conversion.getDatabaseString(r.getArg(3).toString());
 	    String type =Conversion.getDatabaseString (r.getArg(4).toString());
 	    int roomId = r.getArg(5).intValue();
-	    dev= new Device(idDev,name,energy,param,type,roomId);
+	    dev= new Device(idDev,name,energy,type,param,roomId);
 				
 	} catch (Exception sqle) {}
 	return dev;

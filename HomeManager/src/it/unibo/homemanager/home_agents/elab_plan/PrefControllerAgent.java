@@ -21,8 +21,8 @@ import it.unibo.homemanager.ServiceFactory;
 import it.unibo.homemanager.dbmanagement.Database;
 import it.unibo.homemanager.dbmanagement.dbexceptions.NotFoundDbException;
 import it.unibo.homemanager.dbmanagement.dbexceptions.ResultSetDbException;
+import it.unibo.homemanager.detection.Device;
 import it.unibo.homemanager.home_agents.PlanTupleBuilder;
-import it.unibo.homemanager.tablemap.Device;
 import it.unibo.homemanager.tablemap.ServicesInterfaces.DeviceServiceInterface;
 import it.unibo.homemanager.tablemap.ServicesInterfaces.UserServiceInterface;
 import it.unibo.homemanager.tablemap.User;
@@ -186,7 +186,7 @@ public class PrefControllerAgent extends AbstractTucsonAgent {
                     } catch (NotFoundDbException | ResultSetDbException ex) {
                         Logger.getLogger(PrefControllerAgent.class.getName()).log(Level.SEVERE, null, ex);
                     }
-                    if(verify_role_dev(u, device.name)){
+                    if(verify_role_dev(u, device.getDeviceName())){
                         pref += prefs[i];
 
                         if(i<prefs.length-1)

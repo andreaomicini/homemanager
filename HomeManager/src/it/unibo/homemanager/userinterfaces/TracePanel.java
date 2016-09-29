@@ -21,7 +21,7 @@ public class TracePanel extends javax.swing.JPanel {
         this.jTextArea1.setFont(new Font("Courier New",Font.PLAIN,11));
     }
     
-    public void appendText(String text) {
+    public synchronized void appendText(String text) {
         this.jTextArea1.append(text+"\n");
         String s = this.jTextArea1.getText();
         int pos = s.length();

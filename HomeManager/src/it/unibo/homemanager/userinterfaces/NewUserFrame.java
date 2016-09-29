@@ -12,6 +12,7 @@ import java.util.Vector;
 
 import it.unibo.homemanager.tablemap.*;
 import it.unibo.homemanager.dbmanagement.*;
+import it.unibo.homemanager.detection.Device;
 import it.unibo.homemanager.tablemap.ServicesInterfaces.DeviceServiceInterface;
 import it.unibo.homemanager.tablemap.ServicesInterfaces.RoomServiceInterface;
 import it.unibo.homemanager.tablemap.ServicesInterfaces.UserServiceInterface;
@@ -118,7 +119,7 @@ public class NewUserFrame extends javax.swing.JFrame {
     }
     
     private JCheckBox getCbDev(Device d) {
-        JCheckBox cb = new JCheckBox(" "+d.name);
+        JCheckBox cb = new JCheckBox(" "+d.getDeviceName());
         cb.setBackground(new java.awt.Color(102, 0, 102));
         cb.setFont(new java.awt.Font("Courier New",java.awt.Font.PLAIN,12));
         cb.setForeground(java.awt.Color.WHITE);
@@ -149,7 +150,7 @@ public class NewUserFrame extends javax.swing.JFrame {
             JCheckBox cb = (JCheckBox)checkBoxes.elementAt(i);
             if(cb.isSelected()) {
                 Device dev = devices.get(i);//Device)devices.elementAt(i);
-                str += dev.roomId+"-"+dev.idDev+";";
+                str += dev.getDeviceRoomId()+"-"+dev.getDeviceId()+";";
             }
         }
         System.err.println("str: " + str);

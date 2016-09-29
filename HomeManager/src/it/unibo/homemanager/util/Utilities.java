@@ -14,7 +14,7 @@ import alice.tucson.api.TucsonMetaACC;
 import alice.tucson.api.TucsonTupleCentreId;
 import it.unibo.homemanager.ServiceFactory;
 import it.unibo.homemanager.dbmanagement.Database;
-import it.unibo.homemanager.tablemap.Device;
+import it.unibo.homemanager.detection.Device;
 import it.unibo.homemanager.tablemap.Room;
 import it.unibo.homemanager.tablemap.ServicesInterfaces.DeviceServiceInterface;
 import it.unibo.homemanager.tablemap.ServicesInterfaces.RoomServiceInterface;
@@ -70,7 +70,7 @@ public class Utilities {
                 if(ap.getDev() > 0) {
                     Room r = rs.getRoomById(db,ap.getRoom());
                     Device d = ds.getDeviceById(db,ap.getDev());
-                    str += "\n\t"+r.name+": "+d.name;
+                    str += "\n\t"+r.name+": "+d.getDeviceName();
                 }
             }
         }
@@ -121,7 +121,7 @@ public class Utilities {
         Device d = null;
         while(i < devs.size() && d == null) {
             d = (Device)devs.elementAt(i);
-            if(name.compareTo(d.name) != 0) {
+            if(name.compareTo(d.getDeviceName()) != 0) {
                 i++;
                 d = null;
             }
@@ -133,7 +133,7 @@ public class Utilities {
         Device d = null;
         while(i < devs.size() && d == null) {
             d = devs.get(i);
-            if(name.compareTo(d.name) != 0) {
+            if(name.compareTo(d.getDeviceName()) != 0) {
                 i++;
                 d = null;
             }

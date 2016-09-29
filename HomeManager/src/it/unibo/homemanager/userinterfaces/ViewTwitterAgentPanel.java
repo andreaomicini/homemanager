@@ -20,7 +20,6 @@ import alice.tucson.api.exceptions.UnreachableNodeException;
 import alice.tuplecentre.api.exceptions.OperationTimeOutException;
 import it.unibo.homemanager.social.TwitterAgent;
 import it.unibo.homemanager.userinterfaces.TracePanel;
-import it.unibo.homemanager.userinterfaces.ViewManageAgentPanel;
 
 public class ViewTwitterAgentPanel extends JPanel 
 {
