@@ -1,1 +1,8 @@
 content(pantry_0,water,2)
+content(pantry_0,water,2)
+content(pantry_0,water,2)
+content(pantry_0,water,2)
+content(pantry_0,water,2)
+content(pantry_0,water,2)
+content(pantry_0,water,2)
+content(pantry_0,water,2)

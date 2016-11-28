@@ -51,7 +51,7 @@ public class Main {
             TucsonTupleCentreId bagno_priv_tc = new TucsonTupleCentreId("bagno_privato_tc", "localhost", "20504");
             TucsonTupleCentreId garage_tc = new TucsonTupleCentreId("garage_tc", "localhost", "20504");
             //submitted by Sara Bevilacqua
-            System.out.println("Creo twitter_tc");
+            //System.out.println("Creo twitter_tc");
             TucsonTupleCentreId twitter_tc = new TucsonTupleCentreId("twitter_tc", "localhost", "20504");
             //submitted by Alessandro Celi
             TucsonTupleCentreId meteo_tc = new TucsonTupleCentreId("meteo_tc", "localhost", "20504");
@@ -68,7 +68,7 @@ public class Main {
             TucsonTupleCentreId usageManager_tc = new TucsonTupleCentreId("usage_manager_tc", "localhost", "20504");
             
             // RC replaced rbac_tc with rbac
-            System.out.println("Creo rbac");
+            //System.out.println("Creo rbac");
             TucsonTupleCentreId rbac_tc = new TucsonTupleCentreId("rbac", "localhost", "20504");
             TucsonTupleCentreId casa_tc = new TucsonTupleCentreId("casa_tc", "localhost", "20504");
             

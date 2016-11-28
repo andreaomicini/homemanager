@@ -3,6 +3,7 @@ package it.unibo.homemanager.agents;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
+import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
@@ -11,11 +12,17 @@ import javax.swing.JPanel;
 
 import alice.logictuple.LogicTuple;
 import alice.logictuple.TupleArgument;
+import alice.logictuple.Value;
 import alice.tucson.api.AbstractTucsonAgent;
 import alice.tucson.api.EnhancedSynchACC;
 import alice.tucson.api.ITucsonOperation;
 import alice.tucson.api.TucsonTupleCentreId;
 import alice.tucson.api.exceptions.TucsonInvalidAgentIdException;
+import alice.tucson.api.exceptions.TucsonInvalidTupleCentreIdException;
+import alice.tucson.api.exceptions.TucsonOperationNotPossibleException;
+import alice.tucson.api.exceptions.UnreachableNodeException;
+import alice.tucson.utilities.Utils;
+import alice.tuplecentre.api.exceptions.OperationTimeOutException;
 import alice.tuplecentre.core.AbstractTupleCentreOperation;
 import it.unibo.homemanager.communication.AgentCommunicationLanguage;
 import it.unibo.homemanager.dbmanagement.Database;
@@ -170,7 +177,14 @@ public class FridgeAgent extends AbstractTucsonAgent implements TucsonAgentInter
 		try {
 			getTracePanel().appendText("--- " + getName() + " STARTED!");
 			
+			// Config all the situated stuff
+			tracePanel.appendText(" FRIDGE AGENT FOR "+ name +" SITUATED CONFIG START...");
+			configSituatedness();
+			
+			Thread.sleep(5000);
+			tracePanel.appendText(" FRIDGE AGENT FOR "+ name +" SITUATED INIT INGREDIENTS...");
 			initIngredients();
+			tracePanel.appendText(" FRIDGE AGENT FOR "+ name +" SITUATED DONE...");
 			
 			writePresenceInformation();
 			
@@ -194,6 +208,73 @@ public class FridgeAgent extends AbstractTucsonAgent implements TucsonAgentInter
 			}
 		} catch (Exception e) { }
 	}
+	
+	private void configSituatedness() throws TucsonInvalidTupleCentreIdException, IOException, TucsonOperationNotPossibleException, UnreachableNodeException, OperationTimeOutException{
+		
+		EnhancedSynchACC acc = this.getContext();
+        
+        TucsonTupleCentreId configTc = new TucsonTupleCentreId("'$ENV'", "localhost", "20504");
+        
+        String config = Utils.fileToString("it/unibo/homemanager/situatedness/fridgeSpec.rsp");
+        
+        //System.out.println("Config file: " + config);
+        
+        loadConfig(fridgeTc, config);
+        
+        final LogicTuple actuatorTuple = new LogicTuple(
+                "createTransducerActuator",
+                new TupleArgument(fridgeTc.toTerm()), // tuple centre id
+                new Value("it.unibo.homemanager.situatedness.FridgeTransducer"), // java class implementing the transducer
+                        new Value("fridgeTransducer_" + device.getDeviceId()), // transducer id
+                        new Value("it.unibo.homemanager.situatedness.FridgeWithGuiProbe"), // java class implementing the probe
+                                new Value("fridge" + device.getDeviceId())); // probe id
+        
+        acc.out(configTc, actuatorTuple, null);
+        
+        tracePanel.appendText(" FRIDGE AGENT FOR "+ name +" SITUATED CONFIG DONE...");
+        
+	}
+	
+	protected boolean loadConfig(TucsonTupleCentreId tc, String s) {
+    	
+    	// Format the device reaction config file correctly 
+    	// set device id
+    	s = s.replaceAll("#", "" + device.getDeviceId());
+    	// format correctly
+        s = s.replaceAll("\n", "");
+        s = s.replaceAll(" ", "");
+        s = s.replaceAll("\\.", ".\n");
+        
+        //System.out.println("File formattato:\n" + s + "\n");
+        
+    	// Recover the other reaction in the TC
+    	EnhancedSynchACC acc = this.getContext();
+    	
+        ITucsonOperation attuale;
+		try {
+			
+			attuale = acc.getS(tc, null);
+
+	        List<LogicTuple> tupleattuali =  attuale.getLogicTupleListResult();
+	        for(int i=0; i < tupleattuali.size(); i++) {
+	        	System.out.println( tupleattuali.get(i).toString());
+	        	String newconfig = tupleattuali.get(i).toString();
+	        	newconfig.replaceAll("[\\[\\]]","");
+	        	s = s + newconfig + ".\n";
+	        }
+	        
+	        //System.out.println("Nuovo file reaction:\n" + s + "\n");
+	        
+	        acc.setS(tc, s, null);
+		} catch (TucsonOperationNotPossibleException | UnreachableNodeException | OperationTimeOutException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return false;
+		}
+		
+		return true;   	
+
+    }
 
 	private void initIngredients() throws Exception{
 		File file = new File(getName() + "_ingredients.txt");
@@ -446,6 +527,7 @@ public class FridgeAgent extends AbstractTucsonAgent implements TucsonAgentInter
 		String tuple = nameTemplate + "(" + fridgeName + "," + ingredient.getName() + "," + "A" + ")";
 		LogicTuple template = LogicTuple.parse(tuple);
 		ITucsonOperation operation = getAcc().inp(getFridgeTupleCentre(), template, Long.MAX_VALUE);
+		//ITucsonOperation operation = getAcc().in(getFridgeTupleCentre(), template, Long.MAX_VALUE);
 
 		if (operation.isResultSuccess()) {
 			int newQuantity = ingredient.getQuantity();

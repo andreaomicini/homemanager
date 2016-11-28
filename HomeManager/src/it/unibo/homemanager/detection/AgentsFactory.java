@@ -5,6 +5,7 @@ import java.util.Map;
 import alice.tucson.api.TucsonTupleCentreId;
 import alice.tucson.api.exceptions.TucsonInvalidAgentIdException;
 import it.unibo.homemanager.agents.FridgeAgent;
+import it.unibo.homemanager.agents.FridgeSituatedAgent;
 import it.unibo.homemanager.agents.MixerAgent;
 import it.unibo.homemanager.agents.OvenAgent;
 import it.unibo.homemanager.agents.PantryAgent;
@@ -18,6 +19,8 @@ public abstract class AgentsFactory {
 	public static TucsonAgentInterface createAgent(Device device, Map<String, TucsonTupleCentreId> tupleCentres, TracePanel tracePanel, Database database, ViewManageAgentPanel butlerPanel) {
 		if ( device.getDeviceName().equals("fridge") ) {
 			try {
+				//FridgeSituatedAgent s_agent = new FridgeSituatedAgent(device, tupleCentres.get("fridge_tc"),tracePanel);
+				//s_agent.go();
 				FridgeAgent agent = new FridgeAgent(device, tracePanel, tupleCentres.get("fridge_tc"), tupleCentres.get("mixer_container_tc"), tupleCentres.get("usage_manager_tc"), database);
 				agent.setPanel(butlerPanel);
 				return (agent);
