@@ -86,20 +86,20 @@ public class FridgeSituatedAgent extends AbstractTucsonAgent {
 	        	Thread.sleep(5000);
 	        	tracePanel.appendText("--******-- FRIDGE SITUATED AGENT FOR "+ name +" try to insert new tupla");
 	        	// Test: we send some tuple and after that we take off one
-	        	LogicTuple template = LogicTuple.parse("content(" + name + ", banana , 1)");
+	        	LogicTuple template = LogicTuple.parse("act(" + name + ", banana , 1))");
 	            ITucsonOperation op = acc.out(fridgeTc, template,null);
 	            if (op.isResultSuccess()) {
 	            	tracePanel.appendText("--******-- FRIDGE SITUATED AGENT "+ device.getDeviceName() +": banana tupla inserted correctly.");
 	            }
 	            Thread.sleep(5000);
-	            template = LogicTuple.parse("content(" + name + ", kiwi , 3)");
+	            template = LogicTuple.parse("act(" + name + ", kiwi , 3))");
 	            op = acc.out(fridgeTc, template,null);
 	            if (op.isResultSuccess()) {
 	            	tracePanel.appendText("--******-- FRIDGE SITUATED AGENT "+ device.getDeviceName() +": kiwi tupla inserted correctly.");
 	            }
 	            Thread.sleep(5000);
-	            template = LogicTuple.parse("content(" + name + ", banana , X)");
-	            op = acc.rd(fridgeTc, template,null);
+	            template = LogicTuple.parse("sense(" + name + ", banana , X))");
+	            op = acc.in(fridgeTc, template,null);
 	            if (op.isResultSuccess()) {
 	            	String item = op.getLogicTupleResult().getArg(1).toString();
 	            	String quantity = op.getLogicTupleResult().getArg(2).toString();

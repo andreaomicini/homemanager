@@ -107,7 +107,7 @@ public class FridgeProbe implements ISimpleProbe {
 	                final String quantity = op.getLogicTupleResult().getArg(1).toString();
 	                System.err.println("[" + this.pid + "]: My content is: " + "num. " + quantity + " of " + key);
 		        	// Notify the Transducer
-	                //this.transducer.notifyEnvEvent(key, Integer.parseInt(quantity) , AbstractTransducer.GET_MODE);
+	                this.transducer.notifyEnvEvent(key, Integer.parseInt(quantity) , AbstractTransducer.GET_MODE);
 	                return true;
 	            }
 	       	        	
@@ -184,7 +184,7 @@ public class FridgeProbe implements ISimpleProbe {
 				final ITucsonOperation op = this.acc.out(this.probeFridgeTc, tempTuple, null);
 				if (op.isResultSuccess()) {
 					System.err.println("[" + this.pid + "]: We have new ingredients: " + state + " of " + key);
-	                //this.transducer.notifyEnvEvent(key, state, AbstractTransducer.SET_MODE);
+	                this.transducer.notifyEnvEvent(key, state, AbstractTransducer.SET_MODE);
 	                return true;
 	            }
 			} catch (TucsonOperationNotPossibleException | UnreachableNodeException | OperationTimeOutException | InvalidLogicTupleException e) {
