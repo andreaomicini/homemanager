@@ -215,7 +215,7 @@ public class FridgeAgent extends AbstractTucsonAgent implements TucsonAgentInter
         
         TucsonTupleCentreId configTc = new TucsonTupleCentreId("'$ENV'", "localhost", "20504");
         
-        String config = Utils.fileToString("it/unibo/homemanager/situatedness/fridgeSpec.rsp");
+        String config = Utils.fileToString("it/unibo/homemanager/situatedness/fridgeSpec2.rsp");
         
         //System.out.println("Config file: " + config);
         

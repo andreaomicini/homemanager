@@ -98,7 +98,7 @@ public class FridgeProbe implements ISimpleProbe {
         if(!new_ingredient){
         	try {
         		// Remove the ingredient from the list
-        		ingredients.remove(index);
+        		Ingredient ingredient_removed = ingredients.remove(index);
         		
         		// Tuple template to match
         		final LogicTuple template = LogicTuple.parse("content("+ key +", Q)");

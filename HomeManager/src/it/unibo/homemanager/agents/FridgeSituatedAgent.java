@@ -98,13 +98,10 @@ public class FridgeSituatedAgent extends AbstractTucsonAgent {
 	            	tracePanel.appendText("--******-- FRIDGE SITUATED AGENT "+ device.getDeviceName() +": kiwi tupla inserted correctly.");
 	            }
 	            Thread.sleep(5000);
-	            template = LogicTuple.parse("sense(" + name + ", banana , X)");
-	            op = acc.in(fridgeTc, template,null);
+	            template = LogicTuple.parse("del(" + name + ", banana , 1)");
+	            op = acc.in(fridgeTc, template,Long.MAX_VALUE);
 	            if (op.isResultSuccess()) {
-	            	String item = op.getLogicTupleResult().getArg(1).toString();
-	            	String quantity = op.getLogicTupleResult().getArg(2).toString();
-	            	tracePanel.appendText("--******-- FRIDGE SITUATED AGENT "+ device.getDeviceName() +": " + item + "," + quantity);
-	            	tracePanel.appendText("--******-- FRIDGE SITUATED AGENT "+ device.getDeviceName() +": banana tupla read correctly.");
+	            	tracePanel.appendText("--******-- FRIDGE SITUATED AGENT "+ device.getDeviceName() +": banana tupla deleted correctly.");
 	            }
 	       
         }

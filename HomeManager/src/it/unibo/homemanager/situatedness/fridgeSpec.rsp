@@ -1,16 +1,7 @@
 reaction(
-    out(content(fridge_#, I, Q)),
-    (operation, completion),
-    (
-        fridge#@localhost:20504 ? setEnv(I, Q)
-    )
-).
-
-reaction(
     out(act(fridge_#, I, Q)),
     (operation, completion),
     (
-        out(content(fridge_#, I, Q)),
         fridge#@localhost:20504 ? setEnv(I, Q)
     )
 ).
@@ -24,26 +15,9 @@ reaction(
 ).
 
 reaction(
-    in(content(fridge_#, I, Q)),
+    in(del(fridge_#, I, Q)),
     (operation, invocation),
     (
-        fridge#@localhost:20504 ? getEnv(I,Q)
-    )
-).
-
-reaction(
-    inp(content(fridge_#, I, Q)),
-    (operation, invocation),
-    (
-        fridge#@localhost:20504 ? getEnv(I,Q)
-    )
-).
-
-reaction(
-    in(sense(fridge_#, I, Q)),
-    (operation, invocation),
-    (
-        in(content(fridge_#, I, Q)),
         fridge#@localhost:20504 ? getEnv(I,Q)
     )
 ).
@@ -52,6 +26,6 @@ reaction(
     getEnv(I,Q),
     (from_env, completion),
     (
-        out(sense(fridge_#, I, Q))
+        out(del(fridge_#, I, Q))
     )
 ).

@@ -1,8 +1,1 @@
 recipe(0,recipe,20,200,ingredients(ingredient(eggs,3)))
-recipe(0,recipe,20,200,ingredients(ingredient(eggs,3)))
-recipe(0,recipe,20,200,ingredients(ingredient(eggs,3)))
-recipe(0,recipe,20,200,ingredients(ingredient(eggs,3)))
-recipe(0,recipe,20,200,ingredients(ingredient(eggs,3)))
-recipe(0,recipe,20,200,ingredients(ingredient(eggs,3)))
-recipe(0,recipe,20,200,ingredients(ingredient(eggs,3)))
-recipe(0,recipe,20,200,ingredients(ingredient(eggs,3)))
