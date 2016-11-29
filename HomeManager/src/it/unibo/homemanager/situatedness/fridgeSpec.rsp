@@ -10,6 +10,7 @@ reaction(
     out(act(fridge_#, I, Q)),
     (operation, completion),
     (
+        out(content(fridge_#, I, Q)),
         fridge#@localhost:20504 ? setEnv(I, Q)
     )
 ).
@@ -42,6 +43,7 @@ reaction(
     in(sense(fridge_#, I, Q)),
     (operation, invocation),
     (
+        in(content(fridge_#, I, Q)),
         fridge#@localhost:20504 ? getEnv(I,Q)
     )
 ).
