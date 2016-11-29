@@ -102,7 +102,7 @@ public class FridgeProbe implements ISimpleProbe {
         		
         		// Tuple template to match
         		final LogicTuple template = LogicTuple.parse("content("+ key +", Q)");
-	            final ITucsonOperation op = this.acc.in(this.probeFridgeTc, template, null);
+	            final ITucsonOperation op = this.acc.rd(this.probeFridgeTc, template, null);
 	            if (op.isResultSuccess()) {
 	                final String quantity = op.getLogicTupleResult().getArg(1).toString();
 	                System.err.println("[" + this.pid + "]: My content is: " + "num. " + quantity + " of " + key);
