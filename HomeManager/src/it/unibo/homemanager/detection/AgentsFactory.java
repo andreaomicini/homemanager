@@ -19,8 +19,8 @@ public abstract class AgentsFactory {
 	public static TucsonAgentInterface createAgent(Device device, Map<String, TucsonTupleCentreId> tupleCentres, TracePanel tracePanel, Database database, ViewManageAgentPanel butlerPanel) {
 		if ( device.getDeviceName().equals("fridge") ) {
 			try {
-				FridgeSituatedAgent s_agent = new FridgeSituatedAgent(device, tupleCentres.get("fridge_tc"),tracePanel);
-				s_agent.go();
+				//FridgeSituatedAgent s_agent = new FridgeSituatedAgent(device, tupleCentres.get("fridge_tc"),tracePanel);
+				//s_agent.go();
 				FridgeAgent agent = new FridgeAgent(device, tracePanel, tupleCentres.get("fridge_tc"), tupleCentres.get("mixer_container_tc"), tupleCentres.get("usage_manager_tc"), database);
 				agent.setPanel(butlerPanel);
 				return (agent);
