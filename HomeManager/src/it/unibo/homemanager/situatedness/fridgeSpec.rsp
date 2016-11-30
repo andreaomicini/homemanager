@@ -2,6 +2,37 @@ reaction(
     out(act(fridge_#, I, Q)),
     (operation, completion),
     (
+        no(mutua_esc(A,B)),
+        out(mutua_esc(I,Q)),
+        no(content(fridge_#, I, A)),
+        out(content(fridge_#, I, Q)),
+        fridge#@localhost:20504 ? setEnv(I, Q)
+    )
+).
+
+reaction(
+    out(act(fridge_#, I, Q)),
+    (operation, completion),
+    (
+        no(mutua_esc(A,B)),
+        out(mutua_esc(I,Q)),
+        in(content(fridge_#, I, A)),
+        Y is A+Q,
+        Y > 0,
+        out(content(fridge_#, I, Y)),
+        fridge#@localhost:20504 ? setEnv(I, Q)
+    )
+).
+
+reaction(
+    out(act(fridge_#, I, Q)),
+    (operation, completion),
+    (
+        no(mutua_esc(A,B)),
+        out(mutua_esc(I,Q)),
+        in(content(fridge_#, I, A)),
+        Y is A+Q,
+        Y == 0,
         fridge#@localhost:20504 ? setEnv(I, Q)
     )
 ).
@@ -10,12 +41,13 @@ reaction(
     setEnv(I, Q),
     (from_env, completion),
     (
+        in(mutua_esc(I,Q)),
         in(act(fridge_#, I, Q))
     )
 ).
 
 reaction(
-    in(del(fridge_#, I, Q)),
+    in(sense(fridge_#, I, Q)),
     (operation, invocation),
     (
         fridge#@localhost:20504 ? getEnv(I,Q)
@@ -26,6 +58,6 @@ reaction(
     getEnv(I,Q),
     (from_env, completion),
     (
-        out(del(fridge_#, I, Q))
+        out(sense(fridge_#, I, Q))
     )
 ).

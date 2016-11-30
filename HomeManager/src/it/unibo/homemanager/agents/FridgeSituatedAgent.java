@@ -98,10 +98,30 @@ public class FridgeSituatedAgent extends AbstractTucsonAgent {
 	            	tracePanel.appendText("--******-- FRIDGE SITUATED AGENT "+ device.getDeviceName() +": kiwi tupla inserted correctly.");
 	            }
 	            Thread.sleep(5000);
-	            template = LogicTuple.parse("del(" + name + ", banana , 1)");
-	            op = acc.in(fridgeTc, template,Long.MAX_VALUE);
+	            template = LogicTuple.parse("act(" + name + ", banana , 3)");
+	            op = acc.out(fridgeTc, template,null);
+	            if (op.isResultSuccess()) {
+	            	tracePanel.appendText("--******-- FRIDGE SITUATED AGENT "+ device.getDeviceName() +": banana tupla inserted correctly.");
+	            }
+	            Thread.sleep(5000);
+	            template = LogicTuple.parse("act(" + name + ", banana , -2)");
+	            op = acc.out(fridgeTc, template,null);
+	            if (op.isResultSuccess()) {
+	            	tracePanel.appendText("--******-- FRIDGE SITUATED AGENT "+ device.getDeviceName() +": banan tupla updated correctly.");
+	            }
+	            Thread.sleep(5000);
+	            template = LogicTuple.parse("act(" + name + ", banana , -2)");
+	            op = acc.out(fridgeTc, template,Long.MAX_VALUE);
 	            if (op.isResultSuccess()) {
 	            	tracePanel.appendText("--******-- FRIDGE SITUATED AGENT "+ device.getDeviceName() +": banana tupla deleted correctly.");
+	            }
+	            Thread.sleep(5000);
+	            template = LogicTuple.parse("sense(" + name + ", kiwi , A)");
+	            op = acc.in(fridgeTc, template,Long.MAX_VALUE);
+	            if (op.isResultSuccess()) {
+	            	final String quantity = op.getLogicTupleResult().getArg(2).toString();
+	            	tracePanel.appendText("--******-- FRIDGE SITUATED AGENT "+ device.getDeviceName() +": red "+quantity+" kiwi");
+	            	tracePanel.appendText("--******-- FRIDGE SITUATED AGENT "+ device.getDeviceName() +": kiwi tupla red correctly.");
 	            }
 	       
         }
@@ -118,7 +138,7 @@ public class FridgeSituatedAgent extends AbstractTucsonAgent {
     	s = s.replaceAll("#", "" + device.getDeviceId());
     	// format correctly
         s = s.replaceAll("\n", "");
-        s = s.replaceAll(" ", "");
+        s = s.replaceAll("  ", "");
         s = s.replaceAll("\\.", ".\n");
         
         System.out.println("File formattato:\n" + s + "\n");
