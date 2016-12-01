@@ -39,16 +39,16 @@ public class Main {
             
             System.out.println("Initializing Home Manager!");
             
-            TucsonTupleCentreId ingresso_tc = new TucsonTupleCentreId("ingresso_tc", "localhost", "20504");
-            TucsonTupleCentreId cucina_tc = new TucsonTupleCentreId("cucina_tc", "localhost", "20504");
-            TucsonTupleCentreId sala_tc = new TucsonTupleCentreId("sala_tc", "localhost", "20504");
+            TucsonTupleCentreId entrance_tc = new TucsonTupleCentreId("entrance_tc", "localhost", "20504");
+            TucsonTupleCentreId kitchen_tc = new TucsonTupleCentreId("kitchen_tc", "localhost", "20504");
+            TucsonTupleCentreId living_room_tc = new TucsonTupleCentreId("living_room_tc", "localhost", "20504");
             TucsonTupleCentreId studio_tc = new TucsonTupleCentreId("studio_tc", "localhost", "20504");
-            TucsonTupleCentreId corridoio_tc = new TucsonTupleCentreId("corridoio_tc", "localhost", "20504");
-            TucsonTupleCentreId bagno_tc = new TucsonTupleCentreId("bagno_tc", "localhost", "20504");
-            TucsonTupleCentreId camera_tc = new TucsonTupleCentreId("camera_tc", "localhost", "20504");
-            TucsonTupleCentreId ripostiglio_tc = new TucsonTupleCentreId("ripostiglio_tc", "localhost", "20504");
-            TucsonTupleCentreId camera_doppia_tc = new TucsonTupleCentreId("camera_doppia_tc", "localhost", "20504");
-            TucsonTupleCentreId bagno_priv_tc = new TucsonTupleCentreId("bagno_privato_tc", "localhost", "20504");
+            TucsonTupleCentreId corridor_tc = new TucsonTupleCentreId("corridor_tc", "localhost", "20504");
+            TucsonTupleCentreId bathroom_tc = new TucsonTupleCentreId("bathroom_tc", "localhost", "20504");
+            TucsonTupleCentreId bedroom_tc = new TucsonTupleCentreId("bedroom_tc", "localhost", "20504");
+            TucsonTupleCentreId closet_tc = new TucsonTupleCentreId("closet_tc", "localhost", "20504");
+            TucsonTupleCentreId double_bedroom_tc = new TucsonTupleCentreId("double_bedroom_tc", "localhost", "20504");
+            TucsonTupleCentreId priv_bathroom_tc = new TucsonTupleCentreId("priv_bathroom_tc", "localhost", "20504");
             TucsonTupleCentreId garage_tc = new TucsonTupleCentreId("garage_tc", "localhost", "20504");
             //submitted by Sara Bevilacqua
             //System.out.println("Creo twitter_tc");
@@ -76,16 +76,16 @@ public class Main {
             Thread.sleep(5000);
             
             Vector<TucsonTupleCentreId> tupleCenters = new Vector<TucsonTupleCentreId>();
-            tupleCenters.add(0, ingresso_tc);
-            tupleCenters.add(1, sala_tc);
-            tupleCenters.add(2, camera_tc);
+            tupleCenters.add(0, entrance_tc);
+            tupleCenters.add(1, living_room_tc);
+            tupleCenters.add(2, bedroom_tc);
             tupleCenters.add(3, studio_tc);
-            tupleCenters.add(4, cucina_tc);
-            tupleCenters.add(5, bagno_tc);
-            tupleCenters.add(6, corridoio_tc);
-            tupleCenters.add(7, ripostiglio_tc);
-            tupleCenters.add(8, camera_doppia_tc);
-            tupleCenters.add(9, bagno_priv_tc);
+            tupleCenters.add(4, kitchen_tc);
+            tupleCenters.add(5, bathroom_tc);
+            tupleCenters.add(6, corridor_tc);
+            tupleCenters.add(7, closet_tc);
+            tupleCenters.add(8, double_bedroom_tc);
+            tupleCenters.add(9, priv_bathroom_tc);
             tupleCenters.add(10, garage_tc);
             //subamitted by Alessandro Celi
             tupleCenters.add(11, meteo_tc); 

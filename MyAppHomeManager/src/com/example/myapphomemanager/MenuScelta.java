@@ -44,8 +44,8 @@ GoogleApiClient.OnConnectionFailedListener{
       
       /*per la gestione del centro di tuple*/
      TucsonTupleCentreId tc=null;
-     TucsonTupleCentreId sala_tc = null;
-     TucsonTupleCentreId cucina_tc = null;
+     TucsonTupleCentreId living_room_tc = null;
+     TucsonTupleCentreId kitchen_tc = null;
      
      
      /*per la gestione degli agenti*/
@@ -90,11 +90,11 @@ GoogleApiClient.OnConnectionFailedListener{
 			}
 	        
 	        try {
-	        	if(sala_tc==null){
-				this.sala_tc = new TucsonTupleCentreId("sala_tc",Costanti.indirizzoIp, "20504");
-				Log.i("Centro: ", this.sala_tc.toString());
-		        Log.i("Indirizzo rete: ", this.sala_tc.getNode());
-		        Log.i("Porta: ", String.valueOf(this.sala_tc.getPort()));
+	        	if(living_room_tc==null){
+				this.living_room_tc = new TucsonTupleCentreId("living_room_tc",Costanti.indirizzoIp, "20504");
+				Log.i("Centro: ", this.living_room_tc.toString());
+		        Log.i("Indirizzo rete: ", this.living_room_tc.getNode());
+		        Log.i("Porta: ", String.valueOf(this.living_room_tc.getPort()));
 	        	}
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
@@ -102,11 +102,11 @@ GoogleApiClient.OnConnectionFailedListener{
 			}	
 	        
 	        try {
-	        	if(cucina_tc==null){
-				this.cucina_tc = new TucsonTupleCentreId("cucina_tc",Costanti.indirizzoIp, "20504");
-				Log.i("Centro: ", this.cucina_tc.toString());
-		        Log.i("Indirizzo rete: ", this.cucina_tc.getNode());
-		        Log.i("Porta: ", String.valueOf(this.cucina_tc.getPort()));
+	        	if(kitchen_tc==null){
+				this.kitchen_tc = new TucsonTupleCentreId("kitchen_tc",Costanti.indirizzoIp, "20504");
+				Log.i("Centro: ", this.kitchen_tc.toString());
+		        Log.i("Indirizzo rete: ", this.kitchen_tc.getNode());
+		        Log.i("Porta: ", String.valueOf(this.kitchen_tc.getPort()));
 	        	}
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
@@ -173,9 +173,9 @@ GoogleApiClient.OnConnectionFailedListener{
 		            condiUpAgent = new TucsonAgentId("conUpAg");
 		            Log.i("Agente: ", condiUpAgent.toString());
 					}
-					}catch (Exception e){Log.i("Errore agente condi sala_tc =","NO");}
+					}catch (Exception e){Log.i("Errore agente condi living_room_tc =","NO");}
 				
-				CondizionatoreTask ct= new CondizionatoreTask(tc,condiAgent,att,sala_tc,condiUpAgent,risUtente);
+				CondizionatoreTask ct= new CondizionatoreTask(tc,condiAgent,att,living_room_tc,condiUpAgent,risUtente);
 				ct.execute("read");
 				}	
 	        });
@@ -210,9 +210,9 @@ GoogleApiClient.OnConnectionFailedListener{
 			            riscaldaUpAgent = new TucsonAgentId("riscUpAg");
 			            Log.i("Agente: ", riscaldaUpAgent.toString());
 						}
-						}catch (Exception e){Log.i("Errore agente risc sala_tc =","NO");}
+						}catch (Exception e){Log.i("Errore agente risc living_room_tc =","NO");}
 					
-					RiscaldaTask rt= new RiscaldaTask(tc,riscaldamentoAgent,att,sala_tc,riscaldaUpAgent,risUtente);
+					RiscaldaTask rt= new RiscaldaTask(tc,riscaldamentoAgent,att,living_room_tc,riscaldaUpAgent,risUtente);
 					rt.execute("read");
 					
 					
@@ -241,7 +241,7 @@ GoogleApiClient.OnConnectionFailedListener{
 							}
 						}catch (Exception e){Log.i("Errore agente forno=","NO");}
 						
-						FornoTask rt= new FornoTask(tc,fornoAgent,att,cucina_tc,fornoUpAgent,risUtente);
+						FornoTask rt= new FornoTask(tc,fornoAgent,att,kitchen_tc,fornoUpAgent,risUtente);
 						rt.execute("read");
 						
 						
