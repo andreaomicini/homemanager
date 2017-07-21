@@ -1,0 +1,9 @@
+@relation home_manager_human
+@attribute 'giorno' numeric
+@attribute 'ora' numeric
+@attribute 'mese' numeric
+@attribute 'class' {casa_out,casa_in}
+@data
+4,11,4,?
+7,11,2,?
+2,16,6,?

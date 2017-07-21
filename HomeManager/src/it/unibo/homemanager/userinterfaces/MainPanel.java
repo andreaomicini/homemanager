@@ -151,8 +151,8 @@ public class MainPanel extends JPanel {
 
 		AgentManager agentManager = AgentManager.getInstance();
 		agentManager.initComponents(serviceFactory, butlerPanel, tracePanel, tupleCentres);
-		
-		for ( TucsonAgentInterface agent : agentManager.getAgents() )
+	
+		for (TucsonAgentInterface agent : agentManager.getAgents() )
 			cards.add(agent.getInterface(), agent.getName());
 
 		cards.setLocation(0, 0);
@@ -202,22 +202,38 @@ public class MainPanel extends JPanel {
 			TucsonTupleCentreId agent = tupleCentresList.elementAt(i);
 			if (agent.getName().equals("meteo_tc"))
 				tupleCentres.put("meteo_tc", agent);
-			if (agent.getName().equals("twitter_tc"))
+			else if (agent.getName().equals("twitter_tc"))
 				tupleCentres.put("twitter_tc", agent);
-			if (agent.getName().equals("device_manager_tc"))
+			else if (agent.getName().equals("sala_tc"))
+				tupleCentres.put("sala_tc", agent);
+			else if (agent.getName().equals("device_manager_tc"))
 				tupleCentres.put("device_manager_tc", agent);
-			if (agent.getName().equals("usage_manager_tc"))
+			else if (agent.getName().equals("usage_manager_tc"))
 				tupleCentres.put("usage_manager_tc", agent);
-			if (agent.getName().equals("mixer_tc"))
+			else if (agent.getName().equals("mixer_tc"))
 				tupleCentres.put("mixer_tc", agent);
-			if (agent.getName().equals("mixer_container_tc"))
+			else if (agent.getName().equals("mixer_container_tc"))
 				tupleCentres.put("mixer_container_tc", agent);
-			if (agent.getName().equals("fridge_tc"))
+			else if (agent.getName().equals("fridge_tc"))
 				tupleCentres.put("fridge_tc", agent);
-			if (agent.getName().equals("oven_tc"))
+			else if (agent.getName().equals("oven_tc"))
 				tupleCentres.put("oven_tc", agent);
-			if (agent.getName().equals("pantry_tc"))
+			else if (agent.getName().equals("pantry_tc"))
 				tupleCentres.put("pantry_tc", agent);
+			
+			else if (agent.getName().equals("rbac"))
+				tupleCentres.put("rbac_tc", agent);
+			else if (agent.getName().equals("presence"))
+				tupleCentres.put("presence_tc", agent);
+			else if (agent.getName().equals("predictor_tc"))
+				tupleCentres.put("predictor_tc", agent);
+			else if (agent.getName().equals("predictorcamera_tc"))
+				tupleCentres.put("predictorcamera_tc", agent);
+
+			else if (agent.getName().equals("camera_tc"))
+				tupleCentres.put("camera_tc", agent);
+		
+			
 		}
 	}
 	

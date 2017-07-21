@@ -4,12 +4,20 @@ import java.math.RoundingMode;
 import java.sql.Timestamp;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 import javax.swing.JPanel;
 
+import it.unibo.homemanager.agents.TucsonAgentInterface;
+import it.unibo.homemanager.dbmanagement.Database;
+import it.unibo.homemanager.dbmanagement.TucsonDatabase;
+import it.unibo.homemanager.tablemap.User;
+import it.unibo.homemanager.userinterfaces.TracePanel;
+import it.unibo.homemanager.userinterfaces.ViewManageAgentPanel;
+import it.unibo.homemanager.userinterfaces.ViewMeteoAgentPanel;
 import alice.logictuple.LogicTuple;
 import alice.logictuple.Value;
 import alice.logictuple.Var;
@@ -20,14 +28,14 @@ import alice.tucson.api.TucsonTupleCentreId;
 import alice.tucson.api.exceptions.TucsonInvalidAgentIdException;
 import alice.tucson.api.exceptions.TucsonOperationNotPossibleException;
 import alice.tucson.api.exceptions.UnreachableNodeException;
+import alice.tuplecentre.api.Tuple;
+import alice.tuplecentre.api.exceptions.InvalidTupleException;
 import alice.tuplecentre.api.exceptions.OperationTimeOutException;
 import alice.tuplecentre.core.AbstractTupleCentreOperation;
-import it.unibo.homemanager.agents.TucsonAgentInterface;
-import it.unibo.homemanager.dbmanagement.Database;
-import it.unibo.homemanager.dbmanagement.TucsonDatabase;
-import it.unibo.homemanager.userinterfaces.TracePanel;
-import it.unibo.homemanager.userinterfaces.ViewManageAgentPanel;
-import it.unibo.homemanager.userinterfaces.ViewMeteoAgentPanel;
+import alice.tuples.javatuples.api.IJTupleTemplate;
+import alice.tuples.javatuples.exceptions.InvalidJValException;
+import alice.tuples.javatuples.impl.JTupleTemplate;
+import alice.tuples.javatuples.impl.JVal;
 
 public class MeteoAgent extends AbstractTucsonAgent implements TucsonAgentInterface {
 
@@ -126,7 +134,7 @@ public class MeteoAgent extends AbstractTucsonAgent implements TucsonAgentInterf
 	            	ParserMeteo.init();		//inizializza la posizione per i parser
 	            	//Thread.sleep(5000);
 	            	m1=ParserMeteo.previsioniM(url.get(0));	//weathermap
-	            	m2=ParserMeteo.previsioniY(url.get(2));	//yahoo
+	            	//m2=ParserMeteo.previsioniY(url.get(2));	//yahoo
 	            	m3=ParserMeteo.previsioniG(url.get(1));	//google
 	            	
 	            	
@@ -145,10 +153,10 @@ public class MeteoAgent extends AbstractTucsonAgent implements TucsonAgentInterf
 	            	t1c=new LogicTuple("meteo",new Value(m1.getNomeSito()) ,new Value(m1.getPrecipitazioni()), new Value(m1.getMeteoCode()),new Value(m1.getMeteo()));
 	            	
 	            	
-	            	t2a=new LogicTuple("meteo",new Value(m2.getNomeSito()),new Value(m2.getCitta()),new Value(m2.getOraAlba()),new Value(m2.getMinutoAlba()),new Value(m2.getOraTramonto()),new Value(m2.getMinutoTramonto()),new Value(m2.getTemperatura()));
+	            	/*t2a=new LogicTuple("meteo",new Value(m2.getNomeSito()),new Value(m2.getCitta()),new Value(m2.getOraAlba()),new Value(m2.getMinutoAlba()),new Value(m2.getOraTramonto()),new Value(m2.getMinutoTramonto()),new Value(m2.getTemperatura()));
 	            	t2b=new LogicTuple("meteo",new Value(m2.getNomeSito()) ,new Value(m2.getTemperaturaMax()),new Value(m2.getTemperaturaMin()),new Value(m2.getUmidita()),new Value(m2.getPressione()),new Value(m2.getVento()));
 	            	t2c=new LogicTuple("meteo",new Value(m2.getNomeSito()),new Value(m2.getPrecipitazioni()), new Value(m2.getMeteoCode()),new Value(m2.getMeteo()));
-	            	
+	            	*/
 	            	
 	            	t3a=new LogicTuple("meteo",new Value(m3.getNomeSito()),new Value(m3.getCitta()),new Value(m3.getOraAlba()),new Value(m3.getMinutoAlba()),new Value(m3.getOraTramonto()),new Value(m3.getMinutoTramonto()),new Value(m3.getTemperatura()));
 	            	t3b=new LogicTuple("meteo",new Value(m3.getNomeSito()) ,new Value(m3.getTemperaturaMax()),new Value(m3.getTemperaturaMin()),new Value(m3.getUmidita()),new Value(m3.getPressione()),new Value(m3.getVento()));
@@ -187,9 +195,9 @@ public class MeteoAgent extends AbstractTucsonAgent implements TucsonAgentInterf
 	            	acc.out(this.myTid,t1b, null);
 	            	acc.out(this.myTid,t1c, null);
 	            	
-	            	acc.out(this.myTid,t2a, null); 
+	            	/*acc.out(this.myTid,t2a, null); 
 	            	acc.out(this.myTid,t2b, null);
-	            	acc.out(this.myTid,t2c, null);
+	            	acc.out(this.myTid,t2c, null);*/
 	            	
 	            	acc.out(this.myTid,t3a, null); 
 	            	acc.out(this.myTid,t3b, null);
