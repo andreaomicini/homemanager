@@ -9,6 +9,7 @@ import alice.tucson.api.TucsonTupleCentreId;
 import it.unibo.homemanager.ServiceFactory;
 import it.unibo.homemanager.agents.TucsonAgentInterface;
 import it.unibo.homemanager.dbmanagement.Database;
+import it.unibo.homemanager.meteo.MeteoAgent;
 import it.unibo.homemanager.userinterfaces.TracePanel;
 import it.unibo.homemanager.userinterfaces.ViewManageAgentPanel;
 
@@ -59,6 +60,18 @@ public class AgentManager {
 					getAgents().add(agent);
 			}
 		}
+		
+		TucsonAgentInterface meteo_agent = AgentsFactory.createAgent("meteo_tc", tupleCentres, tracePanel, database, butlerPanel);
+		getAgents().add(meteo_agent);
+		
+		TucsonAgentInterface smart_predictor_agent = AgentsFactory.createAgent("predictor_tc", tupleCentres, tracePanel, database, butlerPanel);
+		getAgents().add(smart_predictor_agent);
+		
+		TucsonAgentInterface smart_predictor_agent2 = AgentsFactory.createAgent("predictorcamera_tc", tupleCentres, tracePanel, database, butlerPanel);
+		getAgents().add(smart_predictor_agent2);
+		
+		TucsonAgentInterface presence_agent = AgentsFactory.createAgent("presence_tc", tupleCentres, tracePanel, database, butlerPanel);
+		getAgents().add(presence_agent);
 	}
 
 	public ArrayList<TucsonAgentInterface> getAgents() {

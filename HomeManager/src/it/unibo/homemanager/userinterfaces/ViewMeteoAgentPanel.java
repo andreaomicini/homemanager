@@ -207,7 +207,7 @@ public class ViewMeteoAgentPanel extends javax.swing.JPanel {
         			
         			scrollPane_2.setViewportView(null);
         		}
-        		if(scelto.equals(siti.get(2)))//yahoo
+        		/*if(scelto.equals(siti.get(2)))//yahoo
         		{
         			table = new JTable(data1, Arrays.copyOfRange(columnNames, 0, 4));
         			scrollPane.setViewportView(table);
@@ -217,7 +217,7 @@ public class ViewMeteoAgentPanel extends javax.swing.JPanel {
         			
         			table_2 = new JTable(data3, Arrays.copyOfRange(columnNames,10,11)); //da controllare!!!
         			scrollPane_2.setViewportView(table_2);
-        		}
+        		}*/
         		if(scelto.equals(siti.get(0)))//openweathermap
         		{
         			table = new JTable(data1, Arrays.copyOfRange(columnNames, 0, 4));
@@ -232,25 +232,7 @@ public class ViewMeteoAgentPanel extends javax.swing.JPanel {
         		
         		
         		
-        		/*if(data1!=null)
-        		{
-        			table = new JTable(data1, Arrays.copyOfRange(columnNames, 0, 6));
-        			scrollPane.setViewportView(table);
-        		}
-        		if(data2!=null)
-        		{
-        			table_1 = new JTable(data2, Arrays.copyOfRange(columnNames, 6,meteoAgent.getIndex(""+siticomboBox.getSelectedItem()) ));
-        			scrollPane_1.setViewportView(table_1);
-        		}
-        		if(data3!=null)
-        		{
-        			table_2 = new JTable(data3, Arrays.copyOfRange(columnNames,meteoAgent.getIndex(""+siticomboBox.getSelectedItem()), columnNames.length));
-        			scrollPane_2.setViewportView(table_2);
-        		}
-        		else
-        		{
-        			scrollPane_2.setViewportView(null);
-        		}*/
+        		
         		
         	}
     		

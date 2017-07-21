@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <persistency>
-    <snapshot tc="'@'(fridge,':'(localhost,'20504'))" time="2015-09-26_12.11.11">
+    <snapshot tc="'@'(fridge,':'(localhost,'20504'))" time="2017-06-11_20.18.45">
         <tuples>
             <tuple>threshold(4,2)</tuple>
             <tuple>user_pref(4,yougurt,3)</tuple>
@@ -22,7 +22,7 @@
         <specTuples/>
         <predicates/>
     </snapshot>
-<updates time="2015-09-26_12.11.11">
+<updates time="2017-06-11_20.18.45">
         <update action="addition" subject="tuple">is_persistent(fridge)</update>
     </updates>
 </persistency>

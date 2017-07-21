@@ -1,14 +1,15 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <persistency>
-    <snapshot tc="'@'(db,':'(localhost,'20504'))" time="2015-11-03_12.11.03">
+    <snapshot tc="'@'(db,':'(localhost,'20504'))" time="2017-06-11_20.18.43">
         <tuples>
             <tuple>device(1,'Stereo Philips MCM 190/22',20,'on;off;cd;tuner','R',2)</tuple>
             <tuple>device(2,'TV Plasma Samsung PS 42C7H',20,'on;off','R',2)</tuple>
             <tuple>device(3,'TV Plasma Panasonic TX-32PS12D',20,'on;off','R',3)</tuple>
             <tuple>device(4,'Washer Hoover Vision VHD816PI-30',1.52,'prog_A;prog_B;prog_C;prog_D;prog_E;off','W',4)</tuple>
             <tuple>device(5,'Captain Oven',40,'on;off','E',5)</tuple>
-            <tuple>device(6,'Condizionatore Freezy',30,'on;off','E',2)</tuple>
+            <tuple>device(6,'LivingRoom Conditionair',30,'on;off','E',2)</tuple>
             <tuple>device(7,'Riscaldamento hot',30,'on;off','E',2)</tuple>
+            <tuple>device(8,'BedRoom Conditionair',30,'on;off','E',3)</tuple>
             <tuple>washer_programs(1,4,prog_A,10000)</tuple>
             <tuple>washer_programs(2,4,prog_B,1500)</tuple>
             <tuple>washer_programs(3,4,prog_C,2000)</tuple>
@@ -21,6 +22,7 @@
             <tuple>sensor(5,'BEDROOM_1',3)</tuple>
             <tuple>sensor(6,'BEDROOM_2',3)</tuple>
             <tuple>sensor(7,'BATHROOM',4)</tuple>
+            <tuple>sensor(8,'CAMERA_hall_1',1)</tuple>
             <tuple>visitor(1,'Patrick','Jones')</tuple>
             <tuple>visitor(2,'Clare','Williams')</tuple>
             <tuple>visitor(3,'Julia','Jones')</tuple>
@@ -32,6 +34,7 @@
             <tuple>meteo_site('OpenWeatherMap','http://api.openweathermap.org/data/2.5/weather?q=','/OpenWeatherMap_logo.png')</tuple>
             <tuple>meteo_site('Google','http://api.wunderground.com/api/2cae48e983982ec4/conditions/lang:it/q/','/google-iconBis.png')</tuple>
             <tuple>meteo_site('Yahoo','http://weather.yahooapis.com/forecastrss?w=','/Yahoo.jpg')</tuple>
+            <tuple>timer_prediction(900000)</tuple>
             <tuple>lamp(1,'HALL_FRONT_DOOR',1)</tuple>
             <tuple>lamp(2,'HALL_FRONT_BATHROOM',2)</tuple>
             <tuple>lamp(3,'KITCHEN_PART',3)</tuple>
@@ -49,7 +52,7 @@
         <specTuples/>
         <predicates/>
     </snapshot>
-<updates time="2015-11-03_12.11.03">
+<updates time="2017-06-11_20.18.44">
         <update action="addition" subject="tuple">is_persistent(db)</update>
     </updates>
 </persistency>

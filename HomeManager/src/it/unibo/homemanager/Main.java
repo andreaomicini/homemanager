@@ -56,6 +56,10 @@ public class Main {
             //submitted by Alessandro Celi
             TucsonTupleCentreId meteo_tc = new TucsonTupleCentreId("meteo_tc", "localhost", "20504");
             
+           
+            TucsonTupleCentreId predictor_tc = new TucsonTupleCentreId("predictor_tc", "localhost", "20504");
+            TucsonTupleCentreId predictorcamera_tc = new TucsonTupleCentreId("predictorcamera_tc", "localhost", "20504");
+            
             // submitted by Mattia Fucili
             TucsonTupleCentreId deviceManager_tc = new TucsonTupleCentreId("device_manager_tc", "localhost", "20504");
             // submitted by Luca Scalzotto
@@ -73,7 +77,7 @@ public class Main {
             TucsonTupleCentreId casa_tc = new TucsonTupleCentreId("casa_tc", "localhost", "20504");
             
             System.out.println("TCenters created.. 5 sec to connect the Inspector..");
-            Thread.sleep(5000);
+            Thread.sleep(6000);
             
             Vector<TucsonTupleCentreId> tupleCenters = new Vector<TucsonTupleCentreId>();
             tupleCenters.add(0, ingresso_tc);
@@ -102,6 +106,11 @@ public class Main {
             // submitted by Erika Gardini
             tupleCenters.add(18, pantry_tc);
             tupleCenters.add(19, usageManager_tc);
+            
+           
+            tupleCenters.add(20,predictor_tc);
+            tupleCenters.add(21,rbac_tc);
+            tupleCenters.add(22,predictorcamera_tc);
             
             // init deviceManager
             DeviceManagerAgent deviceManagerAgent = DeviceManagerAgent.getInstance();
