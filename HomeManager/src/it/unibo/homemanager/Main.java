@@ -76,6 +76,9 @@ public class Main {
             TucsonTupleCentreId rbac_tc = new TucsonTupleCentreId("rbac", "localhost", "20504");
             TucsonTupleCentreId casa_tc = new TucsonTupleCentreId("casa_tc", "localhost", "20504");
             
+            //FAVA
+            TucsonTupleCentreId shopper_tc = new TucsonTupleCentreId("shopper_tc", "localhost", "20504");
+            
             System.out.println("TCenters created.. 5 sec to connect the Inspector..");
             Thread.sleep(6000);
             
@@ -111,6 +114,9 @@ public class Main {
             tupleCenters.add(20,predictor_tc);
             tupleCenters.add(21,rbac_tc);
             tupleCenters.add(22,predictorcamera_tc);
+            
+            
+            tupleCenters.add(23, shopper_tc);
             
             // init deviceManager
             DeviceManagerAgent deviceManagerAgent = DeviceManagerAgent.getInstance();

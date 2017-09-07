@@ -4,13 +4,16 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.PrintWriter;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.swing.JPanel;
 
 import alice.logictuple.LogicTuple;
 import alice.logictuple.TupleArgument;
+import alice.logictuple.Value;
 import alice.tucson.api.AbstractTucsonAgent;
 import alice.tucson.api.EnhancedSynchACC;
 import alice.tucson.api.ITucsonOperation;
@@ -23,6 +26,7 @@ import it.unibo.homemanager.detection.Device;
 import it.unibo.homemanager.userinterfaces.TracePanel;
 import it.unibo.homemanager.userinterfaces.ViewManageAgentPanel;
 import it.unibo.homemanager.userinterfaces.agents.FridgePanel;
+import it.unibo.homemanager.util.LogicTupleArgsPosition;
 
 public class FridgeAgent extends AbstractTucsonAgent implements TucsonAgentInterface, ContainersInterface {
 	private Device device;
@@ -40,12 +44,13 @@ public class FridgeAgent extends AbstractTucsonAgent implements TucsonAgentInter
 	private TucsonTupleCentreId fridgeTc;
 	private TucsonTupleCentreId mixerContainerTc;
 	private TucsonTupleCentreId usageManagerTc;
+	private TucsonTupleCentreId shopperTc;
 
 	private FridgePanel fridgePanel;
 	private TracePanel tracePanel;
 
 	public FridgeAgent(Device device, TracePanel tracePanel, TucsonTupleCentreId fridgeTc,
-			TucsonTupleCentreId mixerContainerTc, TucsonTupleCentreId usageManagerTc, Database database)
+			TucsonTupleCentreId mixerContainerTc, TucsonTupleCentreId usageManagerTc, TucsonTupleCentreId shopperTc, Database database)
 					throws TucsonInvalidAgentIdException {
 		super(device.getDeviceName() + "_" + device.getDeviceId());
 
@@ -61,6 +66,7 @@ public class FridgeAgent extends AbstractTucsonAgent implements TucsonAgentInter
 		this.fridgeTc = fridgeTc;
 		this.mixerContainerTc = mixerContainerTc;
 		this.usageManagerTc = usageManagerTc;
+		this.shopperTc = shopperTc;
 		
 		this.tracePanel = tracePanel;
 	}
@@ -156,6 +162,10 @@ public class FridgeAgent extends AbstractTucsonAgent implements TucsonAgentInter
 		return (usageManagerTc);
 	}
 	
+	public TucsonTupleCentreId getShopperTc() {
+		return (shopperTc);
+	}
+	
 	public FridgePanel getFridgePanel() {
 		return (fridgePanel);
 	}
@@ -210,12 +220,9 @@ public class FridgeAgent extends AbstractTucsonAgent implements TucsonAgentInter
 		while ( (line = reader.readLine()) != null) {
 			LogicTuple logicTuple = LogicTuple.parse(line);
 			getAcc().out(getFridgeTupleCentre(), logicTuple, Long.MAX_VALUE);
-			
-			int second = 1;
-			int third = 2;
-			
-			String productName = logicTuple.getArg(second).toString();
-			int productQuantity = logicTuple.getArg(third).intValue();
+						
+			String productName = logicTuple.getArg(LogicTupleArgsPosition.SECOND).toString();
+			int productQuantity = logicTuple.getArg(LogicTupleArgsPosition.THIRD).intValue();
 			
 			Ingredient ingredient = new Ingredient(productName, productQuantity);
 			ingredients.add(ingredient);
@@ -258,8 +265,7 @@ public class FridgeAgent extends AbstractTucsonAgent implements TucsonAgentInter
 			return (false);
 		
 		LogicTuple result = operation.getLogicTupleResult();
-		int third = 2;
-		String deviceState = result.getArg(third).toString();
+		String deviceState = result.getArg(LogicTupleArgsPosition.THIRD).toString();
 	
 		if ( !deviceState.equals("on") )
 			return (false);
@@ -284,17 +290,13 @@ public class FridgeAgent extends AbstractTucsonAgent implements TucsonAgentInter
 	private boolean checkRecipeAnswer(LogicTuple request) throws Exception {
 		List<Ingredient> ingredients = getCurrentIngredients();
 
-		int first = 0;
-		int second = 1;
-		int third = 2;
-
-		TupleArgument missingIngredientsArgument = request.getArg(third);
+		TupleArgument missingIngredientsArgument = request.getArg(LogicTupleArgsPosition.THIRD);
 		List<Ingredient> missingIngredients = new ArrayList<Ingredient>();
 
 		for (int i = 0; i < missingIngredientsArgument.getArity(); i++) {
 			TupleArgument missingIngredientArgument = missingIngredientsArgument.getArg(i);
-			String ingredientName = missingIngredientArgument.getArg(first).toString();
-			int ingredientQuantity = missingIngredientArgument.getArg(second).intValue();
+			String ingredientName = missingIngredientArgument.getArg(LogicTupleArgsPosition.FIRST).toString();
+			int ingredientQuantity = missingIngredientArgument.getArg(LogicTupleArgsPosition.SECOND).intValue();
 			Ingredient missingIngredient = new Ingredient(ingredientName, ingredientQuantity);
 			missingIngredients.add(missingIngredient);
 		}
@@ -328,25 +330,21 @@ public class FridgeAgent extends AbstractTucsonAgent implements TucsonAgentInter
 		LogicTuple template = LogicTuple.parse(tuple);
 		ITucsonOperation operation = getAcc().in(getMixerContainerTc(), template, Long.MAX_VALUE);
 		if (operation.isResultSuccess()) {
-			int third = 2;
 			LogicTuple removeRequest = operation.getLogicTupleArgument();
-			String remove = removeRequest.getArg(third).toString();
+			String remove = removeRequest.getArg(LogicTupleArgsPosition.THIRD).toString();
 			if (remove.equals("remove"))
 				removeIngredientsFromFridge(removeRequest);
 		}
 	}
 	
 	private boolean removeIngredientsFromFridge(LogicTuple removeRequest) throws Exception {
-		int first = 0;
-		int second = 1;
-
 		List<Ingredient> fridgeContent = getCurrentIngredients();
-		TupleArgument ingredients = removeRequest.getArg(second);
+		TupleArgument ingredients = removeRequest.getArg(LogicTupleArgsPosition.SECOND);
 
 		for (int i = 0; i < ingredients.getArity(); i++) {
 			TupleArgument ingredientArgument = ingredients.getArg(i);
-			String name = ingredientArgument.getArg(first).toString();
-			int quantity = ingredientArgument.getArg(second).intValue();
+			String name = ingredientArgument.getArg(LogicTupleArgsPosition.FIRST).toString();
+			int quantity = ingredientArgument.getArg(LogicTupleArgsPosition.SECOND).intValue();
 			Ingredient fridgeIngredient = fridgeContent.get(fridgeContent.indexOf(new Ingredient(name, -1)));
 			Ingredient ingredient = new Ingredient(name, fridgeIngredient.getQuantity() - quantity);
 			if (!updateContent(ingredient))
@@ -383,12 +381,9 @@ public class FridgeAgent extends AbstractTucsonAgent implements TucsonAgentInter
 		List<LogicTuple> logicTuples = operation.getLogicTupleListResult();
 		List<Ingredient> ingredients = new ArrayList<Ingredient>();
 
-		int second = 1;
-		int third = 2;
-
 		for (LogicTuple logicTuple : logicTuples) {
-			String name = logicTuple.getArg(second).toString();
-			int quantity = logicTuple.getArg(third).intValue();
+			String name = logicTuple.getArg(LogicTupleArgsPosition.SECOND).toString();
+			int quantity = logicTuple.getArg(LogicTupleArgsPosition.THIRD).intValue();
 			Ingredient ingredient = new Ingredient(name, quantity);
 			ingredients.add(ingredient);
 		}
@@ -421,11 +416,9 @@ public class FridgeAgent extends AbstractTucsonAgent implements TucsonAgentInter
 		LogicTuple template = LogicTuple.parse(tuple);
 		ITucsonOperation operation = getAcc().inp(getFridgeTupleCentre(), template, Long.MAX_VALUE);
 
-		int third = 2;
-
 		if (operation.isResultSuccess()) {
 			LogicTuple result = operation.getLogicTupleResult();
-			int oldQuantity = result.getArg(third).intValue();
+			int oldQuantity = result.getArg(LogicTupleArgsPosition.THIRD).intValue();
 			int newQuantity = oldQuantity + ingredient.getQuantity();
 			tuple = nameTemplate + "(" + fridgeName + "," + ingredient.getName() + "," + newQuantity + ")";
 			template = LogicTuple.parse(tuple);
@@ -453,6 +446,7 @@ public class FridgeAgent extends AbstractTucsonAgent implements TucsonAgentInter
 				tuple = nameTemplate + "(" + fridgeName + "," + ingredient.getName() + "," + newQuantity + ")";
 				template = LogicTuple.parse(tuple);
 				operation = getAcc().out(getFridgeTupleCentre(), template, Long.MAX_VALUE);
+				checkThreshold(ingredient);
 				return (operation.isResultSuccess());
 			}
 			return (true);
@@ -460,6 +454,28 @@ public class FridgeAgent extends AbstractTucsonAgent implements TucsonAgentInter
 		return (false);
 	}
 	
+	private void checkThreshold(Ingredient ingredient) throws Exception{
+		String nameTemplate = "user_pref";
+		String tuple = nameTemplate + "(A," + ingredient.getName() + ",B)";
+		
+		LogicTuple template = LogicTuple.parse(tuple);
+		ITucsonOperation operation = getAcc().rdp(getShopperTc(), template, Long.MAX_VALUE);
+		if(operation.isResultSuccess()){
+			int threshold = operation.getLogicTupleResult().getArg(LogicTupleArgsPosition.THIRD).intValue();
+			if(ingredient.getQuantity() <= threshold){
+				//genera tupla scarcity
+				//scarcity(idUser,nameProduct,quantityActual,threshold,TimeStamp)
+				Date d = new Date();
+		        SimpleDateFormat df = new SimpleDateFormat("\"yyyy-mm-dd_hh-mm-ss\"");
+		        String timestamp = df.format(d);
+				nameTemplate = "scarcity";
+				tuple = nameTemplate + "(" + operation.getLogicTupleResult().getArg(LogicTupleArgsPosition.FIRST).toString() + "," + ingredient.getName() + "," + ingredient.getQuantity() + "," + threshold + "," + timestamp + ")";
+				template = LogicTuple.parse(tuple);
+				operation = getAcc().out(getShopperTc(), template, Long.MAX_VALUE);
+			}
+		}
+	}
+
 	private void onStateChanged() {
 		for ( StateChangeListener listener : getStateListeners() )
 			listener.onStateChanged();

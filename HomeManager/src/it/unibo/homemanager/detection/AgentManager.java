@@ -72,6 +72,9 @@ public class AgentManager {
 		
 		TucsonAgentInterface presence_agent = AgentsFactory.createAgent("presence_tc", tupleCentres, tracePanel, database, butlerPanel);
 		getAgents().add(presence_agent);
+		
+		TucsonAgentInterface shopper_agent = AgentsFactory.createAgent("shopper_tc", tupleCentres, tracePanel, database, butlerPanel);
+		getAgents().add(shopper_agent);
 	}
 
 	public ArrayList<TucsonAgentInterface> getAgents() {

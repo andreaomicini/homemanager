@@ -27,8 +27,9 @@ public class MailUtility
 {
   public static void sendMail (String host,String user,String password,String []toAddr, String mitt, String oggetto, String testoEmail) throws MessagingException
   {
-      //int port = 465; //porta 25 per non usare SSL
-      int port=25;
+//      int port = 465; //porta 25 per non usare SSL
+	  int port = 587;
+//      int port=25;
     Properties props = new Properties();
     props.put("mail.smtp.auth", "true");
     props.put("mail.smtp.user", mitt);
@@ -69,7 +70,8 @@ public class MailUtility
        }
       
       // corpo del messaggio
-      messageBodyPart1.setText("Shopper Agent: Shopping List\n"+testoEmail);
+//      messageBodyPart1.setText("Shopper Agent: Shopping List\n"+testoEmail);
+      messageBodyPart1.setText(testoEmail);
       multipart.addBodyPart(messageBodyPart1);
  
       // allegato al messaggio

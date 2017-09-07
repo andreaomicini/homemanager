@@ -232,6 +232,8 @@ public class MainPanel extends JPanel {
 
 			else if (agent.getName().equals("camera_tc"))
 				tupleCentres.put("camera_tc", agent);
+			else if (agent.getName().equals("shopper_tc"))
+				tupleCentres.put("shopper_tc", agent);
 		
 			
 		}

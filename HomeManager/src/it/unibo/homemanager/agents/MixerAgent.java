@@ -29,6 +29,7 @@ import it.unibo.homemanager.detection.Device;
 import it.unibo.homemanager.userinterfaces.TracePanel;
 import it.unibo.homemanager.userinterfaces.ViewManageAgentPanel;
 import it.unibo.homemanager.userinterfaces.agents.MixerPanel;
+import it.unibo.homemanager.util.LogicTupleArgsPosition;
 
 public class MixerAgent extends AbstractTucsonAgent implements TucsonAgentInterface {
 	private Device device;
@@ -48,13 +49,14 @@ public class MixerAgent extends AbstractTucsonAgent implements TucsonAgentInterf
 	private TucsonTupleCentreId mixerContainerTc;
 	private TucsonTupleCentreId ovenTc;
 	private TucsonTupleCentreId usageManagerTc;
+	private TucsonTupleCentreId shopperTc;
 
 	private MixerPanel mixerPanel;
 	private TracePanel tracePanel;
 
 	public MixerAgent(Device device, TracePanel tracePanel, TucsonTupleCentreId mixerTc,
 			TucsonTupleCentreId mixerContainerTc, TucsonTupleCentreId ovenTc, TucsonTupleCentreId usageManagerTc,
-			Database database) throws Exception {
+			TucsonTupleCentreId shopperTc, Database database) throws Exception {
 		super(device.getDeviceName() + "_" + device.getDeviceId());
 
 		this.device = device;
@@ -75,6 +77,7 @@ public class MixerAgent extends AbstractTucsonAgent implements TucsonAgentInterf
 		this.mixerContainerTc = mixerContainerTc;
 		this.ovenTc = ovenTc;
 		this.usageManagerTc = usageManagerTc;
+		this.shopperTc = shopperTc;
 		
 		this.tracePanel = tracePanel;
 	}
@@ -192,6 +195,10 @@ public class MixerAgent extends AbstractTucsonAgent implements TucsonAgentInterf
 		return (usageManagerTc);
 	}
 
+	public TucsonTupleCentreId getShopperTc() {
+		return shopperTc;
+	}
+
 	public MixerPanel getMixerPanel() {
 		return (mixerPanel);
 	}
@@ -234,12 +241,6 @@ public class MixerAgent extends AbstractTucsonAgent implements TucsonAgentInterf
 		
 		String line = "";
 		
-		int first = 0;
-		int second = 1;
-		int third = 2;
-		int fourth = 3;
-		int fifth = 4;
-		
 		List<Recipe> allRecipes = new ArrayList<Recipe>();
 		
 		while ( (line = reader.readLine()) != null) {
@@ -248,18 +249,18 @@ public class MixerAgent extends AbstractTucsonAgent implements TucsonAgentInterf
 			Long maxValue = new Long(Long.MAX_VALUE);
 			getAcc().out(getMixerTc(), logicTuple, maxValue);
 			
-			int id = logicTuple.getArg(first).intValue();
-			String name = logicTuple.getArg(second).toString();
-			int cookingTime = logicTuple.getArg(third).intValue();
-			int temperature = logicTuple.getArg(fourth).intValue();
+			int id = logicTuple.getArg(LogicTupleArgsPosition.FIRST).intValue();
+			String name = logicTuple.getArg(LogicTupleArgsPosition.SECOND).toString();
+			int cookingTime = logicTuple.getArg(LogicTupleArgsPosition.THIRD).intValue();
+			int temperature = logicTuple.getArg(LogicTupleArgsPosition.FOURTH).intValue();
 
-			TupleArgument ingredientsArgument = logicTuple.getArg(fifth);
+			TupleArgument ingredientsArgument = logicTuple.getArg(LogicTupleArgsPosition.FIFTH);
 			List<Ingredient> ingredients = new ArrayList<Ingredient>();
 
 			for (int i = 0; i < ingredientsArgument.getArity(); i++) {
 				TupleArgument ingredientArgument = ingredientsArgument.getArg(i);
-				String ingredientName = ingredientArgument.getArg(first).toString();
-				int ingredientQuantity = ingredientArgument.getArg(second).intValue();
+				String ingredientName = ingredientArgument.getArg(LogicTupleArgsPosition.FIRST).toString();
+				int ingredientQuantity = ingredientArgument.getArg(LogicTupleArgsPosition.SECOND).intValue();
 				Ingredient ingredient = new Ingredient(ingredientName, ingredientQuantity);
 				ingredients.add(ingredient);
 			}
@@ -321,27 +322,21 @@ public class MixerAgent extends AbstractTucsonAgent implements TucsonAgentInterf
 		ITucsonOperation operation = getAcc().rdAll(getMixerTc(), template, maxValue);
 
 		List<LogicTuple> logicTuples = operation.getLogicTupleListResult();
-
-		int first = 0;
-		int second = 1;
-		int third = 2;
-		int fourth = 3;
-		int fifth = 4;
 		
 		List<Recipe> allRecipes = new ArrayList<Recipe>();
 		for (LogicTuple logicTuple : logicTuples) {
-			int id = logicTuple.getArg(first).intValue();
-			String name = logicTuple.getArg(second).toString();
-			int cookingTime = logicTuple.getArg(third).intValue();
-			int temperature = logicTuple.getArg(fourth).intValue();
+			int id = logicTuple.getArg(LogicTupleArgsPosition.FIRST).intValue();
+			String name = logicTuple.getArg(LogicTupleArgsPosition.SECOND).toString();
+			int cookingTime = logicTuple.getArg(LogicTupleArgsPosition.THIRD).intValue();
+			int temperature = logicTuple.getArg(LogicTupleArgsPosition.FOURTH).intValue();
 
-			TupleArgument ingredientsArgument = logicTuple.getArg(fifth);
+			TupleArgument ingredientsArgument = logicTuple.getArg(LogicTupleArgsPosition.FIFTH);
 			List<Ingredient> ingredients = new ArrayList<Ingredient>();
 
 			for (int i = 0; i < ingredientsArgument.getArity(); i++) {
 				TupleArgument ingredientArgument = ingredientsArgument.getArg(i);
-				String ingredientName = ingredientArgument.getArg(first).toString();
-				int ingredientQuantity = ingredientArgument.getArg(second).intValue();
+				String ingredientName = ingredientArgument.getArg(LogicTupleArgsPosition.FIRST).toString();
+				int ingredientQuantity = ingredientArgument.getArg(LogicTupleArgsPosition.SECOND).intValue();
 				Ingredient ingredient = new Ingredient(ingredientName, ingredientQuantity);
 				ingredients.add(ingredient);
 			}
@@ -404,17 +399,13 @@ public class MixerAgent extends AbstractTucsonAgent implements TucsonAgentInterf
 					if (operation.isResultSuccess()) {
 						LogicTuple answer = operation.getLogicTupleResult();
 
-						int first = 0;
-						int second = 1;
-						int third = 2;
-
-						TupleArgument ingredientsArgument = answer.getArg(third);
+						TupleArgument ingredientsArgument = answer.getArg(LogicTupleArgsPosition.THIRD);
 						List<Ingredient> ingredients = new ArrayList<Ingredient>();
 
 						for (int i = 0; i < ingredientsArgument.getArity(); i++) {
 							TupleArgument ingredientArgument = ingredientsArgument.getArg(i);
-							String ingredientName = ingredientArgument.getArg(first).toString();
-							int ingredientQuantity = ingredientArgument.getArg(second).intValue();
+							String ingredientName = ingredientArgument.getArg(LogicTupleArgsPosition.FIRST).toString();
+							int ingredientQuantity = ingredientArgument.getArg(LogicTupleArgsPosition.SECOND).intValue();
 							Ingredient ingredient = new Ingredient(ingredientName, ingredientQuantity);
 							ingredients.add(ingredient);
 						}
@@ -514,8 +505,7 @@ public class MixerAgent extends AbstractTucsonAgent implements TucsonAgentInterf
 			return (false);
 		
 		LogicTuple tupleResult = operation.getLogicTupleResult();
-		int third = 2;
-		String response = tupleResult.getArg(third).toString();
+		String response = tupleResult.getArg(LogicTupleArgsPosition.THIRD).toString();
 		
 		if ( !response.equals("on") )
 			return (false);
@@ -550,10 +540,9 @@ public class MixerAgent extends AbstractTucsonAgent implements TucsonAgentInterf
 			ITucsonOperation operation = getAcc().rdAll(getUsageManagerTc(), template, Long.MAX_VALUE);
 	
 			if (operation.isResultSuccess()) {
-				int first = 0;
 				for (LogicTuple logicTuple : operation.getLogicTupleListResult()) {
-					String type = logicTuple.getArg(first).getName();
-					int index = logicTuple.getArg(first).getArg(first).intValue();
+					String type = logicTuple.getArg(LogicTupleArgsPosition.FIRST).getName();
+					int index = logicTuple.getArg(LogicTupleArgsPosition.FIRST).getArg(LogicTupleArgsPosition.FIRST).intValue();
 					containers.add(type + "_" + index);
 				}
 			}
@@ -571,9 +560,8 @@ public class MixerAgent extends AbstractTucsonAgent implements TucsonAgentInterf
 		ITucsonOperation operation = getAcc().rdAll(getUsageManagerTc(), template, Long.MAX_VALUE);
 
 		if (operation.isResultSuccess()) {
-			int first = 0;
 			for (LogicTuple logicTuple : operation.getLogicTupleListResult()) {
-				String oven = logicTuple.getArg(first).toString();
+				String oven = logicTuple.getArg(LogicTupleArgsPosition.FIRST).toString();
 				ovens.add(oven);
 			}
 		}
@@ -598,8 +586,7 @@ public class MixerAgent extends AbstractTucsonAgent implements TucsonAgentInterf
 		if ( !operation.isResultSuccess() )
 			return (false);
 
-		int third = 2;
-		int cookingResult = operation.getLogicTupleResult().getArg(third).intValue();
+		int cookingResult = operation.getLogicTupleResult().getArg(LogicTupleArgsPosition.THIRD).intValue();
 		
 		if ( cookingResult != 0 )
 			return (false);
@@ -689,7 +676,7 @@ public class MixerAgent extends AbstractTucsonAgent implements TucsonAgentInterf
 			listener.onRecipesChanged();
 	}
 	
-	public boolean insertOrder(List<Ingredient> ingredients) {
+	public boolean insertOrder(List<Ingredient> ingredients) throws Exception {
 //		String stringIngredients = "";
 //		for (Ingredient ingredient : ingredients)
 //			stringIngredients = stringIngredients + ingredient.getName() + "-" + ingredient.getQuantity() + ";";
@@ -707,8 +694,29 @@ public class MixerAgent extends AbstractTucsonAgent implements TucsonAgentInterf
 //		ITucsonOperation operation = getAcc().out(getShopperTc(), template, Long.MAX_VALUE);
 //		
 //		return (operation.isResultSuccess());
-		
+		for(Ingredient ingredient : ingredients)
+			addBuyIngredient(ingredient);
 		return (true);
+	}
+	
+	
+	private void addBuyIngredient(Ingredient ingredient) throws Exception{
+		String nameTemplate = "buy";
+		int quantity = ingredient.getQuantity() + getPrevBuyQuantity(ingredient);
+		String tuple = nameTemplate + "(ingredient(" + ingredient.getName() + "," + quantity + "))";
+		LogicTuple template = LogicTuple.parse(tuple);
+		getAcc().out(getShopperTc(), template, Long.MAX_VALUE);
+	}
+	
+	private int getPrevBuyQuantity(Ingredient ingredient) throws Exception{
+		String nameTemplate = "buy";
+		String tuple = nameTemplate + "(ingredient(" + ingredient.getName() + ",A))";
+		LogicTuple template = LogicTuple.parse(tuple);
+		ITucsonOperation operation = getAcc().inp(getShopperTc(), template, Long.MAX_VALUE);
+		if(operation.isResultSuccess())
+			return operation.getLogicTupleResult().getArg(LogicTupleArgsPosition.FIRST)
+					.getArg(LogicTupleArgsPosition.SECOND).intValue();
+		return 0;
 	}
 	
 //	private int getNewOrderId() throws Exception {
