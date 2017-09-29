@@ -12,12 +12,14 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import java.awt.FlowLayout;
 
 public class PoliciesPriorityFrame extends JDialog {
 	
@@ -46,6 +48,8 @@ public class PoliciesPriorityFrame extends JDialog {
 		
 		
 		JPanel panel = new JPanel();
+		FlowLayout flowLayout = (FlowLayout) panel.getLayout();
+		flowLayout.setHgap(20);
 		getContentPane().add(panel, BorderLayout.NORTH);
 		
 		JLabel lblIngredientName = new JLabel("Ingredient name");
@@ -101,10 +105,15 @@ public class PoliciesPriorityFrame extends JDialog {
 	private void initPolicies() {
 		for(String policy : policies){
 			JLabel label = new JLabel(policy);
+			label.setBorder(BorderFactory.createEmptyBorder(0, 20, 0, 0));
 			JTextField text = new JTextField(3);
 			text.setName(policy);
+			JPanel wrappingPanel = new JPanel(new BorderLayout());
+			wrappingPanel.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 20));
+			wrappingPanel.setOpaque(false);
+			wrappingPanel.add(text);
 			policiesPanel.add(label);
-			policiesPanel.add(text);
+			policiesPanel.add(wrappingPanel);
 		}		
 	}
 	
@@ -121,7 +130,7 @@ public class PoliciesPriorityFrame extends JDialog {
 
 		result = new ArrayList<>();
 		
-		List<Component> textboxes = Arrays.asList(policiesPanel.getComponents()).stream().filter(component -> component.getClass() == JTextField.class).collect(Collectors.toList());
+		List<Component> textboxes = Arrays.asList(policiesPanel.getComponents()).stream().filter(component -> component.getClass() == JPanel.class).map(panel -> ((JPanel)panel).getComponent(0)).collect(Collectors.toList());
 		
 		for(Component comp : textboxes)
 			if(((JTextField)comp).getText().trim().isEmpty()){

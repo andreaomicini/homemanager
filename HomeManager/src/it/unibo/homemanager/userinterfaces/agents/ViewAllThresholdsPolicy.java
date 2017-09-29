@@ -4,6 +4,7 @@ import java.awt.BorderLayout;
 import java.awt.Toolkit;
 import java.util.List;
 
+import javax.swing.BorderFactory;
 import javax.swing.JDialog;
 import javax.swing.JTextArea;
 
@@ -21,6 +22,7 @@ public class ViewAllThresholdsPolicy extends JDialog {
 		
 		textArea = new JTextArea();
 		textArea.setEditable(false);
+		textArea.setBorder(BorderFactory.createEmptyBorder(0, 20, 0, 20));
 		getContentPane().add(textArea, BorderLayout.CENTER);
 		
 		this.toView = toView;

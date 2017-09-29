@@ -377,7 +377,7 @@ public class ShopperPanel extends javax.swing.JPanel{
 		
 		if(supermarket == null){
 			JOptionPane.showMessageDialog(null,
-					"No supermarket selected. Please select a supermarket\n from those listed on the left.", "ACTION INVALID",
+					"No supermarket selected. Please select a supermarket\n from those listed above.", "ACTION INVALID",
 					JOptionPane.ERROR_MESSAGE);
 			return;
 		}

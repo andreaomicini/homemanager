@@ -45,6 +45,8 @@ public class ShopperAgent extends AbstractTucsonAgent implements TucsonAgentInte
     
     private Map<String, List<String>> policiesTemplate;
     private List<String> priorityTemplate; 
+    
+    private int counter = 0;
 	
     public ShopperAgent(String name, TucsonTupleCentreId shopper_tc, 
     		TracePanel tp) throws TucsonInvalidAgentIdException {
@@ -98,6 +100,9 @@ public class ShopperAgent extends AbstractTucsonAgent implements TucsonAgentInte
 	@Override
 	protected void main() {
 		
+		int second = 1000;
+		int minute = 60 * second;
+				
 		acc = getContext();
 
 		try {
@@ -111,7 +116,7 @@ public class ShopperAgent extends AbstractTucsonAgent implements TucsonAgentInte
 					checkScarcityTuples();
 					makeOrder();
 					
-					Thread.sleep(1000);
+					Thread.sleep(1 * second);
 					
 				} catch (Exception e) { }
 			}
@@ -183,16 +188,22 @@ public class ShopperAgent extends AbstractTucsonAgent implements TucsonAgentInte
 		//ordering(ingredient_name,quantity,supermarket_id)
 		nameTemplate = "ordering";
 		
-		for(int id : getIds()){
-			int minOrder = getMinOrderForSupermarket(id);
-			tuple = nameTemplate + "(A,B," + id + ")";
-			template = LogicTuple.parse(tuple);
-			operation = getAcc().rdAll(getShopperTc(), template, Long.MAX_VALUE);
-			if(operation.getLogicTupleListResult().size() >= minOrder){
-				getAcc().inAll(getShopperTc(), template, Long.MAX_VALUE);
-				sendOrder(operation.getLogicTupleListResult());				
+		counter++;
+		
+		//l'ordine complessivo lo faccio solo ogni minuto circa (ogni 60 iterazioni)
+		if(counter == 60){
+			for(int id : getIds()){
+				int minOrder = getMinOrderForSupermarket(id);
+				tuple = nameTemplate + "(A,B," + id + ")";
+				template = LogicTuple.parse(tuple);
+				operation = getAcc().rdAll(getShopperTc(), template, Long.MAX_VALUE);
+				if(operation.getLogicTupleListResult().size() >= minOrder){
+					getAcc().inAll(getShopperTc(), template, Long.MAX_VALUE);
+					sendOrder(operation.getLogicTupleListResult());				
+				}
 			}
-		}		
+			counter = 0;
+		}
 	}
 
     private int getMinOrderForSupermarket(int id) throws Exception{
@@ -292,7 +303,8 @@ public class ShopperAgent extends AbstractTucsonAgent implements TucsonAgentInte
 		
 		//se nessuna policy ha dato esito positivo faccio l'ordine nel supermarket con id più basso
 		if(!res)
-			insertOrdering(ingredientName, quantity, getIds().stream().min(null).orElse(0));	
+			insertOrdering(ingredientName, quantity, Collections.min(getIds(), Integer::compare));
+		
 		
 	}
 
@@ -659,6 +671,9 @@ public class ShopperAgent extends AbstractTucsonAgent implements TucsonAgentInte
 			return;
 		String tuple = policy.substring(0, 6) + "A" + policy.substring(policy.indexOf(","));
 		LogicTuple template = LogicTuple.parse(tuple);
+		getAcc().inp(getShopperTc(), template, Long.MAX_VALUE);
+		tuple = policy.substring(0, policy.lastIndexOf(",")) + ",A)";
+		template = LogicTuple.parse(tuple);
 		getAcc().inp(getShopperTc(), template, Long.MAX_VALUE);
 	}
 

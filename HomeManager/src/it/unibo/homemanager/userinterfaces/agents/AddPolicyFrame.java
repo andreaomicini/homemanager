@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import javax.swing.BorderFactory;
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JDialog;
@@ -126,10 +127,17 @@ public class AddPolicyFrame extends JDialog {
 		String policy = e.getActionCommand();
 		List<String> elements = policies.get(policy);
 		for(String element : elements){
-			policyPanel.add(new JLabel(element));
+			JLabel label = new JLabel(element);
+			label.setBorder(BorderFactory.createEmptyBorder(0, 20, 0, 0));
+			policyPanel.add(label);
 			JTextField text = new JTextField();
 			text.setName("txt" + element.replace(" ", ""));
-			policyPanel.add(text);
+			JPanel wrappingPanel = new JPanel(new BorderLayout());
+			wrappingPanel.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 20));
+			wrappingPanel.setOpaque(false);
+			wrappingPanel.setName("wrp_" + text.getName());
+			wrappingPanel.add(text);
+			policyPanel.add(wrappingPanel);
 		}
 		pack();
 		policyPanel.repaint();
@@ -147,8 +155,9 @@ public class AddPolicyFrame extends JDialog {
 		 */
 		
 		List<String> elements = new ArrayList<>();
-		for(Component comp : Arrays.asList(policyPanel.getComponents()).stream().filter(component -> component.getClass() == JTextField.class).collect(Collectors.toList())){
-			JTextField text = (JTextField)comp;
+		for(Component comp : Arrays.asList(policyPanel.getComponents()).stream().filter(component -> component.getClass() == JPanel.class).collect(Collectors.toList())){
+			JPanel wrp = (JPanel)comp;
+			JTextField text = (JTextField)wrp.getComponent(0);
 			elements.add(text.getText());
 		}
 		
