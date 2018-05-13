@@ -10,7 +10,6 @@ import it.unibo.homemanager.util.*;
 import it.unibo.homemanager.tablemap.*;
 import it.unibo.homemanager.dbmanagement.*;
 import it.unibo.homemanager.dbmanagement.dbexceptions.*;
-
 import alice.tucson.api.*;
 import alice.logictuple.*;
 import it.unibo.homemanager.ServiceFactory;

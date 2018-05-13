@@ -16,6 +16,7 @@ import javax.swing.border.TitledBorder;
 import alice.tucson.api.TucsonTupleCentreId;
 import it.unibo.homemanager.ServiceFactory;
 import it.unibo.homemanager.agents.TucsonAgentInterface;
+import it.unibo.homemanager.agents.wardrobe.WardrobeAgent;
 import it.unibo.homemanager.detection.AgentManager;
 import it.unibo.homemanager.detection.AgentsFactory;
 import it.unibo.homemanager.detection.Device;
@@ -154,6 +155,7 @@ public class MainPanel extends JPanel {
 	
 		for (TucsonAgentInterface agent : agentManager.getAgents() )
 			cards.add(agent.getInterface(), agent.getName());
+	
 
 		cards.setLocation(0, 0);
 		add(cards);
@@ -232,7 +234,9 @@ public class MainPanel extends JPanel {
 
 			else if (agent.getName().equals("camera_tc"))
 				tupleCentres.put("camera_tc", agent);
-		
+			
+			else if (agent.getName().equals("wardrobe_tc"))
+				tupleCentres.put("wardrobe_tc", agent);
 			
 		}
 	}

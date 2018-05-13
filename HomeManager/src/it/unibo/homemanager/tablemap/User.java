@@ -6,7 +6,6 @@ package it.unibo.homemanager.tablemap;
  * 
  */
 
-
 /**
  *
  * @author  Claudia Fontan
@@ -20,6 +19,7 @@ package it.unibo.homemanager.tablemap;
 
 
 public class User {
+
 
   public int idUser, temp_heat, temp_ac;
   public String firstname, surname, username, pwd, activate;
@@ -38,7 +38,6 @@ public class User {
     temp_heat = th;
     temp_ac = tac;
     activate = act;
-
   }
   
   public String getRoleString() {
@@ -49,6 +48,9 @@ public class User {
       return this.role.charAt(1);
   }
   
+
+
+	
   public String toString() {
       return "Firstname: "+this.firstname+"\n"+
               "Surname: "+this.surname+"\n"+

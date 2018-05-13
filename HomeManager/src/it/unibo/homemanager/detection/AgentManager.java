@@ -63,7 +63,7 @@ public class AgentManager {
 		
 		TucsonAgentInterface meteo_agent = AgentsFactory.createAgent("meteo_tc", tupleCentres, tracePanel, database, butlerPanel);
 		getAgents().add(meteo_agent);
-		
+	
 		TucsonAgentInterface smart_predictor_agent = AgentsFactory.createAgent("predictor_tc", tupleCentres, tracePanel, database, butlerPanel);
 		getAgents().add(smart_predictor_agent);
 		
@@ -72,6 +72,8 @@ public class AgentManager {
 		
 		TucsonAgentInterface presence_agent = AgentsFactory.createAgent("presence_tc", tupleCentres, tracePanel, database, butlerPanel);
 		getAgents().add(presence_agent);
+		
+		
 	}
 
 	public ArrayList<TucsonAgentInterface> getAgents() {

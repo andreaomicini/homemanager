@@ -1,0 +1,8 @@
+outfit([X_RFID, X_NAME, X_SIZE, X_COLOR], [Y_RFID, Y_NAME, Y_SIZE, Y_COLOR]):-outfit_light([X_RFID, X_NAME, X_SIZE, X_COLOR],[Y_RFID, Y_NAME, Y_SIZE, Y_COLOR]), temperature(hot).
+outfit([X_RFID, X_NAME, X_SIZE, X_COLOR], [Y_RFID, Y_NAME, Y_SIZE, Y_COLOR]):-outfit_heavy([X_RFID, X_NAME, X_SIZE, X_COLOR],[Y_RFID, Y_NAME, Y_SIZE, Y_COLOR]), temperature(cold).
+outfit_heavy([X_RFID, X_NAME, X_SIZE, X_COLOR], [Y_RFID, Y_NAME, Y_SIZE, Y_COLOR]):-dress([X_RFID, X_NAME, X_SIZE, X_COLOR, heavy, top]), present(X_RFID, yes), dress([Y_RFID, Y_NAME, Y_SIZE, Y_COLOR, heavy, bot]), present(Y_RFID, yes).
+outfit_light([X_RFID, X_NAME, X_SIZE, X_COLOR], [Y_RFID, Y_NAME, Y_SIZE, Y_COLOR]):-dress([X_RFID, X_NAME, X_SIZE, X_COLOR, light, top]), present(X_RFID, yes), dress([Y_RFID, Y_NAME, Y_SIZE, Y_COLOR, light, bot]), present(Y_RFID, yes).
+temperature(hot):-degrees(X), X>=20.
+temperature(cold):-degrees(X), X<20.
+is_sunny:-light(X), X>=50.
+is_humid:-humidity(X), X>=85.

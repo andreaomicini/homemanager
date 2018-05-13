@@ -70,6 +70,9 @@ public class Main {
             // submitted by Erika Gardini
             TucsonTupleCentreId pantry_tc = new TucsonTupleCentreId("pantry_tc","localhost","20504");
             TucsonTupleCentreId usageManager_tc = new TucsonTupleCentreId("usage_manager_tc", "localhost", "20504");
+         
+            // submitted by Luca Antognetti
+            TucsonTupleCentreId wardrobe_tc = new TucsonTupleCentreId("wardrobe_tc","localhost","20504");
             
             // RC replaced rbac_tc with rbac
             System.out.println("Creo rbac");
@@ -111,6 +114,10 @@ public class Main {
             tupleCenters.add(20,predictor_tc);
             tupleCenters.add(21,rbac_tc);
             tupleCenters.add(22,predictorcamera_tc);
+            
+            // submitted by Luca Antognetti
+            tupleCenters.add(23,wardrobe_tc);
+
             
             // init deviceManager
             DeviceManagerAgent deviceManagerAgent = DeviceManagerAgent.getInstance();
