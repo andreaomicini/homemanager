@@ -18,6 +18,9 @@ import alice.tucson.api.ITucsonOperation;
 import alice.tucson.api.TucsonTupleCentreId;
 import alice.tucson.api.exceptions.TucsonInvalidAgentIdException;
 import alice.tuplecentre.core.AbstractTupleCentreOperation;
+import classes.Solution;
+import cli.System.Array;
+import interfaces.Client;
 import interfaces.Configurator;
 import interfaces.SmartComponentManager;
 import it.unibo.homemanager.agents.StateChangeListener;
@@ -32,6 +35,14 @@ import lpaas.LPaaSComponentManager;
 
 public class WardrobeAgent extends AbstractTucsonAgent implements TucsonAgentInterface {
 	private final static String THEORY_NAME = "wardrobeTheory";
+
+	private final static String GOAL_SUNNY = "is_sunny.";
+	private final static String GOAL_HUMIDITY = "is_humid.";
+	private final static String GOAL_OUTFIT = "outfit([_|TOP_DRESS],[_|BOT_DRESS]).";
+
+	private final static String GOALSLIST_SUNNY = "sunny";
+	private final static String GOALSLIST_HUMIDITY = "humidity";
+	private final static String GOALSLIST_OUTFIT = "outfits";
 
 	private Device device;
 	private String name;
@@ -83,26 +94,42 @@ public class WardrobeAgent extends AbstractTucsonAgent implements TucsonAgentInt
 
 			SmartComponentManager scm = LPaaSComponentManager.getInstance();
 
-//			do {
-//
-//				result = scm.register(getName(), new URL("http://localhost:8080/lpaas"));
-//
-//			} while (result == false);
-//
-//			String[] credentials = readCredential("lpaas_credential.txt");
-//
-//			Configurator configurator = scm.getConfigurator(getName(), credentials[0], credentials[1]);
-//
-//			String[] empty = new String[1];
-//			empty[1] = "";
-//
-//			result = configurator.createTheory(THEORY_NAME, empty);
-//
-//			if (result == false) {
-//
-//			}
+			do {
+
+				result = scm.register(getName(), new URL("http://localhost:8080/lpaas"));
+
+			} while (result == false);
+
+			String[] credentials = readCredential("lpaas_credential.txt");
+
+			Configurator configurator = scm.getConfigurator(getName(), credentials[0], credentials[1]);
+
+			if (configurator.removeTheory(THEORY_NAME)) {
+				System.out.println("TEORIA ELIMINATA");
+
+			}
+
+			String[] empty = new String[1];
+			empty[1] = "";
+
+			do {
+
+				result = configurator.createTheory(THEORY_NAME, empty);
+
+			} while (result == false);
+
+			System.out.println("TEORIA CREATA");
 
 			// init GoalsList
+
+			String[] goal = new String[1];
+
+			goal[1] = GOAL_OUTFIT;
+			configurator.createGoal(GOALSLIST_OUTFIT, goal);
+			goal[1] = GOAL_SUNNY;
+			configurator.createGoal(GOALSLIST_SUNNY, goal);
+			goal[1] = GOAL_HUMIDITY;
+			configurator.createGoal(GOALSLIST_HUMIDITY, goal);
 
 			while (true) {
 				try {
@@ -336,14 +363,31 @@ public class WardrobeAgent extends AbstractTucsonAgent implements TucsonAgentInt
 	public Vector<Outfit> generateOutfit() {
 		Vector<Outfit> outfits = new Vector<>();
 
-//		Outfit outfit = new Outfit(new Dress("111", "felpa", 52, "top", "Blu"), new Dress("222", "jeans", 52, "bot", "Blu"));
-//
-//		outfit.addAccessory("occhiali da sole");
-//
-//		outfits.add(outfit);
-		
-		
-		// da implementare richiesta outfit a lpaas
+		// Outfit outfit = new Outfit(new Dress("111", "felpa", 52, "top",
+		// "Blu"), new Dress("222", "jeans", 52, "bot", "Blu"));
+		//
+		// outfit.addAccessory("occhiali da sole");
+		//
+		// outfits.add(outfit);
+
+		SmartComponentManager scm = LPaaSComponentManager.getInstance();
+
+		Client client = scm.getClient(getName());
+		long theoryVersion = client.countVersion(THEORY_NAME);
+
+		Solution solutionSunny = client.getSolutions(THEORY_NAME, theoryVersion, GOAL_SUNNY, -1, -1, null, null);
+		Solution solutionHumidity = client.getSolutions(THEORY_NAME, theoryVersion, GOAL_HUMIDITY, -1, -1, null, null);
+
+		// parse solutions e creazione lista accessori
+		Solution solutionOutfit = client.getSolutions(THEORY_NAME, theoryVersion, GOALSLIST_OUTFIT, -1, -1, null, null);
+
+		for (String s : solutionOutfit.getSolution()) {
+			// parse stringa solution e costruzione oggetto outfit
+
+			// Outfit o = new Outfit(top, bot);
+			// outfits.add(o);
+
+		}
 
 		Vector<Outfit> result = new Vector<>();
 		OutfitFilter f = new OutfitColorFilter(getColor());
@@ -360,9 +404,18 @@ public class WardrobeAgent extends AbstractTucsonAgent implements TucsonAgentInt
 	public Vector<Dress> getContent() {
 
 		Vector<Dress> contentList = new Vector<>();
+		
+		
+		SmartComponentManager scm = LPaaSComponentManager.getInstance();
 
-		// da implementare richiesta a lpaas
-
+		Client client = scm.getClient(getName());
+		
+		
+		
+		
+		
+		
+		
 		return contentList;
 	}
 }

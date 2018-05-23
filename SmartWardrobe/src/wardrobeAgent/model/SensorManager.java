@@ -11,7 +11,11 @@ import java.util.StringTokenizer;
 import wardrobeAgent.lpaasLibrary.LPaasLibrary;
 
 public class SensorManager extends Thread {
-	private final static String THEORY_NAME = "wardrobeTheory";
+	final static String THEORY_NAME = "wardrobeTheory";
+	final static String DEGREES_FUNCTOR = "degrees";
+	final static String HUMIDITY_FUNCTOR = "humidity";
+	final static String LIGHT_FUNCTOR = "light";
+
 	private Sensors sensors;
 	private String sensorUsername;
 	private String sensorPassword;
@@ -34,36 +38,38 @@ public class SensorManager extends Thread {
 				System.out.println("HUMIDITY: " + getMockHumidity());
 				System.out.println("LIGHT: " + getMockLightIntensity());
 
-				String fact = "degrees(" + getMockTemperature() + ")";
-				int result = LPaasLibrary.putFact(THEORY_NAME, "degrees", fact, token);
+				String fact = DEGREES_FUNCTOR + "(" + getMockTemperature() + ")";
+				int result = LPaasLibrary.putFact(THEORY_NAME, DEGREES_FUNCTOR, fact, token);
 
 				if (result == 200) {
 
-					System.out.println("PUT degrees OK!");
+					System.out.println("PUT " + DEGREES_FUNCTOR + " OK!");
 				} else {
-					System.out.println("PUT degrees: ERROR " + result);
+					System.out.println("PUT " + DEGREES_FUNCTOR + ": ERROR " + result);
 
 				}
-
-				fact = "humidity(" + getMockHumidity() + ")";
-				result = LPaasLibrary.putFact(THEORY_NAME, "humidity", fact, token);
+				
+				int h = (getMockHumidity() / 65535) * 100;
+				fact = HUMIDITY_FUNCTOR + "(" + h + ")";
+				result = LPaasLibrary.putFact(THEORY_NAME, HUMIDITY_FUNCTOR, fact, token);
 
 				if (result == 200) {
 
-					System.out.println("PUT humidity OK!");
+					System.out.println("PUT " + HUMIDITY_FUNCTOR + " OK!");
 				} else {
-					System.out.println("PUT humidity: ERROR " + result);
+					System.out.println("PUT " + HUMIDITY_FUNCTOR + ": ERROR " + result);
 
 				}
-
-				fact = "light(" + getMockLightIntensity() + ")";
-				result = LPaasLibrary.putFact(THEORY_NAME, "light", fact, token);
+				
+				int l = (getMockLightIntensity() / 65535) * 100;
+				fact = LIGHT_FUNCTOR + "(" + l + ")";
+				result = LPaasLibrary.putFact(THEORY_NAME, LIGHT_FUNCTOR, fact, token);
 
 				if (result == 200) {
 
-					System.out.println("PUT light OK!");
+					System.out.println("PUT " + LIGHT_FUNCTOR + " OK!");
 				} else {
-					System.out.println("PUT light: ERROR " + result);
+					System.out.println("PUT " + LIGHT_FUNCTOR + ": ERROR " + result);
 
 				}
 
@@ -74,37 +80,36 @@ public class SensorManager extends Thread {
 //				System.out.println("LIGHT: " + sensors.getLightIntensity());
 //
 //				// PUT
-//
-//				String fact = "degrees(" + sensors.getTemperature() + ")";
-//				int result = LPaasLibrary.putFact(THEORY_NAME, "degrees", fact, token);
-//
-//				if (result == 200) {
-//
-//					System.out.println("PUT degrees OK!");
-//				} else {
-//					System.out.println("PUT degrees: ERROR " + result);
-//
-//				}
-//
-//				fact = "humidity(" + sensors.getHumidity() + ")";
-//				result = LPaasLibrary.putFact(THEORY_NAME, "humidity", fact, token);
+//				String fact = DEGREES_FUNCTOR + "(" + sensors.getTemperature() + ")";
+//				int result = LPaasLibrary.putFact(THEORY_NAME, DEGREES_FUNCTOR, fact, token);
 //
 //				if (result == 200) {
 //
-//					System.out.println("PUT humidity OK!");
+//					System.out.println("PUT " + DEGREES_FUNCTOR + " OK!");
 //				} else {
-//					System.out.println("PUT humidity: ERROR " + result);
+//					System.out.println("PUT " + DEGREES_FUNCTOR + ": ERROR " + result);
 //
 //				}
+//				int h = (int) ((sensors.getHumidity() / 65535) * 100);
+//				fact = HUMIDITY_FUNCTOR + "(" + h + ")";
+//				result = LPaasLibrary.putFact(THEORY_NAME, HUMIDITY_FUNCTOR, fact, token);
 //
-//				fact = "light(" + sensors.getLightIntensity() + ")";
+//				if (result == 200) {
+//
+//					System.out.println("PUT " + HUMIDITY_FUNCTOR + " OK!");
+//				} else {
+//					System.out.println("PUT " + HUMIDITY_FUNCTOR + ": ERROR " + result);
+//
+//				}
+//				int l = (int) ((sensors.getLightIntensity() / 65535) * 100);
+//				fact = LIGHT_FUNCTOR + "(" + l + ")";
 //				result = LPaasLibrary.putFact(THEORY_NAME, "light", fact, token);
 //
 //				if (result == 200) {
 //
-//					System.out.println("PUT light OK!");
+//					System.out.println("PUT " + LIGHT_FUNCTOR + " OK!");
 //				} else {
-//					System.out.println("PUT light: ERROR " + result);
+//					System.out.println("PUT " + LIGHT_FUNCTOR + ": ERROR " + result);
 //
 //				}
 

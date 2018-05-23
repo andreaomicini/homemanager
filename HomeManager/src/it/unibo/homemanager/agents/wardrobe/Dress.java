@@ -5,18 +5,20 @@ public class Dress {
 	private String name;
 	private int size;
 	private String type;
+	private String heaviness;
 	private String color;
 
 	public Dress() {
 
-		this("NO-TAG", "NONE", -1, "NONE", null);
+		this("NO-TAG", "NONE", -1, "NONE", "NONE", null);
 	}
 
-	public Dress(String rfid, String name, int size, String type, String color) {
+	public Dress(String rfid, String name, int size, String type, String heaviness, String color) {
 		this.rfid = rfid;
 		this.name = name;
 		this.size = size;
 		this.type = type;
+		this.heaviness = heaviness;
 		this.color = color;
 	}
 
@@ -40,9 +42,17 @@ public class Dress {
 		return color;
 	}
 
+	public String getHeaviness() {
+		return heaviness;
+	}
+
+	public void setHeaviness(String heaviness) {
+		this.heaviness = heaviness;
+	}
+
 	@Override
 	public String toString() {
-		return getName() + "\n\t Size: " + getSize() + "\n\t Color: " + getColor();
+		return getName() + " - Color: " + getColor() + " - Size: " + getSize();
 	}
 
 	@Override

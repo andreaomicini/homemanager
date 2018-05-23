@@ -1,8 +1,10 @@
 package wardrobeAgent.model;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
@@ -21,7 +23,10 @@ import wardrobeAgent.model.Device;
 
 public class WardrobeAgent extends AbstractTucsonAgent {
 
-	private final static String THEORY_NAME = "wardrobeTheory";
+	final static String THEORY_NAME = "wardrobeTheory";
+	final static String DRESS_FUNCTOR = "dress";
+	final static String PRESENT_FUNCTOR = "present";
+
 	private Device device;
 	private String name;
 	private String sensorUsername;
@@ -72,16 +77,26 @@ public class WardrobeAgent extends AbstractTucsonAgent {
 			e.printStackTrace();
 		}
 
-		boolean ok = initTheory();
+		// boolean ok;
+		try {
+			/* ok = */initTheory();
+		} catch (IOException e) {
 
-		if (!ok) {
 			System.err.println("ERRORE INIZIALIZZAZIONE TEORIA");
+			e.printStackTrace();
 			System.exit(3);
+
 		}
+
+		// if (!ok) {
+		// System.err.println("ERRORE INIZIALIZZAZIONE TEORIA");
+		// System.exit(3);
+		// }
 
 		SensorManager sensorManager = new SensorManager(sensors, sensorUsername, sensorPassword);
 		sensorManager.start();
-
+		String token = LPaasLibrary.getToken(sensorUsername, sensorPassword);
+		int result = -1;
 		while (true) {
 			try {
 				StringBuilder sb = new StringBuilder();
@@ -94,6 +109,7 @@ public class WardrobeAgent extends AbstractTucsonAgent {
 				System.out.println(sb.toString());
 
 				// sensors.displayOutTemp();
+
 				// String rfid = sensors.readRfid();
 
 				String rfid = randomRfid();
@@ -104,36 +120,62 @@ public class WardrobeAgent extends AbstractTucsonAgent {
 					if (rfidInnerClothing.contains(rfid)) {
 						rfidInnerClothing.remove(rfid);
 
-						// LPaasLibrary.putFact(theoryName, functor, fact,
-						// token);
+						Dress d = getDressByRfid(rfid);
 
-						System.out.println("RIMOSSO " + getRfidMapping().get(rfid));
-						// sensors.ledOn();
-						// sensors.doBip();
-						// sensors.ledOff();
-						// sensors.displayAction("rimosso",
-						// getRfidMapping().get(rfid));
+						String fact = PRESENT_FUNCTOR + "(" + d.getRfid() + "," + "no)";
 
+						result = LPaasLibrary.putFact(THEORY_NAME, PRESENT_FUNCTOR, fact, token);
+
+						if (result == 200) {
+							System.out.println("REMOVED " + getRfidMapping().get(rfid));
+							persist(rfidInnerClothing);
+
+							// sensors.ledOn();
+							// sensors.doBip();
+							// sensors.ledOff();
+							// sensors.displayAction("removed",
+							// getRfidMapping().get(rfid));
+						} else {
+							System.out.println("ERROR REMOVING");
+							// sensors.displayAction("error removing");
+
+						}
 					} else {
 						rfidInnerClothing.add(rfid);
 
-						// LPaasLibrary.putFact(theoryName, functor, fact,
-						// token);
+						Dress d = getDressByRfid(rfid);
 
-						System.out.println("AGGIUNTO " + getRfidMapping().get(rfid));
+						String fact = DRESS_FUNCTOR + "([" + d.getRfid() + "," + d.getName() + "," + d.getSize() + "," + d.getColor() + "," + d.getHeaviness() + "," + d.getType()
+								+ "])";
+						result = LPaasLibrary.postFact(THEORY_NAME, fact, token);
 
-						// sensors.ledOn();
-						// sensors.doBip();
-						// sensors.ledOff();
-						// sensors.displayAction("aggiunto",
-						// getRfidMapping().get(rfid));
+						fact = PRESENT_FUNCTOR + "(" + d.getRfid() + "," + "yes)";
 
+						result = LPaasLibrary.putFact(THEORY_NAME, PRESENT_FUNCTOR, fact, token);
+
+						if (result == 200) {
+							System.out.println("ADDED " + getRfidMapping().get(rfid));
+							persist(rfidInnerClothing);
+							// sensors.ledOn();
+							// sensors.doBip();
+							// sensors.ledOff();
+							// sensors.displayAction("added",
+							// getRfidMapping().get(rfid));
+						} else {
+							System.out.println("ERROR ADDING");
+							// sensors.displayAction("error adding");
+						}
+					}
+
+					if (result == 401) {
+						System.out.println("TOKEN SCADUTO!");
+						token = LPaasLibrary.getToken(sensorUsername, sensorPassword);
 					}
 
 				}
-				Thread.sleep(1000);
+				Thread.sleep(5000);
 
-			} catch (/* IOException | */ InterruptedException e) {
+			} catch (InterruptedException | IOException e) {
 				e.printStackTrace();
 			}
 
@@ -141,7 +183,22 @@ public class WardrobeAgent extends AbstractTucsonAgent {
 
 	}
 
+	private void persist(Vector<String> content) throws IOException {
 
+		File file = new File(getName() + "_content.txt");
+		if (!file.exists()) {
+			file.createNewFile();
+		}
+
+		PrintWriter pw = new PrintWriter(file);
+
+		for (String s : content) {
+			pw.println(s);
+		}
+
+		pw.close();
+
+	}
 
 	private Dress getDressByRfid(String rfid) {
 
@@ -182,19 +239,20 @@ public class WardrobeAgent extends AbstractTucsonAgent {
 		while ((line = br.readLine()) != null) {
 			StringTokenizer st = new StringTokenizer(line, ":\n\r");
 
-			if (st.countTokens() == 5) {
+			if (st.countTokens() == 6) {
 				String rfid = st.nextToken();
 				String name = st.nextToken();
 				String stringSize = st.nextToken();
 				String color = st.nextToken();
+				String heaviness = st.nextToken();
 				String type = st.nextToken();
 
 				try {
 
 					int size = Integer.parseInt(stringSize);
 
-					if (stringSize.equalsIgnoreCase("top") || stringSize.equalsIgnoreCase("bot")) {
-						Dress dress = new Dress(rfid, name, size, type, color);
+					if (type.equalsIgnoreCase("top") || type.equalsIgnoreCase("bot")) {
+						Dress dress = new Dress(rfid, name, size, type, heaviness, color);
 
 						getRfidMapping().put(rfid, dress);
 
@@ -209,7 +267,7 @@ public class WardrobeAgent extends AbstractTucsonAgent {
 
 			} else {
 
-				throw new BadFileFormatException("Number of field != 4");
+				throw new BadFileFormatException("Number of field != 6");
 
 			}
 
@@ -219,47 +277,113 @@ public class WardrobeAgent extends AbstractTucsonAgent {
 
 	}
 
-	private boolean initTheory() {
+	private boolean initTheory() throws IOException {
 
 		boolean result = true;
 		String token = LPaasLibrary.getToken(sensorUsername, sensorPassword);
+		// init logic part of theory
 
-		// Vector<String> facts = new Vector<>();
+		BufferedReader br = new BufferedReader(new FileReader("wardrobeInitFacts.txt"));
+		String line;
+		while ((line = br.readLine()) != null) {
 
-		try {
+			int code = LPaasLibrary.postFact(THEORY_NAME, line, token);
 
-			BufferedReader br = new BufferedReader(new FileReader("wardrobeInitFacts.txt"));
-			String line;
-			while ((line = br.readLine()) != null) {
-
-				int code = LPaasLibrary.postFact(THEORY_NAME, line, token);
-
-				if (code != 200) {
-					result = false;
-					break;
-				}
-				// facts.add(line);
-
+			if (code != 200) {
+				result = false;
+				break;
 			}
 
-			br.close();
-
-		} catch (IOException e) {
-			e.printStackTrace();
 		}
 
-		// for(int i = 0;i<facts.size();i++) {
-		// int code=LPaasLibrary.postFact(THEORY_NAME, facts.get(i), token);
-		//
-		// if(code!=200) {
-		// result = false;
-		// }
+		br.close();
+
+		// init sensor fact with mock data
+
+		String fact = SensorManager.DEGREES_FUNCTOR + "(1000)";
+
+		int code = LPaasLibrary.postFact(THEORY_NAME, fact, token);
+
+		if (code != 200) {
+			result = false;
+		}
+
+		fact = SensorManager.HUMIDITY_FUNCTOR + "(1000)";
+
+		code = LPaasLibrary.postFact(THEORY_NAME, fact, token);
+
+		if (code != 200) {
+			result = false;
+		}
+
+		fact = SensorManager.LIGHT_FUNCTOR + "(1000)";
+
+		code = LPaasLibrary.postFact(THEORY_NAME, fact, token);
+
+		if (code != 200) {
+			result = false;
+		}
+
+		Vector<String> contentWB = loadContent();
+		setRfidInnerClothing(contentWB);
+		String in;
+
+		for (String k : getRfidMapping().keySet()) {
+
+			// init present functor with saved status
+
+			if (getRfidInnerClothing().contains(k)) {
+				in = "yes";
+
+			} else {
+				in = "no";
+			}
+			fact = PRESENT_FUNCTOR + "(" + k + "," + in + ")";
+
+			code = LPaasLibrary.postFact(THEORY_NAME, fact, token);
+
+			if (code != 200) {
+				result = false;
+				break;
+			}
+
+			// init all dress fact
+
+			Dress d = getDressByRfid(k);
+			fact = DRESS_FUNCTOR + "([" + d.getRfid() + "," + d.getName() + "," + d.getSize() + "," + d.getColor() + "," + d.getHeaviness() + "," + d.getType() + "])";
+			code = LPaasLibrary.postFact(THEORY_NAME, fact, token);
+
+			if (code != 200) {
+				result = false;
+				break;
+			}
+
+		}
 
 		return result;
 	}
 
+	private Vector<String> loadContent() throws IOException {
 
-	
+		Vector<String> result = new Vector<>();
+		File file = new File(getName() + "_content.txt");
+		if (!file.exists()) {
+			file.createNewFile();
+		}
+
+		BufferedReader br = new BufferedReader(new FileReader(file));
+		String line = null;
+		while ((line = br.readLine()) != null) {
+
+			result.add(line);
+
+		}
+
+		br.close();
+
+		return result;
+	}
+
 	private void readCredential(String nomeFile) {
 
 		try {
@@ -323,6 +447,14 @@ public class WardrobeAgent extends AbstractTucsonAgent {
 	@Override
 	public void operationCompleted(ITucsonOperation arg0) {
 
+	}
+
+	public Vector<String> getRfidInnerClothing() {
+		return rfidInnerClothing;
+	}
+
+	public void setRfidInnerClothing(Vector<String> rfidInnerClothing) {
+		this.rfidInnerClothing = rfidInnerClothing;
 	}
 
 }

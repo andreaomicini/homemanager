@@ -1,4 +1,4 @@
-eab5e4a4:felpa:46:red:top
-aa8be4a4:t_shirt:44:green:top
-baf7e3a4:jeans:40:blu:bot
-caf0e1a4:shorts:42:grey:bot
+eab5e4a4:felpa:46:red:heavy:top
+aa8be4a4:t_shirt:44:green:light:top
+baf7e3a4:jeans:40:blue:heavy:bot
+caf0e1a4:shorts:42:grey:light:bot

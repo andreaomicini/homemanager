@@ -14,7 +14,7 @@ import org.json.simple.parser.ParseException;
 
 public class LPaasLibrary {
 
-	private final static String BASENAME = "http://localhost:8080/lpaas/";
+	private final static String BASENAME = "http://192.168.1.25:8080/lpaas/";
 
 	// public static String getToken(String username, String password) {
 	// String token = null;
