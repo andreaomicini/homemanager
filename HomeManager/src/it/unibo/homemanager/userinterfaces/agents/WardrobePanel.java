@@ -73,7 +73,7 @@ public class WardrobePanel extends JPanel {
 
 			}
 		});
-		onContentChange();
+	//	onContentChange();
 
 	}
 

@@ -94,7 +94,7 @@ public class Sensors {
 		int[] color = new int[] { 0, 128, 0 };
 		lcd.setRGB(color[0], color[1], color[2]);
 
-		lcd.setText(action.toUpperCase() + "\n" + dress.getName());
+		lcd.setText(action.toUpperCase() + "\n" + dress.getName().toUpperCase());
 
 	}
 	public void displayAction(String action) throws IOException {

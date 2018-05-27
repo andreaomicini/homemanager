@@ -21,7 +21,6 @@ public class Main {
 			TucsonTupleCentreId usageManagerTc = new TucsonTupleCentreId("usage_manager_tc", "localhost", "20504");
 
 			 WardrobeAgent wardrobeAgent = new WardrobeAgent(device, wardrobeTc, usageManagerTc);
-		//	WardrobeAgent wardrobeAgent = new WardrobeAgent(device, wardrobeTc);
 
 			wardrobeAgent.go();
 

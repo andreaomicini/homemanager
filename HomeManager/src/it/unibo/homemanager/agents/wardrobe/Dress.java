@@ -13,7 +13,17 @@ public class Dress {
 		this("NO-TAG", "NONE", -1, "NONE", "NONE", null);
 	}
 
-	public Dress(String rfid, String name, int size, String type, String heaviness, String color) {
+	public Dress(String rfid, String name, int size, String color, String type) {
+		this.rfid = rfid;
+		this.name = name;
+		this.size = size;
+		this.type = type;
+		this.heaviness = null;
+
+		this.color = color;
+	}
+
+	public Dress(String rfid, String name, int size, String color, String heaviness, String type) {
 		this.rfid = rfid;
 		this.name = name;
 		this.size = size;

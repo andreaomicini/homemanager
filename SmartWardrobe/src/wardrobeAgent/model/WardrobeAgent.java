@@ -77,9 +77,9 @@ public class WardrobeAgent extends AbstractTucsonAgent {
 			e.printStackTrace();
 		}
 
-		// boolean ok;
+		boolean ok = false;
 		try {
-			/* ok = */initTheory();
+			ok = initTheory();
 		} catch (IOException e) {
 
 			System.err.println("ERRORE INIZIALIZZAZIONE TEORIA");
@@ -88,10 +88,10 @@ public class WardrobeAgent extends AbstractTucsonAgent {
 
 		}
 
-		// if (!ok) {
-		// System.err.println("ERRORE INIZIALIZZAZIONE TEORIA");
-		// System.exit(3);
-		// }
+		if (!ok) {
+			System.err.println("ERRORE INIZIALIZZAZIONE TEORIA");
+			System.exit(3);
+		}
 
 		SensorManager sensorManager = new SensorManager(sensors, sensorUsername, sensorPassword);
 		sensorManager.start();
@@ -109,12 +109,15 @@ public class WardrobeAgent extends AbstractTucsonAgent {
 				System.out.println(sb.toString());
 
 				// sensors.displayOutTemp();
-
 				// String rfid = sensors.readRfid();
+				// rfid = rfid.toLowerCase();
 
 				String rfid = randomRfid();
 
-				if (!rfid.equals("NO-TAG")) {
+				// PER DEBUG
+				rfid = "NO-TAG";
+
+				if (!rfid.equalsIgnoreCase("NO-TAG")) {
 					System.out.println("Read: " + rfid);
 
 					if (rfidInnerClothing.contains(rfid)) {
@@ -135,9 +138,12 @@ public class WardrobeAgent extends AbstractTucsonAgent {
 							// sensors.ledOff();
 							// sensors.displayAction("removed",
 							// getRfidMapping().get(rfid));
+							// Thread.sleep(1000);
+
 						} else {
 							System.out.println("ERROR REMOVING");
 							// sensors.displayAction("error removing");
+							// Thread.sleep(1000);
 
 						}
 					} else {
@@ -145,11 +151,15 @@ public class WardrobeAgent extends AbstractTucsonAgent {
 
 						Dress d = getDressByRfid(rfid);
 
-						String fact = DRESS_FUNCTOR + "([" + d.getRfid() + "," + d.getName() + "," + d.getSize() + "," + d.getColor() + "," + d.getHeaviness() + "," + d.getType()
-								+ "])";
-						result = LPaasLibrary.postFact(THEORY_NAME, fact, token);
+						// DA ELIMINARE
+						// String fact = DRESS_FUNCTOR + "([" + d.getRfid() +
+						// "," + d.getName() + "," + d.getSize() + "," +
+						// d.getColor() + "," + d.getHeaviness() + "," +
+						// d.getType()+ "])";
+						// result = LPaasLibrary.postFact(THEORY_NAME, fact,
+						// token);
 
-						fact = PRESENT_FUNCTOR + "(" + d.getRfid() + "," + "yes)";
+						String fact = PRESENT_FUNCTOR + "(" + d.getRfid() + "," + "yes)";
 
 						result = LPaasLibrary.putFact(THEORY_NAME, PRESENT_FUNCTOR, fact, token);
 
@@ -161,9 +171,13 @@ public class WardrobeAgent extends AbstractTucsonAgent {
 							// sensors.ledOff();
 							// sensors.displayAction("added",
 							// getRfidMapping().get(rfid));
+							// Thread.sleep(1000);
+
 						} else {
 							System.out.println("ERROR ADDING");
 							// sensors.displayAction("error adding");
+							// Thread.sleep(1000);
+
 						}
 					}
 
@@ -252,7 +266,7 @@ public class WardrobeAgent extends AbstractTucsonAgent {
 					int size = Integer.parseInt(stringSize);
 
 					if (type.equalsIgnoreCase("top") || type.equalsIgnoreCase("bot")) {
-						Dress dress = new Dress(rfid, name, size, type, heaviness, color);
+						Dress dress = new Dress(rfid, name, size, color, heaviness, type);
 
 						getRfidMapping().put(rfid, dress);
 
@@ -287,46 +301,49 @@ public class WardrobeAgent extends AbstractTucsonAgent {
 		String line;
 		while ((line = br.readLine()) != null) {
 
-			int code = LPaasLibrary.postFact(THEORY_NAME, line, token);
+			if (!line.isEmpty()) {
+				int code = LPaasLibrary.postFact(THEORY_NAME, line, token);
 
-			if (code != 200) {
-				result = false;
-				break;
+				if (code != 200) {
+					result = false;
+					break;
+				}
 			}
-
 		}
 
 		br.close();
 
-		// init sensor fact with mock data
-
-		String fact = SensorManager.DEGREES_FUNCTOR + "(1000)";
-
-		int code = LPaasLibrary.postFact(THEORY_NAME, fact, token);
-
-		if (code != 200) {
-			result = false;
-		}
-
-		fact = SensorManager.HUMIDITY_FUNCTOR + "(1000)";
-
-		code = LPaasLibrary.postFact(THEORY_NAME, fact, token);
-
-		if (code != 200) {
-			result = false;
-		}
-
-		fact = SensorManager.LIGHT_FUNCTOR + "(1000)";
-
-		code = LPaasLibrary.postFact(THEORY_NAME, fact, token);
-
-		if (code != 200) {
-			result = false;
-		}
+		// // init sensor fact with mock data
+		//
+		// String fact = SensorManager.DEGREES_FUNCTOR + "(1000)";
+		//
+		// int code = LPaasLibrary.postFact(THEORY_NAME, fact, token);
+		//
+		// if (code != 200) {
+		// result = false;
+		// }
+		//
+		// fact = SensorManager.HUMIDITY_FUNCTOR + "(1000)";
+		//
+		// code = LPaasLibrary.postFact(THEORY_NAME, fact, token);
+		//
+		// if (code != 200) {
+		// result = false;
+		// }
+		//
+		// fact = SensorManager.LIGHT_FUNCTOR + "(1000)";
+		//
+		// code = LPaasLibrary.postFact(THEORY_NAME, fact, token);
+		//
+		// if (code != 200) {
+		// result = false;
+		// }
 
 		Vector<String> contentWB = loadContent();
 		setRfidInnerClothing(contentWB);
 		String in;
+		String fact;
+		int code;
 
 		for (String k : getRfidMapping().keySet()) {
 
@@ -338,6 +355,7 @@ public class WardrobeAgent extends AbstractTucsonAgent {
 			} else {
 				in = "no";
 			}
+
 			fact = PRESENT_FUNCTOR + "(" + k + "," + in + ")";
 
 			code = LPaasLibrary.postFact(THEORY_NAME, fact, token);
@@ -374,9 +392,9 @@ public class WardrobeAgent extends AbstractTucsonAgent {
 		BufferedReader br = new BufferedReader(new FileReader(file));
 		String line = null;
 		while ((line = br.readLine()) != null) {
-
-			result.add(line);
-
+			if (!line.isEmpty()) {
+				result.add(line);
+			}
 		}
 
 		br.close();

@@ -20,10 +20,17 @@ public class SensorManager extends Thread {
 	private String sensorUsername;
 	private String sensorPassword;
 
+	private boolean firstTemperature;
+	private boolean firstHumidity;
+	private boolean firstLight;
+
 	public SensorManager(Sensors sensors, String username, String password) {
 		this.sensors = sensors;
 		this.sensorUsername = username;
 		this.sensorPassword = password;
+		firstTemperature = true;
+		firstHumidity = true;
+		firstLight = true;
 	}
 
 	public void run() {
@@ -34,83 +41,203 @@ public class SensorManager extends Thread {
 
 			try {
 
-				System.out.println("TEMPERATURE: " + getMockTemperature());
-				System.out.println("HUMIDITY: " + getMockHumidity());
-				System.out.println("LIGHT: " + getMockLightIntensity());
-
-				String fact = DEGREES_FUNCTOR + "(" + getMockTemperature() + ")";
-				int result = LPaasLibrary.putFact(THEORY_NAME, DEGREES_FUNCTOR, fact, token);
-
-				if (result == 200) {
-
-					System.out.println("PUT " + DEGREES_FUNCTOR + " OK!");
-				} else {
-					System.out.println("PUT " + DEGREES_FUNCTOR + ": ERROR " + result);
-
-				}
+				 System.out.println("TEMPERATURE: " + getMockTemperature());
+				 System.out.println("HUMIDITY: " + getMockHumidity());
+				 System.out.println("LIGHT: " + (int)
+				 ((getMockLightIntensity() / 65535) * 100));
 				
-				int h = (getMockHumidity() / 65535) * 100;
-				fact = HUMIDITY_FUNCTOR + "(" + h + ")";
-				result = LPaasLibrary.putFact(THEORY_NAME, HUMIDITY_FUNCTOR, fact, token);
-
-				if (result == 200) {
-
-					System.out.println("PUT " + HUMIDITY_FUNCTOR + " OK!");
-				} else {
-					System.out.println("PUT " + HUMIDITY_FUNCTOR + ": ERROR " + result);
-
-				}
+				 int result;
 				
-				int l = (getMockLightIntensity() / 65535) * 100;
-				fact = LIGHT_FUNCTOR + "(" + l + ")";
-				result = LPaasLibrary.putFact(THEORY_NAME, LIGHT_FUNCTOR, fact, token);
-
-				if (result == 200) {
-
-					System.out.println("PUT " + LIGHT_FUNCTOR + " OK!");
-				} else {
-					System.out.println("PUT " + LIGHT_FUNCTOR + ": ERROR " + result);
-
-				}
+				 String fact = DEGREES_FUNCTOR + "(" + getMockTemperature() +
+				 ")";
+				
+				 if (firstTemperature) {
+				
+				 result = LPaasLibrary.postFact(THEORY_NAME, fact, token);
+				
+				 if (result == 200) {
+				
+				 System.out.println("POST " + DEGREES_FUNCTOR + " OK!");
+				 firstTemperature = false;
+				 } else {
+				 System.out.println("POST " + DEGREES_FUNCTOR + ": ERROR " +
+				 result);
+				
+				 }
+				 } else {
+				
+				 result = LPaasLibrary.putFact(THEORY_NAME, DEGREES_FUNCTOR,
+				 fact, token);
+				
+				 if (result == 200) {
+				
+				 System.out.println("PUT " + DEGREES_FUNCTOR + " OK!");
+				 } else {
+				 System.out.println("PUT " + DEGREES_FUNCTOR + ": ERROR " +
+				 result);
+				
+				 }
+				
+				 }
+				
+				 fact = HUMIDITY_FUNCTOR + "(" + getMockHumidity() + ")";
+				
+				 if (firstHumidity) {
+				
+				 result = LPaasLibrary.postFact(THEORY_NAME, fact, token);
+				 if (result == 200) {
+				
+				 System.out.println("POST " + HUMIDITY_FUNCTOR + " OK!");
+				 firstHumidity = false;
+				 } else {
+				 System.out.println("POST " + HUMIDITY_FUNCTOR + ": ERROR " +
+				 result);
+				
+				 }
+				
+				 } else {
+				 result = LPaasLibrary.putFact(THEORY_NAME, HUMIDITY_FUNCTOR,
+				 fact, token);
+				
+				 if (result == 200) {
+				
+				 System.out.println("PUT " + HUMIDITY_FUNCTOR + " OK!");
+				 } else {
+				 System.out.println("PUT " + HUMIDITY_FUNCTOR + ": ERROR " +
+				 result);
+				
+				 }
+				
+				 }
+				
+				 int l = (int) ((getMockLightIntensity() / 65535) * 100);
+				 fact = LIGHT_FUNCTOR + "(" + l + ")";
+				
+				 if (firstLight) {
+				
+				 result = LPaasLibrary.postFact(THEORY_NAME, fact, token);
+				 if (result == 200) {
+				
+				 System.out.println("POST " + LIGHT_FUNCTOR + " OK!");
+				 firstLight = false;
+				 } else {
+				 System.out.println("POST " + LIGHT_FUNCTOR + ": ERROR " +
+				 result);
+				
+				 }
+				
+				 }
+				
+				 else
+				
+				 {
+				
+				 result = LPaasLibrary.putFact(THEORY_NAME, LIGHT_FUNCTOR,
+				 fact, token);
+				
+				 if (result == 200) {
+				
+				 System.out.println("PUT " + LIGHT_FUNCTOR + " OK!");
+				 } else {
+				 System.out.println("PUT " + LIGHT_FUNCTOR + ": ERROR " +
+				 result);
+				
+				 }
+				 }
 
 //				// SENSORS
 //
-//				System.out.println("TEMPERATURE: " + sensors.getTemperature());
-//				System.out.println("HUMIDITY: " + sensors.getHumidity());
-//				System.out.println("LIGHT: " + sensors.getLightIntensity());
+//				System.out.println("TEMPERATURE: " + (int) sensors.getTemperature());
+//				System.out.println("HUMIDITY: " + (int) sensors.getHumidity());
+//				System.out.println("LIGHT: " + (int) ((sensors.getLightIntensity() / 65535) * 100));
 //
-//				// PUT
-//				String fact = DEGREES_FUNCTOR + "(" + sensors.getTemperature() + ")";
-//				int result = LPaasLibrary.putFact(THEORY_NAME, DEGREES_FUNCTOR, fact, token);
+//				int result;
 //
-//				if (result == 200) {
+//				String fact = DEGREES_FUNCTOR + "(" + (int) sensors.getTemperature() + ")";
 //
-//					System.out.println("PUT " + DEGREES_FUNCTOR + " OK!");
+//				if (firstTemperature) {
+//					// POST
+//					result = LPaasLibrary.postFact(THEORY_NAME, fact, token);
+//
+//					if (result == 200) {
+//
+//						System.out.println("POST " + DEGREES_FUNCTOR + " OK!");
+//						firstTemperature = false;
+//					} else {
+//						System.out.println("POST " + DEGREES_FUNCTOR + ": ERROR " + result);
+//
+//					}
 //				} else {
-//					System.out.println("PUT " + DEGREES_FUNCTOR + ": ERROR " + result);
+//					// PUT
+//
+//					result = LPaasLibrary.putFact(THEORY_NAME, DEGREES_FUNCTOR, fact, token);
+//
+//					if (result == 200) {
+//
+//						System.out.println("PUT " + DEGREES_FUNCTOR + " OK!");
+//					} else {
+//						System.out.println("PUT " + DEGREES_FUNCTOR + ": ERROR " + result);
+//
+//					}
 //
 //				}
-//				int h = (int) ((sensors.getHumidity() / 65535) * 100);
-//				fact = HUMIDITY_FUNCTOR + "(" + h + ")";
-//				result = LPaasLibrary.putFact(THEORY_NAME, HUMIDITY_FUNCTOR, fact, token);
 //
-//				if (result == 200) {
+//				fact = HUMIDITY_FUNCTOR + "(" + (int) sensors.getHumidity() + ")";
 //
-//					System.out.println("PUT " + HUMIDITY_FUNCTOR + " OK!");
+//				if (firstHumidity) {
+//					// POST
+//					result = LPaasLibrary.postFact(THEORY_NAME, fact, token);
+//					if (result == 200) {
+//
+//						System.out.println("POST " + HUMIDITY_FUNCTOR + " OK!");
+//						firstHumidity = false;
+//					} else {
+//						System.out.println("POST " + HUMIDITY_FUNCTOR + ": ERROR " + result);
+//
+//					}
+//
 //				} else {
-//					System.out.println("PUT " + HUMIDITY_FUNCTOR + ": ERROR " + result);
+//					// PUT
+//					result = LPaasLibrary.putFact(THEORY_NAME, HUMIDITY_FUNCTOR, fact, token);
+//
+//					if (result == 200) {
+//
+//						System.out.println("PUT " + HUMIDITY_FUNCTOR + " OK!");
+//					} else {
+//						System.out.println("PUT " + HUMIDITY_FUNCTOR + ": ERROR " + result);
+//
+//					}
 //
 //				}
+//
 //				int l = (int) ((sensors.getLightIntensity() / 65535) * 100);
 //				fact = LIGHT_FUNCTOR + "(" + l + ")";
-//				result = LPaasLibrary.putFact(THEORY_NAME, "light", fact, token);
+//				if (firstLight) {
+//					// POST
 //
-//				if (result == 200) {
+//					result = LPaasLibrary.postFact(THEORY_NAME, fact, token);
+//					if (result == 200) {
 //
-//					System.out.println("PUT " + LIGHT_FUNCTOR + " OK!");
-//				} else {
-//					System.out.println("PUT " + LIGHT_FUNCTOR + ": ERROR " + result);
+//						System.out.println("POST " + LIGHT_FUNCTOR + " OK!");
+//						firstLight = false;
+//					} else {
+//						System.out.println("POST " + LIGHT_FUNCTOR + ": ERROR " + result);
 //
+//					}
+//
+//				}
+//
+//				else {
+//					// PUT
+//					result = LPaasLibrary.putFact(THEORY_NAME, LIGHT_FUNCTOR, fact, token);
+//
+//					if (result == 200) {
+//
+//						System.out.println("PUT " + LIGHT_FUNCTOR + " OK!");
+//					} else {
+//						System.out.println("PUT " + LIGHT_FUNCTOR + ": ERROR " + result);
+//
+//					}
 //				}
 
 				if (result == 401) {
@@ -118,7 +245,7 @@ public class SensorManager extends Thread {
 					token = LPaasLibrary.getToken(sensorUsername, sensorPassword);
 				}
 
-				Thread.sleep(1000);
+				Thread.sleep(3000);
 			} catch (InterruptedException /* | IOException */ e) {
 
 				e.printStackTrace();
@@ -127,8 +254,8 @@ public class SensorManager extends Thread {
 
 	}
 
-	private static int getMockLightIntensity() {
-		return 16000;
+	private static double getMockLightIntensity() {
+		return 65000;
 	}
 
 	private static int getMockTemperature() {
@@ -137,7 +264,7 @@ public class SensorManager extends Thread {
 	}
 
 	private static int getMockHumidity() {
-		return 80;
+		return 90;
 
 	}
 }

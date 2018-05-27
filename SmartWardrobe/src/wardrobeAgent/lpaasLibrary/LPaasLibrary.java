@@ -14,12 +14,12 @@ import org.json.simple.parser.ParseException;
 
 public class LPaasLibrary {
 
-	private final static String BASENAME = "http://192.168.1.25:8080/lpaas/";
+	private final static String BASENAME = "http://192.168.1.25:8080/lpaas";
 
 	// public static String getToken(String username, String password) {
 	// String token = null;
 	// try {
-	// URL url = new URL(BASENAME + "auth");
+	// URL url = new URL(BASENAME + "/auth");
 	// HttpURLConnection connection = (HttpURLConnection) url.openConnection();
 	//
 	// connection.setRequestProperty("Accept", "application/json");
@@ -63,7 +63,7 @@ public class LPaasLibrary {
 		String token = null;
 
 		try {
-			URL url = new URL(BASENAME + "auth");
+			URL url = new URL(BASENAME + "/auth");
 			HttpURLConnection connection = (HttpURLConnection) url.openConnection();
 
 			connection.setRequestProperty("Accept", "application/json");
@@ -102,7 +102,7 @@ public class LPaasLibrary {
 		int result = 0;
 
 		try {
-			URL url = new URL(BASENAME + "theories/" + theoryName + "/facts/" + functor);
+			URL url = new URL(BASENAME + "/theories/" + theoryName + "/facts/" + functor);
 			HttpURLConnection connection = (HttpURLConnection) url.openConnection();
 
 			connection.setRequestProperty("Authorization", "jwt " + token);
@@ -129,7 +129,7 @@ public class LPaasLibrary {
 		int result = 0;
 
 		try {
-			URL url = new URL(BASENAME + "theories/" + theoryName + "/facts/");
+			URL url = new URL(BASENAME + "/theories/" + theoryName + "/facts/");
 			HttpURLConnection connection = (HttpURLConnection) url.openConnection();
 
 			connection.setRequestProperty("Authorization", "jwt " + token);

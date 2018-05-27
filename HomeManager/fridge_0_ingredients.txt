@@ -1,1 +1,0 @@
-content(fridge_0,latte,2)
