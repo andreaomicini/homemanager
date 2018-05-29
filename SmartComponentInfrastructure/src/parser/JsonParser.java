@@ -118,35 +118,33 @@ public class JsonParser implements Parser {
 						else{
 							if(solution.matches("^[a-zA-Z]+\\(.+\\),.+") || solution.matches("^[a-zA-Z]+\\(.+\\)$")){
 								
-									System.out.println("ciao");
 									String temp=solution.substring(0,solution.indexOf(")")+1);
 									vector.add(temp);
 									solution=solution.substring(solution.indexOf(")")+1,solution.length());
 								
 							}
 							else{
-								if(solution.matches("^.*,?")){
-									int index=solution.indexOf(",");
-									if(index>0){
-										String temp=solution.substring(0,index);
-										solution=solution.substring(index,solution.length());
-										vector.add(temp);
-									}
-									else{
-										vector.add(solution);
-										ok=true;
-									}
+								if(solution.matches("^'[^,]'.+")){
+									solution=solution.substring(solution.indexOf(")")+1,solution.length());
 								}else{
-									if(solution.matches("^'[^,]'.+")){
-										solution=solution.substring(solution.indexOf(")")+1,solution.length());
+									if(solution.matches("^.+,?")){
+										int index=solution.indexOf(",");
+										if(index>0){
+											String temp=solution.substring(0,index);
+											solution=solution.substring(index,solution.length());
+											vector.add(temp);
+										}
+										else{
+											vector.add(solution);
+											ok=true;
+										}
 									}else{
-										
 										ok=true;
 									}
 								}
 							}
 						}
-					}				
+					}
 				}
 			}
 			
