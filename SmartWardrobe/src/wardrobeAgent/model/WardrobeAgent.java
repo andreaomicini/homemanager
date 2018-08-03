@@ -54,7 +54,7 @@ public class WardrobeAgent extends AbstractTucsonAgent {
 
 		this.rfidMapping = new HashMap<>();
 		this.rfidInnerClothing = new Vector<>();
-		// this.sensors = new Sensors();
+		this.sensors = new Sensors();
 		readCredential("credential.txt");
 	}
 
@@ -108,14 +108,14 @@ public class WardrobeAgent extends AbstractTucsonAgent {
 				sb.append("*************************\n");
 				System.out.println(sb.toString());
 
-				// sensors.displayOutTemp();
-				// String rfid = sensors.readRfid();
-				// rfid = rfid.toLowerCase();
-
-				String rfid = randomRfid();
+				sensors.displayOutTemp();
+				String rfid = sensors.readRfid();
+				rfid = rfid.toLowerCase();
 
 				// PER DEBUG
-				rfid = "NO-TAG";
+				// String rfid = randomRfid();
+				// rfid = "NO-TAG";
+				///
 
 				if (!rfid.equalsIgnoreCase("NO-TAG")) {
 					System.out.println("Read: " + rfid);
@@ -133,17 +133,16 @@ public class WardrobeAgent extends AbstractTucsonAgent {
 							System.out.println("REMOVED " + getRfidMapping().get(rfid));
 							persist(rfidInnerClothing);
 
-							// sensors.ledOn();
-							// sensors.doBip();
-							// sensors.ledOff();
-							// sensors.displayAction("removed",
-							// getRfidMapping().get(rfid));
-							// Thread.sleep(1000);
+							sensors.ledOn();
+							sensors.doBip();
+							sensors.ledOff();
+							sensors.displayAction("removed", getRfidMapping().get(rfid));
+							Thread.sleep(2000);
 
 						} else {
 							System.out.println("ERROR REMOVING");
-							// sensors.displayAction("error removing");
-							// Thread.sleep(1000);
+							sensors.displayAction("error removing");
+							Thread.sleep(2000);
 
 						}
 					} else {
@@ -166,17 +165,16 @@ public class WardrobeAgent extends AbstractTucsonAgent {
 						if (result == 200) {
 							System.out.println("ADDED " + getRfidMapping().get(rfid));
 							persist(rfidInnerClothing);
-							// sensors.ledOn();
-							// sensors.doBip();
-							// sensors.ledOff();
-							// sensors.displayAction("added",
-							// getRfidMapping().get(rfid));
-							// Thread.sleep(1000);
+							sensors.ledOn();
+							sensors.doBip();
+							sensors.ledOff();
+							sensors.displayAction("added", getRfidMapping().get(rfid));
+							Thread.sleep(2000);
 
 						} else {
 							System.out.println("ERROR ADDING");
-							// sensors.displayAction("error adding");
-							// Thread.sleep(1000);
+							sensors.displayAction("error adding");
+							Thread.sleep(2000);
 
 						}
 					}
@@ -187,7 +185,8 @@ public class WardrobeAgent extends AbstractTucsonAgent {
 					}
 
 				}
-				Thread.sleep(5000);
+				// PER DEBUG
+				// Thread.sleep(5000);
 
 			} catch (InterruptedException | IOException e) {
 				e.printStackTrace();

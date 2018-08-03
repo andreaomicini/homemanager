@@ -36,7 +36,7 @@ import lpaas.LPaaSComponentManager;
 
 public class WardrobeAgent extends AbstractTucsonAgent implements TucsonAgentInterface {
 
-	private final static String BASENAME = "http://192.168.1.25:8080/lpaas";
+	private final static String BASENAME = "http://localhost:8080/lpaas";
 
 	private final static String THEORY_NAME = "wardrobeTheory";
 
@@ -111,10 +111,10 @@ public class WardrobeAgent extends AbstractTucsonAgent implements TucsonAgentInt
 
 				configurator.removeTheory(THEORY_NAME);
 
-				System.out.println("TEORIA ELIMINATA");
+				System.out.println("TEORIA " + THEORY_NAME + " ELIMINATA");
 
 			} catch (NotCreatedException e) {
-				System.out.println("TEORIA NON ESISTENTE");
+				System.out.println("TEORIA " + THEORY_NAME + " NON ESISTENTE");
 
 			}
 
@@ -123,17 +123,52 @@ public class WardrobeAgent extends AbstractTucsonAgent implements TucsonAgentInt
 
 			configurator.createTheory(THEORY_NAME, empty);
 
-			System.out.println("TEORIA CREATA");
+			System.out.println("TEORIA " + THEORY_NAME + " CREATA");
 
-			// init GoalsList
+			// remove GoalsList
+
+			// try {
+			// configurator.removeGoal(GOALSLIST_OUTFIT);
+			// }
+			//
+			// catch (NotCreatedException e) {
+			//
+			// System.out.println("GOALLIST " + GOALSLIST_OUTFIT + " NON
+			// ESISTENTE");
+			//
+			// }
+			//
+			// try {
+			// configurator.removeGoal(GOALSLIST_SUNNY);
+			// }
+			//
+			// catch (NotCreatedException e) {
+			// System.out.println("GOALLIST " + GOALSLIST_SUNNY + " NON
+			// ESISTENTE");
+			//
+			// }
+			//
+			// try {
+			// configurator.removeGoal(GOALSLIST_HUMIDITY);
+			// }
+			//
+			// catch (NotCreatedException e) {
+			//
+			// System.out.println("GOALLIST " + GOALSLIST_HUMIDITY + " NON
+			// ESISTENTE");
+			//
+			// }
+
+			// create GoalsList
 
 			String[] goal = new String[1];
+
 			try {
 				goal[0] = GOAL_OUTFIT;
 				configurator.createGoalList(GOALSLIST_OUTFIT, goal);
 
 			} catch (AlreadyCreatedException e) {
-				System.out.println("GOALLIST GIA' PRESENTE");
+				System.out.println("GOALLIST " + GOALSLIST_OUTFIT + " GIA' PRESENTE");
 
 			}
 
@@ -143,7 +178,7 @@ public class WardrobeAgent extends AbstractTucsonAgent implements TucsonAgentInt
 				configurator.createGoalList(GOALSLIST_SUNNY, goal);
 
 			} catch (AlreadyCreatedException e) {
-				System.out.println("GOALLIST GIA' PRESENTE");
+				System.out.println("GOALLIST GIA' " + GOALSLIST_SUNNY + " PRESENTE");
 
 			}
 
@@ -152,7 +187,7 @@ public class WardrobeAgent extends AbstractTucsonAgent implements TucsonAgentInt
 				configurator.createGoalList(GOALSLIST_HUMIDITY, goal);
 
 			} catch (AlreadyCreatedException e) {
-				System.out.println("GOALLIST GIA' PRESENTE");
+				System.out.println("GOALLIST GIA' " + GOALSLIST_HUMIDITY + " PRESENTE");
 
 			}
 
@@ -410,39 +445,41 @@ public class WardrobeAgent extends AbstractTucsonAgent implements TucsonAgentInt
 			for (String s : solutionOutfit.getSolution()) {
 
 				StringTokenizer st = new StringTokenizer(s, "()[], ");
-				if (st.nextToken().equalsIgnoreCase("outfit")) {
+				if (st.hasMoreTokens()) {
+					String outfit = st.nextToken();
+					if (outfit.equalsIgnoreCase("outfit")) {
 
-					String rfid_top = st.nextToken();
-					String name_top = st.nextToken();
-					String stringSize_top = st.nextToken();
-					String color_top = st.nextToken();
+						String rfid_top = st.nextToken();
+						String name_top = st.nextToken();
+						String stringSize_top = st.nextToken();
+						String color_top = st.nextToken();
 
-					int size_top = Integer.parseInt(stringSize_top);
+						int size_top = Integer.parseInt(stringSize_top);
 
-					Dress top = new Dress(rfid_top, name_top, size_top, color_top, "top");
+						Dress top = new Dress(rfid_top, name_top, size_top, color_top, "top");
 
-					String rfid_bot = st.nextToken();
-					String name_bot = st.nextToken();
-					String stringSize_bot = st.nextToken();
-					String color_bot = st.nextToken();
+						String rfid_bot = st.nextToken();
+						String name_bot = st.nextToken();
+						String stringSize_bot = st.nextToken();
+						String color_bot = st.nextToken();
 
-					int size_bot = Integer.parseInt(stringSize_bot);
+						int size_bot = Integer.parseInt(stringSize_bot);
 
-					Dress bot = new Dress(rfid_bot, name_bot, size_bot, color_bot, "bot");
-					Outfit o = new Outfit(top, bot);
+						Dress bot = new Dress(rfid_bot, name_bot, size_bot, color_bot, "bot");
+						Outfit o = new Outfit(top, bot);
 
-					if (solutionSunny.getSolution().length != 0 && solutionSunny.getSolution()[0].equalsIgnoreCase(GOAL_SUNNY)) {
-						o.addAccessory("Occhiali da sole");
+						if (solutionSunny.getSolution().length != 0 && solutionSunny.getSolution()[0].equalsIgnoreCase(GOAL_SUNNY)) {
+							o.addAccessory("Occhiali da sole");
+						}
+
+						if (solutionHumidity.getSolution().length != 0 && solutionHumidity.getSolution()[0].equalsIgnoreCase(GOAL_HUMIDITY)) {
+							o.addAccessory("Ombrello");
+						}
+
+						outfits.add(o);
+
 					}
-
-					if (solutionHumidity.getSolution().length != 0 && solutionHumidity.getSolution()[0].equalsIgnoreCase(GOAL_HUMIDITY)) {
-						o.addAccessory("Ombrello");
-					}
-
-					outfits.add(o);
-
 				}
-
 			}
 
 			OutfitFilter f = new OutfitColorFilter(getColor());
