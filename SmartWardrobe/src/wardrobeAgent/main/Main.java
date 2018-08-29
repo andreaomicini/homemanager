@@ -3,7 +3,7 @@ package wardrobeAgent.main;
 import alice.tucson.api.TucsonTupleCentreId;
 import wardrobeAgent.configuration.Configuration;
 import wardrobeAgent.model.Device;
-import wardrobeAgent.model.WardrobeAgent;
+import wardrobeAgent.model.WardrobeSensorsAgent;
 import wardrobeAgent.naming.NameManager;
 
 public class Main {
@@ -20,7 +20,7 @@ public class Main {
 			TucsonTupleCentreId wardrobeTc = new TucsonTupleCentreId("wardrobe_tc", "localhost", "20504");
 			TucsonTupleCentreId usageManagerTc = new TucsonTupleCentreId("usage_manager_tc", "localhost", "20504");
 
-			 WardrobeAgent wardrobeAgent = new WardrobeAgent(device, wardrobeTc, usageManagerTc);
+			WardrobeSensorsAgent wardrobeAgent = new WardrobeSensorsAgent(device, wardrobeTc, usageManagerTc);
 
 			wardrobeAgent.go();
 

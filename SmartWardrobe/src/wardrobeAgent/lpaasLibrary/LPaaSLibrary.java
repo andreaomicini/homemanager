@@ -12,52 +12,9 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
-public class LPaasLibrary {
+public class LPaaSLibrary {
 
 	private final static String BASENAME = "http://localhost:8080/lpaas";
-
-	// public static String getToken(String username, String password) {
-	// String token = null;
-	// try {
-	// URL url = new URL(BASENAME + "/auth");
-	// HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-	//
-	// connection.setRequestProperty("Accept", "application/json");
-	// connection.setRequestProperty("Content-Type", "application/json");
-	// connection.setRequestMethod("POST");
-	// connection.setDoInput(true); // specifico di voler ricevere il body
-	// connection.setDoOutput(true); // specifico l'invio del body
-	// String rawJson = "{\"username\":" + "\"" + username + "\", \"password\":"
-	// + "\"" + password + "\"" + "}";
-	// connection.getOutputStream().write(rawJson.getBytes());
-	// connection.getOutputStream().close();
-	//
-	// connection.connect();
-	//
-	// if (connection.getResponseCode() == HttpURLConnection.HTTP_OK) {
-	// InputStreamReader in = new
-	// InputStreamReader(connection.getInputStream());
-	// StringBuilder sb = new StringBuilder();
-	// int c;
-	// while ((c = in.read()) > 0) {
-	// sb.append((char) c);
-	//
-	// }
-	// String body = sb.toString();
-	// // System.out.println(body);
-	// StringTokenizer st = new StringTokenizer(body, ":");
-	// st.nextToken();
-	//
-	// token = st.nextToken();
-	// token = token.substring(1, token.length() - 2);
-	// }
-	// connection.disconnect();
-	//
-	// } catch (IOException e) {
-	// e.printStackTrace();
-	// }
-	// return token;
-	// }
 
 	public static String getToken(String username, String password) {
 		String token = null;

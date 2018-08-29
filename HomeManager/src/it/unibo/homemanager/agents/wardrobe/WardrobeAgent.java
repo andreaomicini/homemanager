@@ -3,7 +3,6 @@ package it.unibo.homemanager.agents.wardrobe;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.StringTokenizer;
@@ -61,7 +60,9 @@ public class WardrobeAgent extends AbstractTucsonAgent implements TucsonAgentInt
 
 	private EnhancedSynchACC acc;
 
-	private TucsonTupleCentreId wardrobeTc;
+	private TucsonTupleCentreId wardrobeTc; // centro di tuple non usato per la
+											// comunicazione. Al suo posto viene
+											// utilizzato il servizio LPaaS
 	private TucsonTupleCentreId usageManagerTc;
 
 	private WardrobePanel wardrobePanel;

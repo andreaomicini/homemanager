@@ -19,4 +19,8 @@ public class OutfitColorFilter implements OutfitFilter {
 
 	}
 
+	public String getColor() {
+		return color;
+	}
+
 }

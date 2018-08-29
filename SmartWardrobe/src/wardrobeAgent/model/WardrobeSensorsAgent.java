@@ -18,10 +18,10 @@ import alice.tucson.api.ITucsonOperation;
 import alice.tucson.api.TucsonTupleCentreId;
 import alice.tucson.api.exceptions.TucsonInvalidAgentIdException;
 import alice.tuplecentre.core.AbstractTupleCentreOperation;
-import wardrobeAgent.lpaasLibrary.LPaasLibrary;
+import wardrobeAgent.lpaasLibrary.LPaaSLibrary;
 import wardrobeAgent.model.Device;
 
-public class WardrobeAgent extends AbstractTucsonAgent {
+public class WardrobeSensorsAgent extends AbstractTucsonAgent {
 
 	final static String THEORY_NAME = "wardrobeTheory";
 	final static String DRESS_FUNCTOR = "dress";
@@ -43,7 +43,7 @@ public class WardrobeAgent extends AbstractTucsonAgent {
 												// per evitare di fare get
 	private Sensors sensors;
 
-	public WardrobeAgent(Device device, TucsonTupleCentreId wardrobeTc, TucsonTupleCentreId usageManagerTc) throws TucsonInvalidAgentIdException {
+	public WardrobeSensorsAgent(Device device, TucsonTupleCentreId wardrobeTc, TucsonTupleCentreId usageManagerTc) throws TucsonInvalidAgentIdException {
 		super(device.getName() + "_" + device.getId());
 
 		this.device = device;
@@ -54,7 +54,13 @@ public class WardrobeAgent extends AbstractTucsonAgent {
 
 		this.rfidMapping = new HashMap<>();
 		this.rfidInnerClothing = new Vector<>();
-		this.sensors = new Sensors();
+
+		// DECOMMENTARE PER DEBUG SU PC
+		this.sensors = new MockSensors();
+
+		// DECOMMENTARE PER ESECUZIONE SU RASPBERRY
+		// this.sensors = new GroveSensors();
+
 		readCredential("credential.txt");
 	}
 
@@ -95,7 +101,7 @@ public class WardrobeAgent extends AbstractTucsonAgent {
 
 		SensorManager sensorManager = new SensorManager(sensors, sensorUsername, sensorPassword);
 		sensorManager.start();
-		String token = LPaasLibrary.getToken(sensorUsername, sensorPassword);
+		String token = LPaaSLibrary.getToken(sensorUsername, sensorPassword);
 		int result = -1;
 		while (true) {
 			try {
@@ -112,11 +118,6 @@ public class WardrobeAgent extends AbstractTucsonAgent {
 				String rfid = sensors.readRfid();
 				rfid = rfid.toLowerCase();
 
-				// PER DEBUG
-				// String rfid = randomRfid();
-				// rfid = "NO-TAG";
-				///
-
 				if (!rfid.equalsIgnoreCase("NO-TAG")) {
 					System.out.println("Read: " + rfid);
 
@@ -127,7 +128,7 @@ public class WardrobeAgent extends AbstractTucsonAgent {
 
 						String fact = PRESENT_FUNCTOR + "(" + d.getRfid() + "," + "no)";
 
-						result = LPaasLibrary.putFact(THEORY_NAME, PRESENT_FUNCTOR, fact, token);
+						result = LPaaSLibrary.putFact(THEORY_NAME, PRESENT_FUNCTOR, fact, token);
 
 						if (result == 200) {
 							System.out.println("REMOVED " + getRfidMapping().get(rfid));
@@ -137,11 +138,12 @@ public class WardrobeAgent extends AbstractTucsonAgent {
 							sensors.doBip();
 							sensors.ledOff();
 							sensors.displayAction("removed", getRfidMapping().get(rfid));
+
 							Thread.sleep(2000);
 
 						} else {
 							System.out.println("ERROR REMOVING");
-							sensors.displayAction("error removing");
+							sensors.displayError("error removing");
 							Thread.sleep(2000);
 
 						}
@@ -150,30 +152,25 @@ public class WardrobeAgent extends AbstractTucsonAgent {
 
 						Dress d = getDressByRfid(rfid);
 
-						// DA ELIMINARE
-						// String fact = DRESS_FUNCTOR + "([" + d.getRfid() +
-						// "," + d.getName() + "," + d.getSize() + "," +
-						// d.getColor() + "," + d.getHeaviness() + "," +
-						// d.getType()+ "])";
-						// result = LPaasLibrary.postFact(THEORY_NAME, fact,
-						// token);
-
 						String fact = PRESENT_FUNCTOR + "(" + d.getRfid() + "," + "yes)";
 
-						result = LPaasLibrary.putFact(THEORY_NAME, PRESENT_FUNCTOR, fact, token);
+						result = LPaaSLibrary.putFact(THEORY_NAME, PRESENT_FUNCTOR, fact, token);
 
 						if (result == 200) {
 							System.out.println("ADDED " + getRfidMapping().get(rfid));
 							persist(rfidInnerClothing);
+
 							sensors.ledOn();
 							sensors.doBip();
 							sensors.ledOff();
 							sensors.displayAction("added", getRfidMapping().get(rfid));
+
 							Thread.sleep(2000);
 
 						} else {
 							System.out.println("ERROR ADDING");
-							sensors.displayAction("error adding");
+
+							sensors.displayError("error adding");
 							Thread.sleep(2000);
 
 						}
@@ -181,12 +178,10 @@ public class WardrobeAgent extends AbstractTucsonAgent {
 
 					if (result == 401) {
 						System.out.println("TOKEN SCADUTO!");
-						token = LPaasLibrary.getToken(sensorUsername, sensorPassword);
+						token = LPaaSLibrary.getToken(sensorUsername, sensorPassword);
 					}
 
 				}
-				// PER DEBUG
-				// Thread.sleep(5000);
 
 			} catch (InterruptedException | IOException e) {
 				e.printStackTrace();
@@ -293,7 +288,7 @@ public class WardrobeAgent extends AbstractTucsonAgent {
 	private boolean initTheory() throws IOException {
 
 		boolean result = true;
-		String token = LPaasLibrary.getToken(sensorUsername, sensorPassword);
+		String token = LPaaSLibrary.getToken(sensorUsername, sensorPassword);
 		// init logic part of theory
 
 		BufferedReader br = new BufferedReader(new FileReader("wardrobeInitFacts.txt"));
@@ -301,7 +296,7 @@ public class WardrobeAgent extends AbstractTucsonAgent {
 		while ((line = br.readLine()) != null) {
 
 			if (!line.isEmpty()) {
-				int code = LPaasLibrary.postFact(THEORY_NAME, line, token);
+				int code = LPaaSLibrary.postFact(THEORY_NAME, line, token);
 
 				if (code != 200) {
 					result = false;
@@ -357,7 +352,7 @@ public class WardrobeAgent extends AbstractTucsonAgent {
 
 			fact = PRESENT_FUNCTOR + "(" + k + "," + in + ")";
 
-			code = LPaasLibrary.postFact(THEORY_NAME, fact, token);
+			code = LPaaSLibrary.postFact(THEORY_NAME, fact, token);
 
 			if (code != 200) {
 				result = false;
@@ -368,7 +363,7 @@ public class WardrobeAgent extends AbstractTucsonAgent {
 
 			Dress d = getDressByRfid(k);
 			fact = DRESS_FUNCTOR + "([" + d.getRfid() + "," + d.getName() + "," + d.getSize() + "," + d.getColor() + "," + d.getHeaviness() + "," + d.getType() + "])";
-			code = LPaasLibrary.postFact(THEORY_NAME, fact, token);
+			code = LPaaSLibrary.postFact(THEORY_NAME, fact, token);
 
 			if (code != 200) {
 				result = false;
@@ -431,13 +426,6 @@ public class WardrobeAgent extends AbstractTucsonAgent {
 			e.printStackTrace();
 		}
 
-	}
-
-	private String randomRfid() {
-		String[] rfidArray = new String[] { "eab5e4a4", "aa8be4a4", "baf7e3a4", "caf0e1a4", "NO-TAG" };
-		Random random = new Random();
-		int index = random.nextInt(rfidArray.length);
-		return (rfidArray[index]);
 	}
 
 	public Device getDevice() {
