@@ -15,6 +15,7 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
+import main.Main;
 import test.listener.GeneralListener;
 import test.controller.Controller;
 import test.gui.frames.AddComponentFrame;
@@ -44,27 +45,27 @@ public class HeaderPanel extends JPanel implements ActionListener{
 		
 		/*CREAZIONE ELEMENTI*/
 		JLabel logo=new JLabel();
-		logo.setIcon(new ImageIcon("./resources/LPaaS.jpg"));
+		logo.setIcon(new ImageIcon(Main.class.getResource("/LPaaS.jpg")));
 		
 		JLabel choose=new JLabel("Componente selezionato");
 		
 		this.addComponent=new JButton();
-		this.addComponent.setIcon(new ImageIcon("./resources/Add.png"));
+		this.addComponent.setIcon(new ImageIcon(Main.class.getResource("/Add.png")));
 		this.addComponent.setToolTipText("Aggiungi Componente");
 		this.addComponent.addActionListener(this);
 		
 		this.addConfigurator=new JButton();
-		this.addConfigurator.setIcon(new ImageIcon("./resources/configurator.png"));
+		this.addConfigurator.setIcon(new ImageIcon(Main.class.getResource("/configurator.png")));
 		this.addConfigurator.setToolTipText("Aggiungi configuratore");
 		this.addConfigurator.addActionListener(this);
 		
 		this.removeComponent=new JButton();
-		this.removeComponent.setIcon(new ImageIcon("./resources/Remove.png"));
+		this.removeComponent.setIcon(new ImageIcon(Main.class.getResource("/remove.png")));
 		this.removeComponent.setToolTipText("Rimuovi componente");
 		this.removeComponent.addActionListener(this);
 		
 		this.helpButton=new JButton();
-		this.helpButton.setIcon(new ImageIcon("./resources/help.png"));
+		this.helpButton.setIcon(new ImageIcon(Main.class.getResource("/help.png")));
 		this.helpButton.setToolTipText("Help");
 		this.helpButton.addActionListener(this);
 		
