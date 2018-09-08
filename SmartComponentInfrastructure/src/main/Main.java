@@ -16,7 +16,7 @@ public class Main {
 		JFrame frame=new MainFrame("LPaaS Test",controller);
 		frame.setSize((int)(Toolkit.getDefaultToolkit().getScreenSize().getWidth()*0.80),(int)(Toolkit.getDefaultToolkit().getScreenSize().getHeight()*0.80));
 		frame.setLocationRelativeTo(null);
-		frame.setResizable(false);
+		frame.setResizable(true);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
 		frame.setVisible(true);

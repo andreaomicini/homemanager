@@ -37,7 +37,7 @@ public class AddComponentFrame extends JFrame implements ActionListener{
 		
 		this.setSize((int)(Toolkit.getDefaultToolkit().getScreenSize().getWidth()*0.40),(int)(Toolkit.getDefaultToolkit().getScreenSize().getHeight()*0.40));
 		this.setLocationRelativeTo(null);
-		this.setResizable(false);
+		this.setResizable(true);
 		
 		Container c=this.getContentPane();
 		

@@ -18,7 +18,7 @@ public class HelpFrame extends JFrame {
 		
 		this.setSize((int)(Toolkit.getDefaultToolkit().getScreenSize().getWidth()*0.50),(int)(Toolkit.getDefaultToolkit().getScreenSize().getHeight()*0.50));
 		this.setLocationRelativeTo(null);
-		this.setResizable(false);
+		this.setResizable(true);
 		
 		Container c=this.getContentPane();
 		

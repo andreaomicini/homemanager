@@ -1,5 +1,7 @@
-/Add.png
-/LPaaS.jpg
-/configurator.png
-/help.png
-/remove.png
+/classes/
+/exceptions/
+/interfaces/
+/lpaas/
+/main/
+/parser/
+/test/
