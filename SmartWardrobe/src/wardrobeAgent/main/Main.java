@@ -2,6 +2,7 @@ package wardrobeAgent.main;
 
 import alice.tucson.api.TucsonTupleCentreId;
 import wardrobeAgent.configuration.Configuration;
+import wardrobeAgent.lpaasLibrary.LPaaSLibrary;
 import wardrobeAgent.model.Device;
 import wardrobeAgent.model.WardrobeSensorsAgent;
 import wardrobeAgent.naming.NameManager;
@@ -10,6 +11,8 @@ public class Main {
 
 	public static void main(String[] args) {
 		try {
+			LPaaSLibrary.init();
+
 			NameManager nameManager = NameManager.getInstance();
 			String name = nameManager.getName();
 

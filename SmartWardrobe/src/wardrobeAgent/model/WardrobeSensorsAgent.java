@@ -126,9 +126,12 @@ public class WardrobeSensorsAgent extends AbstractTucsonAgent {
 
 						Dress d = getDressByRfid(rfid);
 
-						String fact = PRESENT_FUNCTOR + "(" + d.getRfid() + "," + "no)";
+						String oldFact = PRESENT_FUNCTOR + "(" + d.getRfid() + "," + "_)";
+						String newFact = PRESENT_FUNCTOR + "(" + d.getRfid() + "," + "no)";
 
-						result = LPaaSLibrary.putFact(THEORY_NAME, PRESENT_FUNCTOR, fact, token);
+						String jsonBody = "{ \"oldFact\":" + "\"" + oldFact + "\"" + ", " + "\"newFact\":" + "\"" + newFact + "\" }";
+
+						result = LPaaSLibrary.putFact(THEORY_NAME, PRESENT_FUNCTOR, jsonBody, token);
 
 						if (result == 200) {
 							System.out.println("REMOVED " + getRfidMapping().get(rfid));
@@ -152,9 +155,12 @@ public class WardrobeSensorsAgent extends AbstractTucsonAgent {
 
 						Dress d = getDressByRfid(rfid);
 
-						String fact = PRESENT_FUNCTOR + "(" + d.getRfid() + "," + "yes)";
+						String oldFact = PRESENT_FUNCTOR + "(" + d.getRfid() + "," + "_)";
+						String newFact = PRESENT_FUNCTOR + "(" + d.getRfid() + "," + "yes)";
 
-						result = LPaaSLibrary.putFact(THEORY_NAME, PRESENT_FUNCTOR, fact, token);
+						String jsonBody = "{ \"oldFact\":" + "\"" + oldFact + "\"" + ", " + "\"newFact\":" + "\"" + newFact + "\" }";
+
+						result = LPaaSLibrary.putFact(THEORY_NAME, PRESENT_FUNCTOR, jsonBody, token);
 
 						if (result == 200) {
 							System.out.println("ADDED " + getRfidMapping().get(rfid));
@@ -287,7 +293,6 @@ public class WardrobeSensorsAgent extends AbstractTucsonAgent {
 
 	private boolean initTheory() throws IOException {
 
-		boolean result = true;
 		String token = LPaaSLibrary.getToken(sensorUsername, sensorPassword);
 		// init logic part of theory
 
@@ -299,39 +304,13 @@ public class WardrobeSensorsAgent extends AbstractTucsonAgent {
 				int code = LPaaSLibrary.postFact(THEORY_NAME, line, token);
 
 				if (code != 200) {
-					result = false;
-					break;
+					return false;
+
 				}
 			}
 		}
 
 		br.close();
-
-		// // init sensor fact with mock data
-		//
-		// String fact = SensorManager.DEGREES_FUNCTOR + "(1000)";
-		//
-		// int code = LPaasLibrary.postFact(THEORY_NAME, fact, token);
-		//
-		// if (code != 200) {
-		// result = false;
-		// }
-		//
-		// fact = SensorManager.HUMIDITY_FUNCTOR + "(1000)";
-		//
-		// code = LPaasLibrary.postFact(THEORY_NAME, fact, token);
-		//
-		// if (code != 200) {
-		// result = false;
-		// }
-		//
-		// fact = SensorManager.LIGHT_FUNCTOR + "(1000)";
-		//
-		// code = LPaasLibrary.postFact(THEORY_NAME, fact, token);
-		//
-		// if (code != 200) {
-		// result = false;
-		// }
 
 		Vector<String> contentWB = loadContent();
 		setRfidInnerClothing(contentWB);
@@ -355,8 +334,8 @@ public class WardrobeSensorsAgent extends AbstractTucsonAgent {
 			code = LPaaSLibrary.postFact(THEORY_NAME, fact, token);
 
 			if (code != 200) {
-				result = false;
-				break;
+				return false;
+
 			}
 
 			// init all dress fact
@@ -366,13 +345,39 @@ public class WardrobeSensorsAgent extends AbstractTucsonAgent {
 			code = LPaaSLibrary.postFact(THEORY_NAME, fact, token);
 
 			if (code != 200) {
-				result = false;
-				break;
+				return false;
 			}
 
 		}
 
-		return result;
+		// init sensor data facts
+
+		String newFact = SensorManager.DEGREES_FUNCTOR + "(" + (int) sensors.getTemperature() + ")";
+
+		code = LPaaSLibrary.postFact(THEORY_NAME, newFact, token);
+		if (code != 200) {
+			return false;
+
+		}
+
+		newFact = SensorManager.HUMIDITY_FUNCTOR + "(" + (int) sensors.getHumidity() + ")";
+
+		code = LPaaSLibrary.postFact(THEORY_NAME, newFact, token);
+		if (code != 200) {
+			return false;
+
+		}
+
+		int l = (int) ((sensors.getLightIntensity() / 65535) * 100);
+		newFact = SensorManager.LIGHT_FUNCTOR + "(" + l + ")";
+
+		code = LPaaSLibrary.postFact(THEORY_NAME, newFact, token);
+		if (code != 200) {
+			return false;
+
+		}
+
+		return true;
 	}
 
 	private Vector<String> loadContent() throws IOException {

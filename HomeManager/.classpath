@@ -12,6 +12,6 @@
 	<classpathentry kind="lib" path="weka.jar"/>
 	<classpathentry kind="lib" path="opencv-300.jar"/>
 	<classpathentry kind="lib" path="lib/json-simple-1.1.jar"/>
-	<classpathentry kind="lib" path="lib/SmartComponentInfrastructure.jar"/>
+	<classpathentry kind="lib" path="lib/SmartComponentLibrary.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

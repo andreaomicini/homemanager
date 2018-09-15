@@ -35,13 +35,15 @@ import lpaas.LPaaSComponentManager;
 
 public class WardrobeAgent extends AbstractTucsonAgent implements TucsonAgentInterface {
 
-	private final static String BASENAME = "http://localhost:8080/lpaas";
+	// private final static String BASENAME = "http://localhost:8080/lpaas";
+
+	private static String BASENAME = null;
 
 	private final static String THEORY_NAME = "wardrobeTheory";
 
 	private final static String GOAL_SUNNY = "is_sunny";
 	private final static String GOAL_HUMIDITY = "is_humid";
-	private final static String GOAL_OUTFIT = "outfit([TOP_RFID|TOP_DRESS],[BOT_RFID|BOT_DRESS])";
+	private final static String GOAL_OUTFIT = "outfit([Top_rfid|Top_dress],[Bot_rfid|Bot_dress])";
 
 	private final static String GOALSLIST_SUNNY = "sunny";
 	private final static String GOALSLIST_HUMIDITY = "humidity";
@@ -83,6 +85,31 @@ public class WardrobeAgent extends AbstractTucsonAgent implements TucsonAgentInt
 		this.usageManagerTc = usageManagerTc;
 
 		this.tracePanel = tracePanel;
+
+		// lettura da file esterno dell'ip del server LPaaS per rendere più dinamica la configurazione
+		readIPServerLPaaS();
+
+	}
+
+	private static void readIPServerLPaaS() {
+		try {
+			BufferedReader br = new BufferedReader(new FileReader("ip_serverLPaaS.txt"));
+			String line;
+
+			line = br.readLine();
+
+			if (line != null) {
+
+			}
+			BASENAME = "http://" + line.trim() + ":8080/lpaas";
+
+			br.close();
+
+		} catch (IOException e) {
+
+			e.printStackTrace();
+		}
+
 	}
 
 	@Override

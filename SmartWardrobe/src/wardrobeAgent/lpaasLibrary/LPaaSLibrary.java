@@ -1,12 +1,11 @@
 package wardrobeAgent.lpaasLibrary;
 
+import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.Reader;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.StringTokenizer;
 
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -14,7 +13,34 @@ import org.json.simple.parser.ParseException;
 
 public class LPaaSLibrary {
 
-	private final static String BASENAME = "http://localhost:8080/lpaas";
+	// private final static String BASENAME = "http://localhost:8080/lpaas";
+
+	private static String BASENAME = null;
+
+	public static void init() {
+		readIPServerLPaaS();
+	}
+
+	private static void readIPServerLPaaS() {
+		try {
+			BufferedReader br = new BufferedReader(new FileReader("ip_serverLPaaS.txt"));
+			String line;
+
+			line = br.readLine();
+
+			if (line != null) {
+
+			}
+			BASENAME = "http://" + line.trim() + ":8080/lpaas";
+
+			br.close();
+
+		} catch (IOException e) {
+
+			e.printStackTrace();
+		}
+
+	}
 
 	public static String getToken(String username, String password) {
 		String token = null;
@@ -55,7 +81,7 @@ public class LPaaSLibrary {
 		return token;
 	}
 
-	public static int putFact(String theoryName, String functor, String fact, String token) {
+	public static int putFact(String theoryName, String functor, String body, String token) {
 		int result = 0;
 
 		try {
@@ -63,10 +89,10 @@ public class LPaaSLibrary {
 			HttpURLConnection connection = (HttpURLConnection) url.openConnection();
 
 			connection.setRequestProperty("Authorization", "jwt " + token);
-			connection.setRequestProperty("Content-Type", "text/plain");
+			connection.setRequestProperty("Content-Type", "application/json");
 			connection.setRequestMethod("PUT");
 			connection.setDoOutput(true); // specifico l'invio del body
-			connection.getOutputStream().write(fact.getBytes());
+			connection.getOutputStream().write(body.getBytes());
 			connection.getOutputStream().close();
 
 			connection.connect();
