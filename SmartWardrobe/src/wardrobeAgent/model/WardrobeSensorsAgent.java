@@ -122,7 +122,6 @@ public class WardrobeSensorsAgent extends AbstractTucsonAgent {
 					System.out.println("Read: " + rfid);
 
 					if (rfidInnerClothing.contains(rfid)) {
-						rfidInnerClothing.remove(rfid);
 
 						Dress d = getDressByRfid(rfid);
 
@@ -134,6 +133,7 @@ public class WardrobeSensorsAgent extends AbstractTucsonAgent {
 						result = LPaaSLibrary.putFact(THEORY_NAME, PRESENT_FUNCTOR, jsonBody, token);
 
 						if (result == 200) {
+							rfidInnerClothing.remove(rfid);
 							System.out.println("REMOVED " + getRfidMapping().get(rfid));
 							persist(rfidInnerClothing);
 
@@ -151,7 +151,6 @@ public class WardrobeSensorsAgent extends AbstractTucsonAgent {
 
 						}
 					} else {
-						rfidInnerClothing.add(rfid);
 
 						Dress d = getDressByRfid(rfid);
 
@@ -163,6 +162,7 @@ public class WardrobeSensorsAgent extends AbstractTucsonAgent {
 						result = LPaaSLibrary.putFact(THEORY_NAME, PRESENT_FUNCTOR, jsonBody, token);
 
 						if (result == 200) {
+							rfidInnerClothing.add(rfid);
 							System.out.println("ADDED " + getRfidMapping().get(rfid));
 							persist(rfidInnerClothing);
 

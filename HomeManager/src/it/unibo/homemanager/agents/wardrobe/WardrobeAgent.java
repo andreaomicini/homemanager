@@ -497,11 +497,11 @@ public class WardrobeAgent extends AbstractTucsonAgent implements TucsonAgentInt
 						Outfit o = new Outfit(top, bot);
 
 						if (solutionSunny.getSolution().length != 0 && solutionSunny.getSolution()[0].equalsIgnoreCase(GOAL_SUNNY)) {
-							o.addAccessory("Occhiali da sole");
+							o.addAccessory("Sunglasses");
 						}
 
 						if (solutionHumidity.getSolution().length != 0 && solutionHumidity.getSolution()[0].equalsIgnoreCase(GOAL_HUMIDITY)) {
-							o.addAccessory("Ombrello");
+							o.addAccessory("Umbrella");
 						}
 
 						outfits.add(o);

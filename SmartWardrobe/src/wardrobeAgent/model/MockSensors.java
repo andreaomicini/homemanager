@@ -25,19 +25,19 @@ public class MockSensors implements Sensors {
 	@Override
 	public double getTemperature() throws IOException {
 		Random random = new Random();
-		return random.nextDouble()*40;
+		return random.nextDouble() * 40;
 	}
 
 	@Override
 	public double getHumidity() throws IOException {
 		Random random = new Random();
-		return random.nextDouble()*100;
+		return random.nextDouble() * 100;
 	}
 
 	@Override
 	public double getLightIntensity() throws IOException {
 		Random random = new Random();
-		return random.nextDouble()*65535;
+		return random.nextDouble() * 65535;
 	}
 
 	@Override

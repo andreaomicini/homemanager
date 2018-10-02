@@ -326,7 +326,7 @@ public class WardrobePanel extends JPanel {
 
 			if (!o.getAccessories().isEmpty()) {
 
-				sb.append("\nAccessori:\n");
+				sb.append("\nAccessories:\n");
 
 				for (String accessory : o.getAccessories()) {
 
