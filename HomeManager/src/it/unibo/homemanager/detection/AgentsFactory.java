@@ -10,6 +10,7 @@ import it.unibo.homemanager.agents.MixerAgent;
 import it.unibo.homemanager.agents.OvenAgent;
 import it.unibo.homemanager.agents.PantryAgent;
 import it.unibo.homemanager.agents.TucsonAgentInterface;
+import it.unibo.homemanager.agents.wardrobe.WardrobeAgent;
 import it.unibo.homemanager.dbmanagement.Database;
 import it.unibo.homemanager.humanpresence.PresenceAgent;
 import it.unibo.homemanager.meteo.MeteoAgent;
@@ -53,7 +54,15 @@ public abstract class AgentsFactory {
 				e.printStackTrace();
 			}
 		}
-		
+		 else if ( device.getDeviceName().equals("wardrobe") ) {
+				try {
+					WardrobeAgent agent = new WardrobeAgent(device, tracePanel, tupleCentres.get("wardrobe_tc"), tupleCentres.get("usage_manager_tc"), database);
+					agent.setPanel(butlerPanel);
+					return (agent);
+				} catch (TucsonInvalidAgentIdException e) {
+					e.printStackTrace();
+				}
+			}
 		
 		
 		return (null);

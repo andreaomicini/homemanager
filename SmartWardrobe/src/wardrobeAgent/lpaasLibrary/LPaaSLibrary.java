@@ -1,0 +1,139 @@
+package wardrobeAgent.lpaasLibrary;
+
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
+
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
+
+public class LPaaSLibrary {
+
+	// private final static String BASENAME = "http://localhost:8080/lpaas";
+
+	private static String BASENAME = null;
+
+	public static void init() {
+		readIPServerLPaaS();
+	}
+
+	private static void readIPServerLPaaS() {
+		try {
+			BufferedReader br = new BufferedReader(new FileReader("ip_serverLPaaS.txt"));
+			String line;
+
+			line = br.readLine();
+
+			if (line != null) {
+
+			}
+			BASENAME = "http://" + line.trim() + ":8080/lpaas";
+
+			br.close();
+
+		} catch (IOException e) {
+
+			e.printStackTrace();
+		}
+
+	}
+
+	public static String getToken(String username, String password) {
+		String token = null;
+
+		try {
+			URL url = new URL(BASENAME + "/auth");
+			HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+
+			connection.setRequestProperty("Accept", "application/json");
+			connection.setRequestProperty("Content-Type", "application/json");
+			connection.setRequestMethod("POST");
+			connection.setDoInput(true); // specifico di voler ricevere il body
+			connection.setDoOutput(true); // specifico l'invio del body
+			String rawJson = "{\"username\":" + "\"" + username + "\", \"password\":" + "\"" + password + "\"" + "}";
+			connection.getOutputStream().write(rawJson.getBytes());
+			connection.getOutputStream().close();
+
+			connection.connect();
+
+			if (connection.getResponseCode() == HttpURLConnection.HTTP_OK) {
+				InputStreamReader in = new InputStreamReader(connection.getInputStream());
+
+				JSONParser parser = new JSONParser();
+
+				Object jsonObj = parser.parse(in);
+
+				JSONObject jsonObject = (JSONObject) jsonObj;
+
+				token = (String) jsonObject.get("token");
+
+			}
+
+			connection.disconnect();
+
+		} catch (IOException | ParseException e) {
+			e.printStackTrace();
+		}
+		return token;
+	}
+
+	public static int putFact(String theoryName, String functor, String body, String token) {
+		int result = 0;
+
+		try {
+			URL url = new URL(BASENAME + "/theories/" + theoryName + "/facts/" + functor);
+			HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+
+			connection.setRequestProperty("Authorization", "jwt " + token);
+			connection.setRequestProperty("Content-Type", "application/json");
+			connection.setRequestMethod("PUT");
+			connection.setDoOutput(true); // specifico l'invio del body
+			connection.getOutputStream().write(body.getBytes());
+			connection.getOutputStream().close();
+
+			connection.connect();
+
+			result = connection.getResponseCode();
+
+			connection.disconnect();
+
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+		return result;
+	}
+
+	public static int postFact(String theoryName, String fact, String token) {
+		int result = 0;
+
+		try {
+			URL url = new URL(BASENAME + "/theories/" + theoryName + "/facts/");
+			HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+
+			connection.setRequestProperty("Authorization", "jwt " + token);
+			connection.setRequestProperty("Content-Type", "text/plain");
+
+			connection.setRequestMethod("POST");
+			connection.setDoOutput(true); // specifico l'invio del body
+			connection.getOutputStream().write(fact.getBytes());
+			connection.getOutputStream().close();
+
+			connection.connect();
+
+			result = connection.getResponseCode();
+
+			connection.disconnect();
+
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+		return result;
+	}
+
+}
