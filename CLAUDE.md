@@ -54,6 +54,8 @@ locally before every push.
 
 - The `claude:` prefix on every commit I make; commits touching only notes, `desc/`, `logo/`
   or `icon/` carry `[skip ci]`.
+- **GitLab DISI refuses any push over 60 MiB** (`pack exceeds maximum allowed size`): a push of a
+  large file needs splitting, as the first push did (see `.ai/HANDOFF.md`).
 - **Remotes**: see `.ai/HANDOFF.md`. One `origin` pushing to GitLab DISI and GitHub; a read-only
   mirror in `~/GitHub/andreaomicini/homemanager`, pulled after every push.
 - `desc/homemanager.txt`: line 1 the description, last line the APICe alias, the source of the

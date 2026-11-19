@@ -7,4 +7,7 @@ Recovered from Software Heritage (Codex's bundle and reports: `~/Downloads/HomeM
 (11, one per thesis merged into `master`), `v0-bitbucket` (the archived `master`), `v1-builds`
 (`build.sh`, 15 Latin-1 sources to UTF-8, code unchanged). The seven Java parts compile with
 zulu 8; the Android app is not rebuilt. Then the repository around the code: README, RECOVERY.md,
-`recovery/`, CI, notes, desc, logo, icon. Remotes: not yet created.
+`recovery/`, CI, notes, desc, logo, icon. Remotes (2026-11-19): GitLab DISI project 115 and GitHub,
+both public, one `origin` pushing to both, `master` the default branch on both; pipeline 3417 green
+(7 jobs). GitLab DISI refuses any push over 60 MiB: the history went up in pieces under 50 MiB on
+temporary tags, all deleted after (`chunkpush.py` in `~/Documents/Claude/2026.11.19 – HomeManager recovery/`).
