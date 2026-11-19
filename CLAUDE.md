@@ -56,6 +56,10 @@ locally before every push.
   or `icon/` carry `[skip ci]`.
 - **GitLab DISI refuses any push over 60 MiB** (`pack exceeds maximum allowed size`): a push of a
   large file needs splitting, as the first push did (see `.ai/HANDOFF.md`).
+- **GitHub is fed by GitLab**: a push mirror (SSH, GitLab's key as GitHub deploy key with write) copies every
+  push GitLab receives, the collaborators' too. This repo is the first with one; the others push to both
+  from the local `origin`. GitLab's API cannot set SSH host keys: a new mirror is made in the web UI
+  (*Detect host keys*).
 - **Remotes**: see `.ai/HANDOFF.md`. One `origin` pushing to GitLab DISI and GitHub; a read-only
   mirror in `~/GitHub/andreaomicini/homemanager`, pulled after every push.
 - `desc/homemanager.txt`: line 1 the description, last line the APICe alias, the source of the
