@@ -60,7 +60,9 @@ locally before every push.
   mirror in `~/GitHub/andreaomicini/homemanager`, pulled after every push.
 - `desc/homemanager.txt`: line 1 the description, last line the APICe alias, the source of the
   GitLab and GitHub descriptions. `logo/logoHM2.jpg` is the product logo from the APICe record;
-  `icon/homemanager.icns` was made from it.
+  `icon/homemanager.icns` and the GitLab avatar
+  `logo/homemanager-avatar.png` (512 px: GitLab takes at most 200 KiB) were made from it, on a
+  transparent square: a product has no kit *mark*, so its logo stands in.
 
 ## Content
 
