@@ -14,3 +14,7 @@ temporary tags, all deleted after (`chunkpush.py` in `~/Documents/Claude/2026.11
 
 GitLab push mirror to GitHub (SSH, made in the web UI by Andrea; deploy key 170482250), first sync 19:52.
 Roberta Calegari (`roberta.calegari`) is Maintainer; Enrico Denti to add once he has logged in to GitLab DISI.
+
+**Archived (2026-11-19)** on GitLab and GitHub, at Andrea's word: the collaborators are not to work on it for now
+("sono solo felici che sia tornato al mondo"). To work again: unarchive both (GitLab: Settings → General →
+Advanced; GitHub: Settings → Danger Zone), then add Enrico Denti as Maintainer once he has a GitLab DISI account.
