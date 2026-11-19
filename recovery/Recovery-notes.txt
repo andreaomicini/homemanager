@@ -1,0 +1,46 @@
+HomeManager recovery
+
+Original repository: https://bitbucket.org/tuprologteam/homemanager.git
+Archived snapshot: 659bdaed47c4372bf8b5df24fd34a2eef5198ab7
+Archive visit: 9 January 2021, 08:51:43 UTC
+Original default branch revision: 9f6c138ea5d54f14b51ec64ac849f1667eaeb0ae
+Recovered default branch revision: c32a06f86a76334c91d84c03dcadb7c90029977e
+Default branch directory: 8ccf58dc3209595e8da1c7a2f194cc1c7dc40243
+
+Recovered source: 4825 files in 1441 directories.
+Recovered history: 97 commits, 11 branches.
+All available original contents were hash-verified. Git fsck and bundle verification passed.
+One unavailable historical file, opencv-3.0.0.zip (189137624 bytes), was removed
+from every revision as requested. Commit IDs changed wherever this removal affects
+a tree or ancestor. All 97 commits, their parent relationships, messages, authors,
+dates, and all 11 branch names are retained. commit-map.json maps original IDs
+to recovered IDs; archived-branches.json records original branch heads.
+File contents and tracked permissions are preserved. Builds were not attempted.
+Some third-party bytes were recovered from official Google Maven and OpenCV
+distributions, and accepted only when their original archived Git hashes matched.
+Historical directory metadata also came from the official ENEA mirror.
+Google Maven: https://dl.google.com/dl/android/maven2/
+OpenCV source: https://github.com/opencv/opencv/archive/refs/tags/3.0.0.zip
+ENEA mirror: https://mirror.softwareheritage.enea.it/
+This recovery covers the objects reachable from the archived snapshot, not issues,
+pull requests, wiki pages, or commits absent from that archived snapshot.
+
+HomeManager-source.zip: default branch files, including the tracked workspace files.
+HomeManager-history.bundle: portable Git repository with every recovered branch.
+HomeManager-with-history/: usable local Git checkout on the master branch.
+
+To create another checkout from the bundle:
+git clone HomeManager-history.bundle HomeManager
+
+Branch heads:
+master c32a06f86a76334c91d84c03dcadb7c90029977e
+PR-BEVILACQUA 4f1356bd446c5a2cb59344529ee427e500927e6c
+TH-AMELI cc7bf0a333dc4213aa1f54d6815bd26e31a277f5
+TH-ANTOGNETTI a2bd969091eb5bd2a6717e9aacbcfa0c797b19bb
+TH-CALVIO 5aa8fb4e701e85ab8e77d245c73b5cf3f2de57ec
+TH-CASADEI db243ffcb646f64fb67263b8c9f3cb98dd429390
+TH-FAVA 7371f628a1cff9e96d472fa763866d55fae18027
+TH-GAVA 653e62b35ceade24373cbdf12b5bdb5cc5394c9d
+TH-MANCINI a4e773662e6299003b75471913bd6fe31afb3a91
+TH-MARZADURI a7658d03fabfadd9a372e25976ade8320d21c714
+TH-POMETTO aa85ade5d6723c9b07c98eb772b63c2c1f845996

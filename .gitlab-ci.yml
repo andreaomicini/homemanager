@@ -1,0 +1,57 @@
+# Compiles each Java part of Home Manager on the DISI GitLab with Java 8, as
+# it was built in 2014–2018, only when a push touches it. Every job runs the
+# same build.sh you run on your own machine.
+#
+# The Android app (MyAppHomeManager) has no job: its 2016 Gradle build no
+# longer runs on today's tools (see README.md).
+
+.java8: &java8
+  image: azul/zulu-openjdk:8
+  interruptible: true
+  variables:
+    GIT_DEPTH: "1"
+  artifacts:
+    paths: [_build/]
+    expire_in: 1 week
+
+HomeManager:
+  <<: *java8
+  rules:
+    - changes: [HomeManager/**/*, build.sh, .gitlab-ci.yml]
+  script: [./build.sh HomeManager]
+
+SmartComponentInfrastructure:
+  <<: *java8
+  rules:
+    - changes: [SmartComponentInfrastructure/**/*, build.sh, .gitlab-ci.yml]
+  script: [./build.sh SmartComponentInfrastructure]
+
+SmartFridge:
+  <<: *java8
+  rules:
+    - changes: [SmartFridge/**/*, build.sh, .gitlab-ci.yml]
+  script: [./build.sh SmartFridge]
+
+SmartPantry:
+  <<: *java8
+  rules:
+    - changes: [SmartPantry/**/*, build.sh, .gitlab-ci.yml]
+  script: [./build.sh SmartPantry]
+
+SmartMixer:
+  <<: *java8
+  rules:
+    - changes: [SmartMixer/**/*, build.sh, .gitlab-ci.yml]
+  script: [./build.sh SmartMixer]
+
+SmartOven:
+  <<: *java8
+  rules:
+    - changes: [SmartOven/**/*, build.sh, .gitlab-ci.yml]
+  script: [./build.sh SmartOven]
+
+SmartWardrobe:
+  <<: *java8
+  rules:
+    - changes: [SmartWardrobe/**/*, build.sh, .gitlab-ci.yml]
+  script: [./build.sh SmartWardrobe]

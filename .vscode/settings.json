@@ -1,0 +1,14 @@
+{
+  // Home Manager -- open the folder or homemanager.code-workspace.
+
+  // The parts are Eclipse projects of 2014-2018, for Java 8: the Java extension imports
+  // them from their .classpath. The path is Homebrew's zulu@8; elsewhere, point it at a JDK 8.
+  "java.configuration.runtimes": [
+    { "name": "JavaSE-1.8", "path": "/Library/Java/JavaVirtualMachines/zulu-8.jdk/Contents/Home", "default": true }
+  ],
+  "files.encoding": "utf8",
+  "files.exclude": {
+    "_build": true,
+    "**/Icon\r": true
+  }
+}

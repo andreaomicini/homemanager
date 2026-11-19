@@ -1,0 +1,58 @@
+{
+  "branches": {
+    "master": "c32a06f86a76334c91d84c03dcadb7c90029977e",
+    "PR-BEVILACQUA": "4f1356bd446c5a2cb59344529ee427e500927e6c",
+    "TH-AMELI": "cc7bf0a333dc4213aa1f54d6815bd26e31a277f5",
+    "TH-ANTOGNETTI": "a2bd969091eb5bd2a6717e9aacbcfa0c797b19bb",
+    "TH-CALVIO": "5aa8fb4e701e85ab8e77d245c73b5cf3f2de57ec",
+    "TH-CASADEI": "db243ffcb646f64fb67263b8c9f3cb98dd429390",
+    "TH-FAVA": "7371f628a1cff9e96d472fa763866d55fae18027",
+    "TH-GAVA": "653e62b35ceade24373cbdf12b5bdb5cc5394c9d",
+    "TH-MANCINI": "a4e773662e6299003b75471913bd6fe31afb3a91",
+    "TH-MARZADURI": "a7658d03fabfadd9a372e25976ade8320d21c714",
+    "TH-POMETTO": "aa85ade5d6723c9b07c98eb772b63c2c1f845996"
+  },
+  "commits": 97,
+  "trees": 4622,
+  "omitted_blob": "5dd4fef0224f1613c255e2b78c4ef3bf107eb669",
+  "omitted_entries": [
+    {
+      "tree": "694285fb999cee9ed765b1c5365c8fe4cf61a2fa",
+      "entry": "100644 opencv-3.0.0.zip"
+    },
+    {
+      "tree": "fffdc1d634d13329abc439fc7764ffb6d8bda6a3",
+      "entry": "100644 opencv-3.0.0.zip"
+    },
+    {
+      "tree": "23eceb8cbb65b27f332a713dc7bf659ab7212a89",
+      "entry": "100644 opencv-3.0.0.zip"
+    },
+    {
+      "tree": "1bee60a29fd9de87eb73eedfa7494a63bae09218",
+      "entry": "100644 opencv-3.0.0.zip"
+    },
+    {
+      "tree": "5e1da559f5fd03ca556fdc6b93d375e66e8a0134",
+      "entry": "100644 opencv-3.0.0.zip"
+    },
+    {
+      "tree": "efc1c9deec7a9e408090113e7b446acc2d768709",
+      "entry": "100644 opencv-3.0.0.zip"
+    },
+    {
+      "tree": "8b130b9ea171195e91db4aa4ab4f319a73ef166f",
+      "entry": "100644 opencv-3.0.0.zip"
+    },
+    {
+      "tree": "b2e650129ca063afbe78244e1277efb25e948528",
+      "entry": "100644 opencv-3.0.0.zip"
+    },
+    {
+      "tree": "71702fe78b9f158564aa439bc5de0ff4247f2bc5",
+      "entry": "100644 opencv-3.0.0.zip"
+    }
+  ],
+  "original_object_hashes_verified": false,
+  "history_rewritten_to_remove_unavailable_file": true
+}

@@ -1,0 +1,2 @@
+Home Manager, a multi-agent platform for the intelligent home on TuCSoN and tuProlog: the 2014–2018 repository of its theses, recovered from Software Heritage
+https://homemanager.apice.unibo.it
