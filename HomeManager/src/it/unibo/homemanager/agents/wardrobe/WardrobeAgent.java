@@ -86,7 +86,7 @@ public class WardrobeAgent extends AbstractTucsonAgent implements TucsonAgentInt
 
 		this.tracePanel = tracePanel;
 
-		// lettura da file esterno dell'ip del server LPaaS per rendere più dinamica la configurazione
+		// lettura da file esterno dell'ip del server LPaaS per rendere piÃ¹ dinamica la configurazione
 		readIPServerLPaaS();
 
 	}

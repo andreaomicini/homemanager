@@ -16,7 +16,7 @@ public class ParserMeteo {
 
 	private static DocumentBuilderFactory dbf=DocumentBuilderFactory.newInstance();
 	private static DocumentBuilder domParser;
-	private static String city;   	//citt‡ dove fare rilevazioni meteo inizializzata durante il metodo init
+	private static String city;   	//citt√† dove fare rilevazioni meteo inizializzata durante il metodo init
 	private static String state; 	//serve per google
 	private static String woeid;  	//woeid di yahoo
 	private static String lat;
@@ -49,7 +49,7 @@ public class ParserMeteo {
 		stream=url.openStream();
 		doc=domParser.parse(stream);  
 		doc.normalizeDocument();
-		woeid=doc.getElementsByTagName("place").item(0).getAttributes().getNamedItem("woeid").getNodeValue().trim();//suppongo che il primo sia quello giusto in quanto al 99% Ë cosi
+		woeid=doc.getElementsByTagName("place").item(0).getAttributes().getNamedItem("woeid").getNodeValue().trim();//suppongo che il primo sia quello giusto in quanto al 99% √® cosi
 		
 		//
 		//Thread.sleep(1000);
@@ -65,7 +65,7 @@ public class ParserMeteo {
 	}
 	public static Meteo previsioniY(String urlBase) throws Exception
 	{
-		//qui non c Ë bisogno di modifica con una nuova key ma c Ë bisogno per flickr sopra
+		//qui non c √® bisogno di modifica con una nuova key ma c √® bisogno per flickr sopra
 		URL url3=new URL(urlBase+woeid+"&u=c");
 		InputStream stream3=url3.openStream();
 		Document doc3=domParser.parse(stream3);
@@ -75,7 +75,7 @@ public class ParserMeteo {
 	public static Meteo previsioniG(String urlBase) throws Exception
 	{
 		//DA MODIFICARE CON UNA ALTRA KEY DELL UNI
-		//questa non funziona per nomi di citt‡ diversi nella lingua inglese quindi meglio usare quello con lat e lon
+		//questa non funziona per nomi di citt√† diversi nella lingua inglese quindi meglio usare quello con lat e lon
 		//URL url2=new URL("http://api.wunderground.com/api/2cae48e983982ec4/conditions/lang:it/q/"+state+"/"+city+".xml");
 		URL url2=new URL(urlBase+lat+","+lon+".xml");
 		InputStream stream2=url2.openStream();
@@ -154,7 +154,7 @@ public class ParserMeteo {
 		p.setUmidita(Integer.parseInt(estrai(doc, "humidity", "value")));  //es 73 (si intende in %)
 		p.setPressione(Float.parseFloat(estrai(doc, "pressure", "value"))); //es 982 (si intende in hpa che equivale al mb)
 		p.setVento((float) (Float.parseFloat(estrai(doc, "speed", "value"))*3.6));  //es 9.43 (si intende in km/h)
-		if(!estrai(doc, "precipitation", "mode").trim().equals("no"))  //puÚ valere no se non piove o rain se piove per esempio
+		if(!estrai(doc, "precipitation", "mode").trim().equals("no"))  //pu√≤ valere no se non piove o rain se piove per esempio
 			p.setPrecipitazioni(Float.parseFloat(estrai(doc, "precipitation", "value")));// es 0.82 metto il volume (in mm) delle precipitazioni nel caso piova
 		else
 			p.setPrecipitazioni(0); //senno default a 0

@@ -33,28 +33,28 @@ public class HelpFrame extends JFrame {
 		message.append("Rimuovi Componente: Rimuove un componente dalla lista degli elementi da testare\n\n");
 		message.append("--PARTE DI CONTROLLO\n");
 		message.append("Suddivisa in tre parti: Theory Control, Goal Control, Solutions\n");
-		message.append("Ogni operazione eseguita in queste parti Ë realtiva al componente selezionato nella ComboBox superiore!\n\n");
+		message.append("Ogni operazione eseguita in queste parti √® realtiva al componente selezionato nella ComboBox superiore!\n\n");
 		message.append("--THEORY CONTROL\n");
 		message.append("Le tre ComboBox rappresentano rispettivamente l'elenco delle teorie,\n delle versioni relative ad una teoria"
 				+ " e dei functor relativi ad una specifica versione di una specifica teoria\n");
-		message.append("Tramite il 'Cerca Teoria' Ë possibile andare a visualizzare la teoria selezionata, eventualmente filtrando per versione e functor\n");
-		message.append("Tramite 'Aggiungi Versione' Ë possibile aggiungere una nuova versione alla teoria selezionata,\n"
+		message.append("Tramite il 'Cerca Teoria' √® possibile andare a visualizzare la teoria selezionata, eventualmente filtrando per versione e functor\n");
+		message.append("Tramite 'Aggiungi Versione' √® possibile aggiungere una nuova versione alla teoria selezionata,\n"
 				+ "i facts con cui si intende inizializzare la versione vanno scritti nella TextArea sottostante\n");
 		message.append("Tramite 'Elimina Teoria' si elimina la teoria selezionata\n");
-		message.append("Tramite 'Sostituisci Teoria' si andr‡ a sostituire la versione 0 della teoria selezionata\n"
+		message.append("Tramite 'Sostituisci Teoria' si andr√† a sostituire la versione 0 della teoria selezionata\n"
 				+ "i facts da sostituire vanno aggiunti nella TextArea sottostante\n");
-		message.append("Tramite 'Crea Teoria' si andr‡ a creare una nuova teoria\n"
+		message.append("Tramite 'Crea Teoria' si andr√† a creare una nuova teoria\n"
 				+ "i facts per inizializzare la teoria vanno inseriti nella TextArea sottostante\n"
 				+ "IMPORTANTE: Per creare correttamente la teoria va inserita una riga del tipo TITOLO:<titoloTeoria>\n\n");
 		message.append("--GOAL CONTROL\n");
 		message.append("La ComboBox rappresenta l'elenco delle GoalLists\n");
-		message.append("Tramite il 'Cerca Goal' Ë possibile andare a visualizzare i goal della GoalList selezionata\n");
-		message.append("Tramite 'Aggiungi Goal' Ë possibile aggiungere un nuovo Goal alla GoalList selezionata,\n"
+		message.append("Tramite il 'Cerca Goal' √® possibile andare a visualizzare i goal della GoalList selezionata\n");
+		message.append("Tramite 'Aggiungi Goal' √® possibile aggiungere un nuovo Goal alla GoalList selezionata,\n"
 				+ "i goals vanno scritti nella TextArea sottostante\n");
 		message.append("Tramite 'Elimina Goal' si elimina la GoalList selezionata\n");
-		message.append("Tramite 'Sostituisci Goal' si andr‡ a sostituire la GoalList selezionata\n"
+		message.append("Tramite 'Sostituisci Goal' si andr√† a sostituire la GoalList selezionata\n"
 				+ "i goal da sostituire vanno aggiunti nella TextArea sottostante\n");
-		message.append("Tramite 'Crea Goal' si andr‡ a creare una nuova GoalList\n"
+		message.append("Tramite 'Crea Goal' si andr√† a creare una nuova GoalList\n"
 				+ "i goals per inizializzare la GoalList vanno inseriti nella TextArea sottostante\n"
 				+ "IMPORTANTE: Per creare correttamente la GoalList va inserita una riga del tipo TITOLO:<titoloGoalList>\n\n");
 		message.append("--SOLUTIONS\n");

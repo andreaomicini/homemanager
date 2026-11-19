@@ -7,7 +7,7 @@ import exceptions.NotCreatedException;
 public interface Configurator {
 
 	/*
-	 * Modella i permessi che può avere un configuratore:
+	 * Modella i permessi che puÃ² avere un configuratore:
 	 * 1)Modifica/creazione/eliminazione delle theories
 	 * 2)Modifica/creazione/eliminazione delle goalList
 	 */

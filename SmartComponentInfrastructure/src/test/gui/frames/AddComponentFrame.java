@@ -23,7 +23,7 @@ public class AddComponentFrame extends JFrame implements ActionListener{
 
 	private static final long serialVersionUID = 1L;
 	
-	/*PROPRIET¿*/
+	/*PROPRIET√Ä*/
 	private Controller controller;
 	private JComboBox<String> components;
 	private JButton aggiungi;
@@ -96,7 +96,7 @@ public class AddComponentFrame extends JFrame implements ActionListener{
 					this.setVisible(false);
 				}
 			} catch (AlreadyRegisteredException e1) {
-				JOptionPane.showMessageDialog(null, "Componente gi‡ registrato", "alert", JOptionPane.ERROR_MESSAGE);
+				JOptionPane.showMessageDialog(null, "Componente gi√† registrato", "alert", JOptionPane.ERROR_MESSAGE);
 			}
 		}
 	}

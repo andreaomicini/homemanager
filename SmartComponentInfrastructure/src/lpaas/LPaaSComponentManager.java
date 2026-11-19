@@ -78,7 +78,7 @@ public class LPaaSComponentManager implements SmartComponentManager {
 			e.printStackTrace();
 		}
 		
-		//controllo che il componente(URL) non sia gi‡ registrato
+		//controllo che il componente(URL) non sia gi√† registrato
 		for(URL u: table.values()){
 			if(u.equals(location)){
 				throw new AlreadyRegisteredException();

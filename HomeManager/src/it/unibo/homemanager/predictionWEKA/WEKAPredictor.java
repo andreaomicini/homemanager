@@ -59,7 +59,7 @@ public class WEKAPredictor extends AbstractTucsonAgent{
 	private void createClassificator() throws Exception
 	   {
 		 Instances dataset_datapreprocessed;
-		 //applico il filtro per costruire un classificatore più accurato basato sulle stagioni
+		 //applico il filtro per costruire un classificatore piÃ¹ accurato basato sulle stagioni
 		 LocalDate data_oggi = LocalDate.now();
 		 if((data_oggi.getMonth().getValue()>=6) && (data_oggi.getMonth().getValue()<=9))
 		    {
@@ -116,7 +116,7 @@ public class WEKAPredictor extends AbstractTucsonAgent{
 		        String[] options = new String[4];
 		        options[0] = "-C"; //attributo sul quale si vuole filtrare
 		        options[1]= "3"; 
-		        options[2] ="-S"; //Instances with values più grande di quello imposto
+		        options[2] ="-S"; //Instances with values piÃ¹ grande di quello imposto
 		        options[3]="6"; 		        
 		        
 		        filter_num.setOptions(options);
@@ -147,7 +147,7 @@ public class WEKAPredictor extends AbstractTucsonAgent{
 		        String[] options = new String[4];
 		        options[0] = "-C"; //attributo sul quale si vuole filtrare
 		        options[1]= "3"; 
-		        options[2] ="-S"; //Instances with values più grande di quello imposto
+		        options[2] ="-S"; //Instances with values piÃ¹ grande di quello imposto
 		        options[3]="1"; 		        
 		        
 		        filter_num.setOptions(options);
@@ -174,7 +174,7 @@ public class WEKAPredictor extends AbstractTucsonAgent{
 			        String[] options3 = new String[4];
 			        options3[0] = "-C"; //attributo sul quale si vuole filtrare
 			        options3[1]= "3"; 
-			        options3[2] ="-S"; //Instances with values più grande di quello imposto
+			        options3[2] ="-S"; //Instances with values piÃ¹ grande di quello imposto
 			        options3[3]="10"; 		        
 			        
 			        filter_num.setOptions(options3);

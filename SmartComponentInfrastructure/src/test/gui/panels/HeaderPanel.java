@@ -26,7 +26,7 @@ public class HeaderPanel extends JPanel implements ActionListener{
 
 	private static final long serialVersionUID = 1L;
 	
-	/*PROPRIETÀ*/
+	/*PROPRIETÃ€*/
 	private Controller controller;
 	private JComboBox<String> components;
 	private JButton addComponent;

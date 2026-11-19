@@ -69,7 +69,7 @@ public class TucsonUserService implements UserServiceInterface {
 	   u = new User(0,fn,sn,un,p,r,th,tac,act);
 	   TucsonDatabase db= (TucsonDatabase)database;
 	   boolean exist = false;
-		/* controllo che l'utente non sia gi� presente (username) */
+		/* controllo che l'utente non sia giï¿½ presente (username) */
 		try {
 		
 			LogicTuple arr= new LogicTuple().parse("user"+"(["+new Var("X")+","+ new Var("Y")+","+new Var("Z")+
@@ -78,7 +78,7 @@ public class TucsonUserService implements UserServiceInterface {
 
 			if (exist) {
 				throw new Exception("User: insert(): Tentativo di inserimento "+
-					"di un utente gi� presente.");
+					"di un utente già presente.");
 				}
 			
 			/*inserimento del dispositivo*/

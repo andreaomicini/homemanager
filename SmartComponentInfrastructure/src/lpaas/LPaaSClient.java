@@ -56,7 +56,7 @@ public class LPaaSClient implements Client {
 			}
 		}
 		
-		//se arrivo qui è perchè è stata passata una teoria che non esiste
+		//se arrivo qui Ã¨ perchÃ¨ Ã¨ stata passata una teoria che non esiste
 		throw new NotCreatedException();
 	}
 

@@ -261,7 +261,7 @@ public class SmartPredictorAgent extends AbstractTucsonAgent implements TucsonAg
 		    		
 		    		Policy politica = checkPolicy(p.getHour());
 		    		
-		    		// se non c'è politica allora procedo con mix informazioni
+		    		// se non c'Ã¨ politica allora procedo con mix informazioni
 		    		if (politica==null){
 		    		if (((!isRainingDay(meteo)) && 
 		    			   (meteo.getTemperatura()>= upt.getTemp())) &&
@@ -271,7 +271,7 @@ public class SmartPredictorAgent extends AbstractTucsonAgent implements TucsonAg
 		    	       }
 		    	      else predizioni_giornata.put(p.getHour(), "OFF");
 		    	   }
-		    		//se c'è la politica forzo il risultato
+		    		//se c'Ã¨ la politica forzo il risultato
 		    	   else 
 		    	     {
 		    		   predizioni_giornata.put(p.getHour(),politica.getStato_condizionatore().toUpperCase());

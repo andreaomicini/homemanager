@@ -11,7 +11,7 @@ public class InfoPanel extends JPanel {
 
 	private static final long serialVersionUID = 1L;
 	
-	/*PROPRIETÀ*/
+	/*PROPRIETÃ€*/
 	private JTextArea infoArea;
 	
 	public InfoPanel(GeneralListener listener){

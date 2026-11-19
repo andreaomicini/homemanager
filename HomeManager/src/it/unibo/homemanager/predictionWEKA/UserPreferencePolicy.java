@@ -58,7 +58,7 @@ public class UserPreferencePolicy {
 	   {
 		 if (p!=null)
 		    {
-			 //se non è già presente il giorno devo creare la struttura ospitante
+			 //se non Ã¨ giÃ  presente il giorno devo creare la struttura ospitante
 			  if (!politiche.containsKey(p.getGiorno_settimana())) 
 			     {
 				    ArrayList<Policy> insieme = new ArrayList<Policy>();
@@ -76,7 +76,7 @@ public class UserPreferencePolicy {
 	   }
 	
 	
-	//metodo per la rimozione di una politica qualora non servisse più
+	//metodo per la rimozione di una politica qualora non servisse piÃ¹
 	public boolean removePolicy(Policy p)
 	   {
 		 ArrayList<Policy> lette =  politiche.get(p.getGiorno_settimana());

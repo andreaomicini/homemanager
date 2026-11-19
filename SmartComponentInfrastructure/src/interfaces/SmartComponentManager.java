@@ -7,7 +7,7 @@ import exceptions.NotRegisteredException;
 
 public interface SmartComponentManager {
 	/*
-	 * Il manager è ciò che permette agli agenti di interfacciarsi
+	 * Il manager Ã¨ ciÃ² che permette agli agenti di interfacciarsi
 	 * con i dispositivi smart presenti in HM
 	 */
 
